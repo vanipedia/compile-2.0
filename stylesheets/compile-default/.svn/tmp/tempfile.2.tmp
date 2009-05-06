@@ -1,0 +1,21 @@
+add theme to repository
+--This line, and those below, will be ignored--
+
+R    .
+A    images
+AM   images/ui-bg_glass_55_603F9D_1x400.png
+AM   images/ui-bg_inset-hard_55_A69940_1x100.png
+AM   images/ui-icons_fcd113_256x240.png
+AM   images/ui-bg_flat_100_DEE2F9_40x100.png
+AM   images/ui-bg_flat_75_aaaaaa_40x100.png
+AM   images/ui-icons_f7a50d_256x240.png
+AM   images/ui-icons_E0D3F8_256x240.png
+AM   images/ui-bg_gloss-wave_45_603F9D_500x100.png
+AM   images/ui-bg_glass_45_3F4C9D_1x400.png
+AM   images/ui-icons_3F4C9D_256x240.png
+AM   images/ui-bg_gloss-wave_45_e14f1c_500x100.png
+AM   images/ui-bg_flat_55_999999_40x100.png
+AM   images/ui-icons_D4D9F9_256x240.png
+AM   images/ui-bg_inset-hard_35_C3C9F2_1x100.png
+AM   images/ui-icons_603F9D_256x240.png
+AM   jquery-ui-1.7.1.custom.css

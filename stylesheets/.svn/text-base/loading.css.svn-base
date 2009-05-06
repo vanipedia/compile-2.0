@@ -1,0 +1,30 @@
+#loading {
+  position: fixed;
+  width:  65%;
+  height: 200px;
+  top:    20%;
+  text-align: center;
+  z-index:200;
+
+}
+#loading_bak {
+  top: inherit;
+  height:   inherit;
+  opacity:  0.8;
+  background: black;
+  -moz-border-radius:    15px;
+  -webkit-border-radius: 15px;
+}
+#loading > #loading_text {
+  color:      white;
+  display:    inline;
+  font-family:Georgia;
+  font-size:  medium;
+  position:   relative;
+  top:        55%;
+  z-index:    201;
+}
+
+#compilation.hidden {
+  display: none;
+}

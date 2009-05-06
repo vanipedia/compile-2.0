@@ -1,0 +1,36 @@
+<table class="q_menu">
+  <tr>
+    <td><div class="status_text"></div></td>
+    <td class="q_tools">
+      <div class="del_quote"><span title="Remove quote from this compilation" class="ui-icon ui-icon-trash"/></div>
+      <div class="undo_quote"><span title="Undo last change" class="ui-icon ui-icon-arrowreturnthick-1-w"/></div>
+    </td>
+    </tr>
+  <tr>
+    <% if(quote.tips) { %>
+    <td class="q_tips" colspan="2">
+      <% for(tip in quote.tips) { %>
+        <% if (quote.tips[tip].id) { %>
+            <input type="button" value="<%= quote.tips[tip].title %>" id="<%= quote.tips[tip].id %>" class="tips ui-state-default ui-corner-all"/>
+            <div><%= quote.tips[tip].desc %></div>
+        <% } %>
+      <% } %>
+      <div id="alert_tip"></div>
+    </td>
+    <% } %>
+  </tr>
+</table>
+<%if (quote.heading) { %>
+        <div class="heading"><%= quote.heading %></div>
+<% } %>
+<span class="link"><a href='/wiki/index.php/<%= quote.link %>'><%= quote.link_text %><% if (quote.section) { %>, <%= quote.section %><% } %></a>:</span>
+<%if (quote.trans || quote.purport) { %>
+    <%if (quote.trans) { %>
+      <div class="trans text"><%= quote.trans %></div>
+    <% } %>
+    <%if (quote.purport) { %>
+      <div class="purport text"><%= quote.purport %></div>
+    <% } %>
+<% } else { %>
+    <div class="text"><%= quote.text %></div>
+<% } %>

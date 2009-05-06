@@ -1,0 +1,16 @@
+<% for(var i=0; i<Compilation.quotes.length; i++) { %>
+    <div id="quote_<%= i %>" class="quote" index=<%= i %> >
+    	<p><b><%= Compilation.quotes[i].heading %></b></p>
+        <p>
+        	<a href='/wiki/index.php/<%= Compilation.quotes[i].ref %>'>
+        		<b><%= Compilation.quotes[i].link2 %></b>
+        	</a>: 
+        	<% if (Compilation.quotes[i].trans) { %>
+        		<%= Compilation.quotes[i].trans %>
+        	<% } %>
+        	<%if (Compilation.quotes[i].purport) { %> 
+        		<%= Compilation.quotes[i].purport %>
+        	<% } %>
+        </p>
+    </div>
+<% } %>

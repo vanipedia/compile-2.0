@@ -1,0 +1,483 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="../../jmvc/rhino/documentation/style.css" type="text/css" />
+        <title>Facts</title>
+    </head>
+    <body>
+        <div id='left_side'><h3>Documentation</h3>
+
+    
+        
+ 
+            <a href='../classes/Compilation.html' id='Compilation.html'>
+                Compilation
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/CompileController.html' id='CompileController.html'>
+                CompileController
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/CompileForm.html' id='CompileForm.html'>
+                CompileForm
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/Facts.html' id='Facts.html'>
+                Facts
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/MVC.Class.html' id='MVC.Class.html'>
+                MVC.Class
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/MVC.Controller.html' id='MVC.Controller.html'>
+                <span class='matches_previous'>MVC.</span>Controller
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/MVC.Controller.Action.html' id='MVC.Controller.Action.html'>
+                <span class='matches_previous'>MVC.Controller.</span>Action
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/MVC.Controller.Action.EnterLeave.html' id='MVC.Controller.Action.EnterLeave.html'>
+                <span class='matches_previous'>MVC.Controller.Action.</span>EnterLeave
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/MVC.Controller.Action.Event.html' id='MVC.Controller.Action.Event.html'>
+                <span class='matches_previous'>MVC.Controller.Action.</span>Event
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/MVC.Controller.Action.Hover.html' id='MVC.Controller.Action.Hover.html'>
+                <span class='matches_previous'>MVC.Controller.Action.</span>Hover
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/MVC.Controller.Action.Subscribe.html' id='MVC.Controller.Action.Subscribe.html'>
+                <span class='matches_previous'>MVC.Controller.Action.</span>Subscribe
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/MVC.Controller.Params.html' id='MVC.Controller.Params.html'>
+                <span class='matches_previous'>MVC.Controller.</span>Params
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/MVC.Delegator.html' id='MVC.Delegator.html'>
+                <span class='matches_previous'>MVC.</span>Delegator
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/MVC.Element.html' id='MVC.Element.html'>
+                <span class='matches_previous'>MVC.</span>Element
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/MVC.Event.html' id='MVC.Event.html'>
+                <span class='matches_previous'>MVC.</span>Event
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/MVC.Model.html' id='MVC.Model.html'>
+                <span class='matches_previous'>MVC.</span>Model
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/MVC.Native.html' id='MVC.Native.html'>
+                <span class='matches_previous'>MVC.</span>Native
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/MVC.Native.Array.html' id='MVC.Native.Array.html'>
+                <span class='matches_previous'>MVC.Native.</span>Array
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/MVC.Native.Function.html' id='MVC.Native.Function.html'>
+                <span class='matches_previous'>MVC.Native.</span>Function
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/MVC.Native.Number.html' id='MVC.Native.Number.html'>
+                <span class='matches_previous'>MVC.Native.</span>Number
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/MVC.Native.Object.html' id='MVC.Native.Object.html'>
+                <span class='matches_previous'>MVC.Native.</span>Object
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/MVC.Native.String.html' id='MVC.Native.String.html'>
+                <span class='matches_previous'>MVC.Native.</span>String
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/MVC.Store.html' id='MVC.Store.html'>
+                <span class='matches_previous'>MVC.</span>Store
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/MVC.Vector.html' id='MVC.Vector.html'>
+                <span class='matches_previous'>MVC.</span>Vector
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/MVC.View.html' id='MVC.View.html'>
+                <span class='matches_previous'>MVC.</span>View
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/MVC.View.Helpers.html' id='MVC.View.Helpers.html'>
+                <span class='matches_previous'>MVC.View.</span>Helpers
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/OpenAjax.html' id='OpenAjax.html'>
+                OpenAjax
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/Quote.html' id='Quote.html'>
+                Quote
+            </a>
+       
+        
+    
+</div>
+        <div id='right_side'><div><h1>Facts <label>API</label></h1>
+
+<div id='shortcuts'><a href='#Facts'>Facts</a>, <a href='#Facts.prototype'>prototype</a>, <a href='#Facts.static'>static</a>, <a href='#Facts.static.add'>add</a>, <a href='#Facts.static.add_user'>add_user</a>, <a href='#Facts.static.build_new'>build_new</a>, <a href='#Facts.static.build_with'>build_with</a>, <a href='#Facts.static.categories'>categories</a>, <a href='#Facts.static.check_totals'>check_totals</a>, <a href='#Facts.static.check_user'>check_user</a>, <a href='#Facts.static.complete'>complete</a>, <a href='#Facts.static.find'>find</a>, <a href='#Facts.static.g'>g</a>, <a href='#Facts.static.get_date'>get_date</a>, <a href='#Facts.static.save'>save</a>, <a href='#Facts.static.set'>set</a>, <a href='#Facts.static.update'>update</a>, <a href='#Facts.static.update_totals'>update_totals</a></div>
+
+
+    <div class='inherits'>Inherits: <b><a href='MVC.Model.html'>MVC.Model</a></b></div>
+
+
+<div class='group'>This model requests and process the page_facts for every Vaniquote compilation<br/><br/></div>
+
+<div><h2>Static Methods</h2>
+<div><div class='method'>
+ 
+ 
+ <h3 id="Facts.static.add">add</h3>
+ <pre class='signiture'><code>add(fact, value) -> undefined</code></pre>
+ <div class='real_comment'>Use to add values to facts db array like expressions(terms) and categories.
+</div>
+   
+      <div class='param '>
+          <label>fact</label>
+          <code>{string}</code> - array to update: terms or categories
+      </div>
+   
+      <div class='param '>
+          <label>value</label>
+          <code>{string}</code> - 
+   
+      </div>
+ 
+
+                
+</div><div class='method'>
+ 
+ 
+ <h3 id="Facts.static.add_user">add_user</h3>
+ <pre class='signiture'><code>add_user() -> undefined</code></pre>
+ <div class='real_comment'>add_user adds compiler [wiki] name to Facts.db if not already in it
+   
+</div>
+ 
+
+                
+</div><div class='method'>
+ 
+ 
+ <h3 id="Facts.static.build_new">build_new</h3>
+ <pre class='signiture'><code>build_new() -> undefined</code></pre>
+ <div class='real_comment'>builds a blank facts.db
+ since most default blank values are already set in Facts.db
+ we only need to set a few
+   
+</div>
+ 
+
+                
+</div><div class='method'>
+ 
+ 
+ <h3 id="Facts.static.build_with">build_with</h3>
+ <pre class='signiture'><code>build_with(data) -> undefined</code></pre>
+ <div class='real_comment'>builds a facts.db for the current compilation
+</div>
+   
+      <div class='param '>
+          <label>data</label>
+          <code>{string}</code> - contains all the data found within the <div id="facts"> in the compilation.
+   
+      </div>
+ 
+
+                
+</div><div class='attribute' id="Facts.static.categories"><h3>categories</h3><p>Categories 
+</p></div><div class='method'>
+ 
+ 
+ <h3 id="Facts.static.check_totals">check_totals</h3>
+ <pre class='signiture'><code>check_totals() -> undefined</code></pre>
+ <div class='real_comment'>Check quotes in compilation.db and updates totals by section and total
+ it should be called after rendering compilation and before saving(and perhaps in other extra-ordinary situations)
+ For individual quotes added to compilation call update_totals instead
+   
+</div>
+ 
+
+                
+</div><div class='method'>
+ 
+ 
+ <h3 id="Facts.static.check_user">check_user</h3>
+ <pre class='signiture'><code>check_user() -> undefined</code></pre>
+ <div class='real_comment'>check_user checks if current user/compiler is logged-in
+ and returns false or the userName
+   
+</div>
+ 
+
+                
+</div><div class='method'>
+ 
+ 
+ <h3 id="Facts.static.complete">complete</h3>
+ <pre class='signiture'><code>complete(book, action) -> undefined</code></pre>
+ <div class='real_comment'>Complete is called to add or remove completed books in Facts.db.complete
+</div>
+   
+      <div class='param '>
+          <label>book</label>
+          <code>{string}</code> - to add or remove for the completed list
+      </div>
+   
+      <div class='param '>
+          <label>action</label>
+          <code>{string}</code> - add or remove
+   
+      </div>
+ 
+
+                
+</div><div class='method'>
+ 
+ 
+ <h3 id="Facts.static.find">find</h3>
+ <pre class='signiture'><code>find(id) -> undefined</code></pre>
+ <div class='real_comment'>find retrieves a json formated facts database for the current compilation/page
+</div>
+   
+      <div class='param '>
+          <label>id</label>
+          <code>{string}</code> - Contains the MediaWiki articleId which should match the one on the facts server database
+   
+      </div>
+ 
+
+                
+</div><div class='attribute' id="Facts.static.g"><h3>g</h3><p>Facts 
+</p></div><div class='method'>
+ 
+ 
+ <h3 id="Facts.static.get_date">get_date</h3>
+ <pre class='signiture'><code>get_date() -> undefined</code></pre>
+ <div class='real_comment'>returns the date in specified Facts format
+   
+</div>
+ 
+
+                
+</div><div class='method'>
+ 
+ 
+ <h3 id="Facts.static.save">save</h3>
+ <pre class='signiture'><code>save() -> undefined</code></pre>
+ <div class='real_comment'>Save will rebuild the Facts.db in wiki format {{field|value1|value2|valueN}}
+   
+</div>
+ 
+
+                
+</div><div class='method'>
+ 
+ 
+ <h3 id="Facts.static.set">set</h3>
+ <pre class='signiture'><code>set(name, value, fact) -> undefined</code></pre>
+ <div class='real_comment'>set data in Facts.db
+ you must know the type of data in the db in order to set this properly. ducktyping is too much work just to set initial values
+</div>
+   
+      <div class='param '>
+          <label>name</label>
+          <code>{}</code> - 
+      </div>
+   
+      <div class='param '>
+          <label>value</label>
+          <code>{string}</code> - to set it can be anything (a string, array or obj)
+   
+      </div>
+   
+      <div class='param '>
+          <label>fact</label>
+          <code>{string}</code> - to be updated
+      </div>
+ 
+
+                
+</div><div class='method'>
+ 
+ 
+ <h3 id="Facts.static.update">update</h3>
+ <pre class='signiture'><code>update(fact, index, value) -> undefined</code></pre>
+ <div class='real_comment'>Update values in Facts.db
+</div>
+   
+      <div class='param '>
+          <label>fact</label>
+          <code>{string}</code> - to update
+      </div>
+   
+      <div class='param '>
+          <label>index</label>
+          <code>{number}</code> - of value to update, only used for Terms and Categories
+      </div>
+   
+      <div class='param '>
+          <label>value</label>
+          <code>{string}</code> - 
+   
+      </div>
+ 
+
+                
+</div><div class='method'>
+ 
+ 
+ <h3 id="Facts.static.update_totals">update_totals</h3>
+ <pre class='signiture'><code>update_totals(params, id) -> undefined</code></pre>
+ <div class='real_comment'>Update totals by checking the new quote added/deleted in the compilation, by finding it's book parent
+</div>
+   
+      <div class='param '>
+          <label>params</label>
+          <code>{}</code> - 
+      </div>
+   
+      <div class='param '>
+          <label>id</label>
+          <code>{string}</code> - Id of the inserted or deleted quote
+   
+      </div>
+ 
+
+                
+</div></div><h2>Prototype Methods</h2>
+<div></div></div>
+</div></div>
+        <script type="text/javascript" src="../../jmvc/rhino/documentation/highlight/highlight.js"></script>
+        <script type="text/javascript">
+          hljs.initHighlightingOnLoad('html', 'css','javascript');
+        </script>
+        <script type="text/javascript">
+            //select someone
+            parts = window.location.href.split("/")
+            var selected = document.getElementById(parts.pop().replace(/[#|?].*/,""))
+            if(selected){
+                selected.className = "selected";
+            }
+        </script>
+    </body>
+</html>

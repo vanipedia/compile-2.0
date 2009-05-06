@@ -1,0 +1,29 @@
+<%if (type == 'view') { %>
+	<div id="new_quote">
+		<div class="heading"><%= quote.heading %></div>
+		<span class="link"><a href="/wiki/index.php/<%= quote.link %>">
+		<%= quote.link_text %>
+		</a>:</span>
+		<%if (quote.trans || quote.purport) { %>
+				<%if (quote.trans) { %>
+					<div class="trans"><%= quote.trans %></div>
+				<% } %>
+				<%if (quote.purport) { %>
+					<div class="purport"><%= quote.purport %></div>
+				<% } %>
+		<% } else { %>
+				<div class="text"><%= quote.text %></div>
+		<% } %>
+	</div>
+<% } else { %>
+		<div id="new_quote_edit"><%= text_area_tag('new_quote_text', quote.text) %></div>
+<% } %>
+
+<div id="quote_tips">
+	<% for(tip in quote.tips) { %>
+		<div class="tips">
+			<span><%= quote.tips[tip].title %></span><div><%= quote.tips[tip].desc %></div><br/>
+		</div>
+	<% } %>
+	<div id="alert_tip"></div>
+</div>

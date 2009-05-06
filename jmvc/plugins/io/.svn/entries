@@ -1,0 +1,43 @@
+9
+
+dir
+50
+file:///Users/acyuta/Programing/svn/vaniquotes/compile/branches/2.0/jmvc/plugins/io
+file:///Users/acyuta/Programing/svn/vaniquotes
+
+
+
+2009-05-03T10:23:56.243726Z
+37
+acyuta
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+61b9d6cb-350f-4c59-8729-91da6de7dc69
+
+ajax
+dir
+
+comet
+dir
+
+window_name
+dir
+
+jsonp
+dir
+
+xdoc
+dir
+

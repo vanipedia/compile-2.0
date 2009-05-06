@@ -1,0 +1,113 @@
+9
+
+dir
+2
+file:///Users/acyuta/Programing/svn/jmvc/trunk/compile_app/views/quote
+file:///Users/acyuta/Programing/svn/jmvc
+
+
+
+2009-02-07T03:38:23.691254Z
+1
+acyuta
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+61b9d6cb-350f-4c59-8729-91da6de7dc69
+
+heading.ejs
+file
+0
+
+
+add
+
+quote_edit.ejs
+file
+
+
+
+
+2009-02-07T04:02:42.000000Z
+d35e112579a477a1cc48d41ed6108d19
+2009-02-07T03:38:23.691254Z
+1
+acyuta
+
+delete.ejs
+file
+0
+
+
+add
+
+heading_or_verse.ejs
+file
+0
+
+
+add
+
+section.ejs
+file
+0
+
+
+add
+
+edit_heading.ejs
+file
+0
+
+
+add
+
+verse.ejs
+file
+0
+
+
+add
+
+new_quote.ejs
+file
+0
+
+
+add
+
+all_quotes.ejs
+file
+
+
+
+
+2009-02-07T04:02:42.000000Z
+d6ca432174e5b6ec2dad407f454fee8e
+2009-02-07T03:38:23.691254Z
+1
+acyuta
+
+quote.ejs
+file
+
+
+
+
+2009-02-07T04:02:42.000000Z
+23855a36b65dbfb3270814654704fe30
+2009-02-07T03:38:23.691254Z
+1
+acyuta
+

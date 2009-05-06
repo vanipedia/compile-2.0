@@ -1,0 +1,32 @@
+<div id="compilation" class="hidden">
+  <div id="compile_tools_menu">
+    <p id="compile_tools_toggle" class="ui-state-default ui-corner-all"><a href="#"><span class="ui-icon ui-icon-newwin"></span><span id="compile_tools_toggle_text">Hide Tools</span></a></p>
+    <p id="compile_tools_save" class="ui-state-default ui-corner-all"><a href="#"><span class="ui-icon ui-icon-disk"></span>Save</a></p>
+    <div id="compile_tools_menu_bak" class="ui-corner-left"></div>
+  </div>
+  <div id="transparent_background"></div>
+  <div id="compile_tools">
+    <ul>
+      <li><a href="#compile_form">Compile Form</a></li>
+      <li><a href="#facts">Page Facts</a></li>
+      <div id="compile_tools_buttons">
+        <span id="compile_tools_float" class="ui-icon ui-icon-pin-w" title="Float"></span>
+        <span id="compile_tools_fix" class="ui-icon ui-icon-pin-s" title="Send to top"></span>
+        <span id="compile_tools_hide" class="ui-icon ui-icon-circle-close" title="Hide"></span>
+      </div>
+    </ul>
+    <div id="compile_form">
+      <div>
+        <p id="clear_form" class="ui-state-default ui-corner-all"title="Clear form"><a href="#"><span class="ui-icon ui-icon-refresh"></span></a></p>
+        <p id="submit_quote" class="ui-state-default ui-corner-all" title="Submit new quote"><a href="#">Submit</a></p>
+        <p>Copy quote by clicking <img src="/images/copy_ref_button.png" title="copy with ref"> in Vedabase and paste here to create new quote </p>
+      </div>
+      <%= text_area_tag() %>
+    </div>
+    <div id="facts" class="facts"></div>
+    <div id="ajax"></div>
+    <div id="verses"></div>
+  </div>
+  <div id="warning" class="ui-state-error ui-corner-all"></div>
+  <div id="darken"></div>
+</div>

@@ -1,0 +1,437 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="../../jmvc/rhino/documentation/style.css" type="text/css" />
+        <title>Compilation</title>
+    </head>
+    <body>
+        <div id='left_side'><h3>Documentation</h3>
+
+    
+        
+ 
+            <a href='../classes/Compilation.html' id='Compilation.html'>
+                Compilation
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/CompileController.html' id='CompileController.html'>
+                CompileController
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/CompileForm.html' id='CompileForm.html'>
+                CompileForm
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/Facts.html' id='Facts.html'>
+                Facts
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/MVC.Class.html' id='MVC.Class.html'>
+                MVC.Class
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/MVC.Controller.html' id='MVC.Controller.html'>
+                <span class='matches_previous'>MVC.</span>Controller
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/MVC.Controller.Action.html' id='MVC.Controller.Action.html'>
+                <span class='matches_previous'>MVC.Controller.</span>Action
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/MVC.Controller.Action.EnterLeave.html' id='MVC.Controller.Action.EnterLeave.html'>
+                <span class='matches_previous'>MVC.Controller.Action.</span>EnterLeave
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/MVC.Controller.Action.Event.html' id='MVC.Controller.Action.Event.html'>
+                <span class='matches_previous'>MVC.Controller.Action.</span>Event
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/MVC.Controller.Action.Hover.html' id='MVC.Controller.Action.Hover.html'>
+                <span class='matches_previous'>MVC.Controller.Action.</span>Hover
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/MVC.Controller.Action.Subscribe.html' id='MVC.Controller.Action.Subscribe.html'>
+                <span class='matches_previous'>MVC.Controller.Action.</span>Subscribe
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/MVC.Controller.Params.html' id='MVC.Controller.Params.html'>
+                <span class='matches_previous'>MVC.Controller.</span>Params
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/MVC.Delegator.html' id='MVC.Delegator.html'>
+                <span class='matches_previous'>MVC.</span>Delegator
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/MVC.Element.html' id='MVC.Element.html'>
+                <span class='matches_previous'>MVC.</span>Element
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/MVC.Event.html' id='MVC.Event.html'>
+                <span class='matches_previous'>MVC.</span>Event
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/MVC.Model.html' id='MVC.Model.html'>
+                <span class='matches_previous'>MVC.</span>Model
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/MVC.Native.html' id='MVC.Native.html'>
+                <span class='matches_previous'>MVC.</span>Native
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/MVC.Native.Array.html' id='MVC.Native.Array.html'>
+                <span class='matches_previous'>MVC.Native.</span>Array
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/MVC.Native.Function.html' id='MVC.Native.Function.html'>
+                <span class='matches_previous'>MVC.Native.</span>Function
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/MVC.Native.Number.html' id='MVC.Native.Number.html'>
+                <span class='matches_previous'>MVC.Native.</span>Number
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/MVC.Native.Object.html' id='MVC.Native.Object.html'>
+                <span class='matches_previous'>MVC.Native.</span>Object
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/MVC.Native.String.html' id='MVC.Native.String.html'>
+                <span class='matches_previous'>MVC.Native.</span>String
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/MVC.Store.html' id='MVC.Store.html'>
+                <span class='matches_previous'>MVC.</span>Store
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/MVC.Vector.html' id='MVC.Vector.html'>
+                <span class='matches_previous'>MVC.</span>Vector
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/MVC.View.html' id='MVC.View.html'>
+                <span class='matches_previous'>MVC.</span>View
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/MVC.View.Helpers.html' id='MVC.View.Helpers.html'>
+                <span class='matches_previous'>MVC.View.</span>Helpers
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/OpenAjax.html' id='OpenAjax.html'>
+                OpenAjax
+            </a>
+       
+        
+    
+        
+ 
+            <a href='../classes/Quote.html' id='Quote.html'>
+                Quote
+            </a>
+       
+        
+    
+</div>
+        <div id='right_side'><div><h1>Compilation <label>API</label></h1>
+
+<div id='shortcuts'><a href='#Compilation'>Compilation</a>, <a href='#Compilation.prototype'>prototype</a>, <a href='#Compilation.static'>static</a>, <a href='#Compilation.static.build'>build</a>, <a href='#Compilation.static.db'>db</a>, <a href='#Compilation.static.find_in_db'>find_in_db</a>, <a href='#Compilation.static.from'>from</a>, <a href='#Compilation.static.new_quote'>new_quote</a>, <a href='#Compilation.static.process_verse'>process_verse</a>, <a href='#Compilation.static.update_db'>update_db</a>, <a href='#Compilation.static.update_heading'>update_heading</a>, <a href='#Compilation.static.update_q_section'>update_q_section</a></div>
+
+
+    <div class='inherits'>Inherits: <b><a href='MVC.Model.html'>MVC.Model</a></b></div>
+
+
+<div class='group'>This model will retrieve and set the raw data from/to the edit box in a Vaniquotes page.<br/><br/></div>
+
+<div><h2>Static Methods</h2>
+<div><div class='method'>
+ 
+ 
+ <h3 id="Compilation.static.build">build</h3>
+ <pre class='signiture'><code>build(data) -> undefined</code></pre>
+ <div class='real_comment'>This method gets the original data from the current Vaniquotes page
+	
+</div>
+   
+      <div class='param '>
+          <label>data</label>
+          <code>{}</code> - 
+      </div>
+ 
+
+                
+</div><div class='attribute' id="Compilation.static.db"><h3>db</h3><p>DB holds data about every quote and section in the compilation 
+</p></div><div class='method'>
+ 
+ 
+ <h3 id="Compilation.static.find_in_db">find_in_db</h3>
+ <pre class='signiture'><code>find_in_db(ref, type) -> undefined</code></pre>
+ <div class='real_comment'>find quote or section instance in Compilation.db
+	 
+</div>
+   
+      <div class='param '>
+          <label>ref</label>
+          <code>{}</code> - 
+      </div>
+   
+      <div class='param '>
+          <label>type</label>
+          <code>{}</code> - 
+      </div>
+ 
+
+                
+</div><div class='attribute' id="Compilation.static.from"><h3>from</h3><p>for(var attr in this[where][name]) {
+						this[undo][name][attr] = this[where][name][attr];
+				}
+</p></div><div class='method'>
+ 
+ 
+ <h3 id="Compilation.static.new_quote">new_quote</h3>
+ <pre class='signiture'><code>new_quote(elem, ref, parent) -> undefined</code></pre>
+ <div class='real_comment'>Method to create a new quote and insert it into the Compilation.db
+</div>
+   
+      <div class='param '>
+          <label>elem</label>
+          <code>{Object}</code> - to build into this compilation db
+      </div>
+   
+      <div class='param '>
+          <label>ref</label>
+          <code>{String}</code> - Reference to object: The name or id of the element. It must have underscores (_) instead of spaces
+      </div>
+   
+      <div class='param '>
+          <label>parent</label>
+          <code>{String}</code> - Name of the parent of the element
+	 
+      </div>
+ 
+
+                
+</div><div class='method'>
+ 
+ 
+ <h3 id="Compilation.static.process_verse">process_verse</h3>
+ <pre class='signiture'><code>process_verse(params, quote, verse, resp) -> undefined</code></pre>
+ <div class='real_comment'>Process_verse will process posible verse(s) in quotes
+</div>
+   
+      <div class='param '>
+          <label>params</label>
+          <code>{}</code> - 
+      </div>
+   
+      <div class='param '>
+          <label>quote</label>
+          <code>{string}</code> - id of the quote whose verse will be "processed" (e.g.: deleted if false alarm or reformated to show correctly in the quote)
+      </div>
+   
+      <div class='param '>
+          <label>verse</label>
+          <code>{number}</code> - number in question
+      </div>
+   
+      <div class='param '>
+          <label>resp</label>
+          <code>{boolean}</code> - true or false wheather we format or delete(remove from verse candidates in quote) the verse
+	 
+      </div>
+ 
+
+                
+</div><div class='method'>
+ 
+ 
+ <h3 id="Compilation.static.update_db">update_db</h3>
+ <pre class='signiture'><code>update_db(name, attr, type) -> undefined</code></pre>
+ <div class='real_comment'>Update local(client) db (quote or section)
+</div>
+   
+      <div class='param '>
+          <label>name</label>
+          <code>{string}</code> - of quote to be updated
+      </div>
+   
+      <div class='param '>
+          <label>attr</label>
+          <code>{obj}</code> - json object with attributes to be updated e.g.: attr.heading, attr.section, etc.
+      </div>
+   
+      <div class='param '>
+          <label>type</label>
+          <code>{string}</code> - indicate which db to search for the object to be updated: 'q' for quote or 's' for section.
+	 
+      </div>
+ 
+
+                
+</div><div class='method'>
+ 
+ 
+ <h3 id="Compilation.static.update_heading">update_heading</h3>
+ <pre class='signiture'><code>update_heading(params, params.id, params.heading, params.action) -> undefined</code></pre>
+ <div class='real_comment'>Update the heading on a quote
+</div>
+   
+      <div class='param '>
+          <label>params</label>
+          <code>{}</code> - 
+      </div>
+   
+      <div class='param '>
+          <label>params.id</label>
+          <code>{string}</code> - quote id
+      </div>
+   
+      <div class='param '>
+          <label>params.heading</label>
+          <code>{string}</code> - text to update heading
+      </div>
+   
+      <div class='param '>
+          <label>params.action</label>
+          <code>{string}</code> - to perform: "new" or "append"
+	 
+      </div>
+ 
+
+                
+</div><div class='method'>
+ 
+ 
+ <h3 id="Compilation.static.update_q_section">update_q_section</h3>
+ <pre class='signiture'><code>update_q_section(name, attr) -> undefined</code></pre>
+ <div class='real_comment'>	 
+</div>
+   
+      <div class='param '>
+          <label>name</label>
+          <code>{}</code> - 
+      </div>
+   
+      <div class='param '>
+          <label>attr</label>
+          <code>{}</code> - 
+      </div>
+ 
+
+                
+</div></div><h2>Prototype Methods</h2>
+<div></div></div>
+</div></div>
+        <script type="text/javascript" src="../../jmvc/rhino/documentation/highlight/highlight.js"></script>
+        <script type="text/javascript">
+          hljs.initHighlightingOnLoad('html', 'css','javascript');
+        </script>
+        <script type="text/javascript">
+            //select someone
+            parts = window.location.href.split("/")
+            var selected = document.getElementById(parts.pop().replace(/[#|?].*/,""))
+            if(selected){
+                selected.className = "selected";
+            }
+        </script>
+    </body>
+</html>

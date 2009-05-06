@@ -1,0 +1,2 @@
+<span>Use selected text as heading?</span><br/><br/>
+<input id="heading_yes" type="button" value="Yes" />

@@ -1,0 +1,12 @@
+<p><b><%= quote.heading %></b></p>
+<p>
+	<a href='/wiki/index.php/<%= quote.ref %>'>
+		<b><%= quote.link2 %></b>
+	</a>: 
+	<%if (quote.trans) { %> 
+		<%= quote.trans %><br/><br/>
+	<% } %>
+	<%if (quote.purport) { %> 
+		<%= quote.purport %>
+	<% } %>		
+</p>

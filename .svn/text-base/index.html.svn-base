@@ -1,0 +1,22 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+            "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+	<head>
+		<title>compile</title>
+        <style type='text/css'>
+            body {font-family: verdana}
+            .error {border: solid 1px red;}
+            .error_text { color: red; font-size: 10px;}
+            td {padding: 3px;}
+        </style>
+	</head>
+	<body>
+		<p>We are here for sure!</p>
+		<script type='text/javascript' src='jmvc/include.js?compile,development'></script>
+		<script type='text/javascript'>
+				t = new TermsController('term_1', { val: 'Haribol'});
+		</script>
+		<div id="quotes">Quotes</div>
+		<div id="terms">Terms will go here</div>
+	</body>
+</html>

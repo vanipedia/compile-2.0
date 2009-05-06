@@ -1,0 +1,23 @@
+<%if (quote.link_text) { %>
+	<div id="link" class="ui-state-default ui-corner-all"><%= quote.link_text %></div><br/>
+<% } %>
+<%if (quote.heading) { %>
+	<%= label_tag('Heading:') %><br/> <%= text_field_tag('heading', quote.heading)  %><br/>
+<% } %>
+<%if (quote.trans || quote.purport) { %>
+	<%if (quote.trans) { %>
+		<%= label_tag('Translation:') %><br/> <%= text_area_tag('trans', quote.trans) %><br/>
+	<% } %>
+	<%if (quote.purport) { %>
+		<%= label_tag('Purport:') %><br/> <%= text_area_tag('purport', quote.purport) %><br/>
+	<% } %>
+<% } else { %>
+	<%= label_tag('Text:') %><br/> <%= text_area_tag('text', quote.text) %><br/>
+<% } %>
+<div id="edit_buttons">
+	<input type="button" id="Update_quote" class="ui-state-default ui-corner-all" value="Update">
+	<input type="button" id="Cancel_quote" class="ui-state-default ui-corner-all" value="Cancel">
+</div>
+<% if(quote.book == 'Lec' || quote.book == 'Con') { %>
+	<span id="prabhupada_icon" title="Place the cursor in text to insert Prabhupāda: as the speaker and click here" />
+<% } %>

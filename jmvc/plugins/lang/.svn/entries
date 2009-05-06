@@ -1,0 +1,117 @@
+9
+
+dir
+50
+file:///Users/acyuta/Programing/svn/vaniquotes/compile/branches/2.0/jmvc/plugins/lang
+file:///Users/acyuta/Programing/svn/vaniquotes
+
+
+
+2009-05-03T10:23:56.243726Z
+37
+acyuta
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+61b9d6cb-350f-4c59-8729-91da6de7dc69
+
+timer
+dir
+
+vector
+dir
+
+class
+dir
+
+inflector
+dir
+
+openajax
+dir
+
+json
+dir
+
+setup.js
+file
+
+
+
+
+2009-05-04T10:51:18.000000Z
+111f4eea74f7268f9a13a6a99ed615f8
+2009-05-03T10:23:56.243726Z
+37
+acyuta
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+35
+
+date
+dir
+
+standard_helpers.js
+file
+
+
+
+
+2009-05-04T10:51:18.000000Z
+60b84766ec5a2d0e1364fc118cfb8fce
+2009-05-03T10:23:56.243726Z
+37
+acyuta
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+9486
+

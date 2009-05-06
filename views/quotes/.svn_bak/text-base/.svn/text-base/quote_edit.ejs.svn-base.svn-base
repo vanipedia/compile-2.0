@@ -1,0 +1,11 @@
+<%if (Compilation.quotes[index].heading) { %> 
+	Heading: <%= text_field_tag('heading', Compilation.quotes[index].heading)  %><br/> 
+<% } %>
+<%if (Compilation.quotes[index].trans) { %> 
+	Translation: <%= text_area_tag('trans', Compilation.quotes[index].trans) %><br/>
+<% } %>
+<%if (Compilation.quotes[index].purport) { %> 
+	Purport: <%= text_area_tag('purport', Compilation.quotes[index].purport) %><br/>
+<% } %>
+<input type="button" class="Update" value="Update">
+<input type="button" class="Cancel" value="Cancel">	

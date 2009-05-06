@@ -1,0 +1,3 @@
+<% for(t in totals) { %>
+    <div><%= t %>=<%= totals[t] %></div>
+<% } %>

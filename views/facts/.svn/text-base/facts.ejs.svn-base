@@ -1,0 +1,76 @@
+<h3><a href="#">expressions</a></h3>
+<div id="terms" class="fact">
+  <ul id="terms_list">
+    <% for(i = 0; i < facts.terms.length; i++) { %>
+        <li id="terms_<%=i%>" class="term"><%= facts.terms[i] %></li>
+    <% } %>
+  </ul>
+    <div id="terms_tools" class="facts_tools">
+        <div id="add_terms"  fact="terms">
+            <label>Add new expression:</label>
+            <input type="text" size="20"/>
+            <span class="ui-icon ui-icon-circle-plus" title="Add terms" />
+        </div>
+        <div id="copy_terms" class="copy_to_clip">
+            <label>Copy expressions to clipboard</label>
+            <span class="add ui-icon ui-icon-clipboard" title="Copy expressions to Clipboard"/>
+        </div>
+    </div>
+</div>
+
+<h3><a href="#">categories</a></h3>
+<div id="categories" class="fact">
+  <ul id="categories_list">
+    <% for(i = 0; i < facts.categories.length; i++) { %>
+        <li id="categories_<%=i%>" class="category"><%= facts.categories[i]%></li>
+    <% } %>
+  </ul>
+    <div id="categories_tools" class="facts_tools">
+        <div id="add_categories">
+            <label>Add new category:</label>
+            <input type="text"  size="20" />
+            <span class="add ui-icon ui-icon-circle-plus" title="Add Categories" />
+        </div>
+    </div>
+</div>
+
+<h3><a href="#">goal</a></h3>
+<div id="goal" class="fact"><%= facts.goal %></div>
+
+<h3><a href="#">notes from the compiler</a></h3>
+<div id="notes" class="fact"><%= facts.notes %></div>
+
+<h3><a href="#">completed sections</a></h3>
+<div id="complete" class="fact">
+    <% for(i = 0; i < facts.books.length; i++) { %>
+        <div class="check_div">
+          <label><%= facts.books[i] %></label><input type="checkbox" class="complete_checks" id="complete_<%= facts.books[i] %>"/>
+        </div>
+    <% } %>
+    <div class="check_div"><label>ALL</label><input type="checkbox" class="complete_checks" id="complete_ALL"/></div>
+</div>
+
+<h3><a href="#">compiler</a></h3>
+<div id="compiler" class="fact">
+  <ul>
+    <% for(i = 0; i < facts.compiler.length; i++) { %>
+        <li id="compiler_<%=i%>" class="compiler"><%= facts.compiler[i]%></li>
+     <% } %>
+  </ul>
+</div>
+
+<h3><a href="#">first</a></h3>
+<div id="first" class="fact"><%= facts.first %></div>
+
+<h3><a href="#">last</a></h3>
+<div id="last" class="fact"><%= facts.last %></div>
+
+<h3><a href="#">totals by section</a></h3>
+<div id="totals_by_section" class="fact">
+    <% for(i = 0; i < facts.books.length; i++) { %>
+        <div><%= facts.books[i] %>=<%= facts.totals_by_section[facts.books[i]] %></div>
+    <% } %>
+</div>
+
+<h3><a href="#">total</a></h3>
+<div id="total" class="fact"><%= facts.total %></div>

@@ -1,0 +1,56 @@
+.edit_quote, .edit_quote:hover {
+  background: #C3C9F2;
+  padding: 8px 4px;
+  border: 2px solid #C3C9F2;
+  margin: 8px 0px;
+  position: relative;
+  left: -6px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+
+}
+.edit_quote label {
+  color:#747184;
+  font-family:tahoma;
+  font-style:italic;
+  font-weight:bold;
+  position:relative;
+  left:6px;
+}
+.edit_quote > div#link {
+  position: relative;
+  float: right;
+  right: 5%;
+  margin: 2px;
+  padding:4px;
+}
+
+.edit_quote > input#heading, .edit_quote > textarea {
+  color: #62326D;
+  padding: 4px;
+  margin: 4px;
+  width: 95%;
+  font-family: tahoma;
+}
+.edit_quote > input#heading {
+  font-size: small;
+}
+.edit_quote #edit_buttons {
+    float: left;
+}
+.edit_quote #Cancel_quote, .edit_quote #Update_quote {
+ cursor: pointer;
+ padding: 3px;
+}
+.edit_quote #prabhupada_icon {
+  background-image: url("images/prabhupada_icon.png");
+  background-repeat: no-repeat;
+  width: 36px;
+  height: 36px;
+  position: relative;
+  float: right;
+  border: #3F4C9D solid;
+  border-width: 1px 2px 2px 1px;
+  right: 5%;
+  cursor: pointer;
+}

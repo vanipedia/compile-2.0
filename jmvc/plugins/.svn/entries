@@ -1,0 +1,55 @@
+9
+
+dir
+50
+file:///Users/acyuta/Programing/svn/vaniquotes/compile/branches/2.0/jmvc/plugins
+file:///Users/acyuta/Programing/svn/vaniquotes
+
+
+
+2009-05-03T18:42:18.381185Z
+46
+acyuta
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+61b9d6cb-350f-4c59-8729-91da6de7dc69
+
+dom
+dir
+
+test
+dir
+
+model
+dir
+
+lang
+dir
+
+controller
+dir
+
+debug
+dir
+
+io
+dir
+
+error
+dir
+
+view
+dir
+
