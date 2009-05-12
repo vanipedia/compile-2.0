@@ -54,7 +54,8 @@ MVC.Inflector = {
     ['child',  'children'],
     ['man',    'men'     ],
     ['foreman', 'foremen'],
-    ['person', 'people'  ]
+    ['person', 'people'  ],
+	['woman', 'women'  ]
     ],
     uncountable: [
     "sheep",

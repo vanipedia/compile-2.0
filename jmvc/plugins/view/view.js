@@ -86,12 +86,17 @@ MVC.View = function( options ){
 		return;
 	}
 	if(options.url || options.absolute_url || options.view_url){
-        this.name = this.name ? this.name : options.url || options.absolute_url || "views/"+options.view_url;
+        options.url = options.url && 
+                    ( options.url + (options.url.match(this.extMatch) ? '' : this.ext ));
+        options.view_url = options.view_url && 
+                    (options.view_url + (options.view_url.match(this.extMatch) ? '' : this.ext ));
+        this.name = this.name ? this.name : options.url || 
+                                            options.absolute_url || 
+                                            "views/"+options.view_url;
         var url = options.absolute_url || 
-                  (options.url ? MVC.root.join( options.url+ (options.url.match(this.extMatch) ? '' : this.ext ) ) : 
-                   MVC.root.join("views/"+options.view_url+ (options.view_url.match(this.extMatch) ? '' : this.ext ))
+                  (options.url ? MVC.root.join( options.url ) : 
+                   MVC.root.join("views/"+options.view_url)
                    );
-        //options.url = options.absolute_url || options.url || options.;
 		var template = MVC.View.get(this.name, this.cache);
 		if (template) return template;
 	    if (template == MVC.View.INVALID_PATH) return null;
