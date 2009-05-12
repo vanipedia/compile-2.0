@@ -57,7 +57,8 @@ MVC.Object.extend(MVC.Element, {
      * 
      */
 	insert: function(element, insertions) {
-		element = MVC.$E(element);
+		if(typeof element == 'string')
+			element = document.getElementById(element);
 		if(typeof insertions == 'string'){insertions = {bottom: insertions};};
 
 		var content, insert, tagName, childNodes;
@@ -93,7 +94,8 @@ MVC.Object.extend(MVC.Element, {
 	  }
 	},
     replace: function(element, content) {
-        var element = MVC.$E(element);
+        if(typeof element == 'string')
+			element = document.getElementById(element);
         if (content.nodeType == 1) {
               element.parentNode.replaceChild(content, element);
               return element;
@@ -210,7 +212,8 @@ MVC.Object.extend(MVC.Element, {
      * @return {HTMLElement} element
      */
     make_positioned: function(element) {
-        element = MVC.$E(element);
+        if(typeof element == 'string')
+			element = document.getElementById(element);
         var pos = MVC.Element.get_style(element, 'position');
         if (pos == 'static' || !pos) {
           element._madePositioned = true;
@@ -288,7 +291,8 @@ MVC.Object.extend(MVC.Element, {
      * @return {HTMLElement} element.
      */
     update: function(element, content){
-        element = MVC.$E(element);
+        if(typeof element == 'string')
+			element = document.getElementById(element);
         var tagName = element.tagName.toUpperCase();
         if ( ( !MVC.Browser.IE && !MVC.Browser.Opera  )|| !( tagName in MVC.$E._insertionTranslations.tags) ){
             element.innerHTML = content;

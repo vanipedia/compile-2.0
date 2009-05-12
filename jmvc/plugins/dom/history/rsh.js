@@ -446,6 +446,7 @@ MVC.History = {
             this.ignoreManual = true;
 		}
 		else if (this.isIE) {
+			this.currentLocation = hash;
 			return;
 		}
 

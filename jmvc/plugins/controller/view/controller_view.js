@@ -131,7 +131,7 @@ render = function(options) {
 		for(var l =0; l < locations.length; l++){
 			if(typeof  options[locations[l]] == 'string'){
 				var id = options[locations[l]];
-				options[locations[l]] = MVC.$E(id);
+				options[locations[l]] = document.getElementById(id);
 				if(!options[locations[l]]) 
 					throw {message: "Can't find element with id: "+id, name: 'ControllerView: Missing Element'};
 			}

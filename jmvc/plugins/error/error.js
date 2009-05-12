@@ -1,4 +1,4 @@
-MVC.ApplicationError = MVC.JsonPModel.extend('application_error',
+MVC.ApplicationError = MVC.Model.JsonP.extend('application_error',
 {
     controller_name: "error",
     domain: 'https://damnit.jupiterit.com', name: 'error',
@@ -184,7 +184,7 @@ if(MVC.Controller){
 			e = MVC.ApplicationError.transform_error(e);
 			
 			MVC.Object.extend(e,{
-				'Controller': instance.klass.className,
+				'Controller': instance.Class.className,
 				'Action': action_name,
 				subject: 'Dispatch Error: '+((e.message && typeof(e.message) == 'string') ? e.message : e.toString())
 			});
@@ -199,4 +199,5 @@ if(window.attachEvent) {
 }else{
 	window.addEventListener('resize', MVC.ApplicationError.set_width, false);
 }
-window.onerror = MVC.error_handler;
+if(!MVC.dont_use_onerror)
+	window.onerror = MVC.error_handler;

@@ -1,66 +1,0 @@
-9
-
-dir
-50
-file:///Users/acyuta/Programing/svn/vaniquotes/compile/branches/2.0/views
-file:///Users/acyuta/Programing/svn/vaniquotes
-
-
-
-2009-05-04T13:13:48.340810Z
-50
-acyuta
-
-
-svn:special svn:externals svn:needs-lock
-
-
-
-
-
-
-
-
-
-
-
-61b9d6cb-350f-4c59-8729-91da6de7dc69
-
-facts
-dir
-
-quotes
-dir
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-file:///Users/acyuta/Programing/svn/vaniquotes/compile/trunk/views/quotes
-49
-
-compile
-dir
-
-terms
-dir
-
-compile_form
-dir
-
-compilation
-dir
-
