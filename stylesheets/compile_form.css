@@ -17,6 +17,18 @@
   background-repeat:    no-repeat;
   background-position:  center;
 }
+#compile_form #form_text * {
+ float: left;
+ margin: 0px 2px;
+}
+#compile_form #form_text #veda_img  {
+	display: block;
+	width: 25px;
+	height: 24px;
+	background: url("images/copy_ref_button.png");
+	position: relative;
+	top: -6px;
+}
 #compile_form #submit_quote, #compile_form #clear_form {
   position: relative;
   float: right;
