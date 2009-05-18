@@ -22,7 +22,7 @@
  padding: 0px 1px;
 }
 .quote > div {
- margin: 6px 0px;
+ margin: 6px 2px;
 }
 
 .heading, .trans, .link {
@@ -62,7 +62,7 @@
  border: 2px solid transparent;
  padding: 2px;
  margin: 2px;
- width: 150px;
+ width: 100px;
 }
 
 .quote:hover .q_menu {
@@ -152,7 +152,7 @@ background-image: url(/images/Vaniquotes-logo-small2.png);
 	display: block;
 }
 .q_new .status_text:after {
-	content: 'New quote!';
+	content: 'Inserted!';
 }
 
 .q_bad_section .q_menu .tips {

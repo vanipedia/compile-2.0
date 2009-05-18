@@ -1,7 +1,8 @@
 include.resources(
     'jquery-1.3.2',
     'ejs_fulljslint',
-    'jquery.tinysort.packed', 'jquery.autogrow','jquery.easing', 'jquery.scrollTo', 'jquery.jeditable', 'jquery.copy.min', 'jquery.hoverIntent',
+    'jquery.tinysort.packed', 'jquery.autogrow','jquery.easing', 'jquery.scrollTo', 
+    'jquery.jeditable', 'jquery.copy.min', 'jquery.hoverIntent', 'jquery-autocomplete/jquery.autocomplete',
     'jquery-ui-1.7.1.custom',
     'BaltoUni.min', 'UnitoASCII', 'jquery.highlight_sanskrit', 'JsAutoP'
     );
@@ -18,5 +19,5 @@ include(function(){ //runs after prior includes are loaded
   include.views();
 });
 include.css('compilation', 'quotes', 'edit_quote', 'deleted_quote', 'compile_form', 'facts',
-            'compile-default/jquery-ui-1.7.1.custom'
+            'compile-default/jquery-ui-1.7.1.custom', 'jquery.autocomplete'
             );

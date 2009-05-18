@@ -10,32 +10,32 @@ Quote = MVC.Model.extend('quote',
 	attr: new Array('ref', 'id', 'parent', 'book', 'heading', 'link', 'link_text', 'text', 'trans', 'purport', 'index', 'type', 'tips', 'verses'),
 	tips_db: {
 		section: 			{
-			title: 	"< Set the Section",
+			title: 	"Set Section",
 			desc: 	"...this quote requires a section. Click here",
 			id: 		"set_section_tip"
 		},
 		edit_section: {
-			title: 	"< Edit this Section",
+			title: 	"Edit Section",
 			desc: 	"...by clicking here!",
 			id: 		"edit_section_tip"
 		},
 		heading: {
-			title: 	"< Set the Heading",
+			title: 	"Set Heading",
 			desc: 	"...by highlighting a part of the quote",
 			id: 		"set_heading_tip"
 		},
 		edit_heading: {
-			title: 	"< Edit the Heading",
+			title: 	"Edit Heading",
 			desc: 	"...by highlighting a part of the quote",
 			id: 		"edit_heading_tip"
 		},
 		edit_quote: {
-			title:	"< Edit this quote",
+			title:	"Edit quote",
 			desc: 	"...by doubleClicking on it or clicking here",
 			id: 		"edit_quote_tip"
 		},
 		insert_new: {
-			title:	"< Insert!",
+			title:	"Insert!",
 			desc:		"...this quote to the compilation by clicking here",
 			id:			"set_insert_tip"
 		}
@@ -70,6 +70,7 @@ Quote = MVC.Model.extend('quote',
 		}
 		// Build request object
 		request.ref = params.ref;
+        // params.type defines the column to make the search in the db
 		if(params.type) request.type = params.type;
 		// Set async. if request has an attr request, the request should be asynchronous.
 		if(params.attr) async = false;
@@ -84,6 +85,7 @@ Quote = MVC.Model.extend('quote',
         if(resp.result !== 'Found') {
           result = resp.result;
           that.publish('warning', { msg: 'Quote not found for '+params.ref });
+          that.publish('not_found_reference');
         } else {
           new_quote = {
             link_text:  resp.title,

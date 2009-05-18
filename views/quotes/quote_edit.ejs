@@ -2,7 +2,7 @@
 	<div id="link" class="ui-state-default ui-corner-all"><%= quote.link_text %></div><br/>
 <% } %>
 <%if (quote.heading) { %>
-	<%= label_tag('Heading:') %><br/> <%= text_field_tag('heading', quote.heading)  %><br/>
+	<%= label_tag('Heading:') %><br/> <%= text_area_tag('heading', quote.heading)  %><br/>
 <% } %>
 <%if (quote.trans || quote.purport) { %>
 	<%if (quote.trans) { %>

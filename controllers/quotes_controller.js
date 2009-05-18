@@ -172,7 +172,7 @@ QuotesController = MVC.Controller.extend('quotes',
 				});
 
 				// Some CSS and behavior ------ Where should this go?
-				$('#'+id+'.edit_quote').children('#trans, #purport, #text').autogrow();
+				$('#'+id+'.edit_quote').children('#heading, #trans, #purport, #text').autogrow();
 				$('#'+id+'.edit_quote').children('.ui-state-default').hover(
 						function() { $(this).addClass('ui-state-hover'); },
 						function() { $(this).removeClass('ui-state-hover');
@@ -192,8 +192,10 @@ QuotesController = MVC.Controller.extend('quotes',
 						timeout: 500, // number = milliseconds delay before onMouseOut
 						out: tips_mouseleave // function = onMouseOut callback (REQUIRED)
 				};
-				$('#'+id+' .tips').hoverIntent(hover_options)
-				$('#'+id+' .tips[id^="set_"]').toggleClass('ui-state-error');
+				// Replacement for hover with a delay
+                $('#'+id+' .tips').hoverIntent(hover_options)
+                // Make tips for this quote red in case they are required to be set
+				$('#'+id+' .tips[id^="set_"]').not('#set_heading_tip').toggleClass('ui-state-error');
 
 				this.publish('rendered', $('#'+id).not('.edit_quote'));
 
