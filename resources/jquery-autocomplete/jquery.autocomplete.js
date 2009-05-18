@@ -562,8 +562,18 @@ $.Autocompleter.Select = function (options, input, select, config) {
 		element,
 		list;
 	
-	// Create results
+   function target(event) {
+		var element = event.target;
+		while(element && element.tagName != "LI")
+			element = element.parentNode;
+		// more fun with IE, sometimes event.target is empty, just ignore it then
+		if(!element)
+			return [];
+		return element;
+	}
+    // Create results
 	function init() {
+     
 		if (!needsInit)
 			return;
 		element = $("<div/>")
@@ -598,15 +608,7 @@ $.Autocompleter.Select = function (options, input, select, config) {
 		needsInit = false;
 	} 
 	
-	function target(event) {
-		var element = event.target;
-		while(element && element.tagName != "LI")
-			element = element.parentNode;
-		// more fun with IE, sometimes event.target is empty, just ignore it then
-		if(!element)
-			return [];
-		return element;
-	}
+	
 
 	function moveSelect(step) {
 		listItems.slice(active, active + 1).removeClass(CLASSES.ACTIVE);
