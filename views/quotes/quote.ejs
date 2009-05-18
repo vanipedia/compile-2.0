@@ -11,8 +11,7 @@
     <td class="q_tips" colspan="2">
       <% for(tip in quote.tips) { %>
         <% if (quote.tips[tip].id) { %>
-            <input type="button" value="<%= quote.tips[tip].title %>" id="<%= quote.tips[tip].id %>" class="tips ui-state-default ui-corner-all"/>
-            <div><%= quote.tips[tip].desc %></div>
+            <input type="button" value="<%= quote.tips[tip].title %>" id="<%= quote.tips[tip].id %>" class="tips ui-state-default ui-corner-all" title="<%= quote.tips[tip].desc %>" />
         <% } %>
       <% } %>
       <div id="alert_tip"></div>

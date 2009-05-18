@@ -84,6 +84,12 @@ CompileController = MVC.Controller.extend('compilation',
     "#compile_tools_save click": function(params) {
         this.save();
     },
+    "#compile_form .ui-state-default mouseover": function(params) {
+        $(params.element).addClass('ui-state-hover');
+    },
+    "#compile_form .ui-state-default mouseout": function(params) {
+        $(params.element).removeClass('ui-state-hover');
+    },
     // Loading message while building compilation
     _loading: function(now) {
         var that = this;

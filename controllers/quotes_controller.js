@@ -120,10 +120,16 @@ QuotesController = MVC.Controller.extend('quotes',
 				var selected_section, elem;
 				params.event.kill();
 				elem = params.element
-				selected_section = elem.value;
+				selected_section = elem.id;
 				if(window.console) console.log(elem+' with '+selected_section);
 				this._do_section(elem, selected_section)
 		},
+        ".ui-state-default mouseover": function(params) {
+            $(params.element).addClass('ui-state-hover');
+        },
+        ".ui-state-default mouseout": function(params) {
+            $(params.element).removeClass('ui-state-hover');
+        },
 
 		/****** Event responders ********/
 		/**
@@ -173,27 +179,8 @@ QuotesController = MVC.Controller.extend('quotes',
 
 				// Some CSS and behavior ------ Where should this go?
 				$('#'+id+'.edit_quote').children('#heading, #trans, #purport, #text').autogrow();
-				$('#'+id+'.edit_quote').children('.ui-state-default').hover(
-						function() { $(this).addClass('ui-state-hover'); },
-						function() { $(this).removeClass('ui-state-hover');
-				});
-
-				function tips_mouseenter() {
-				// Test for tips desc on mouseover
-						$(this).next('div').slideDown('fast');
-				}
-				function tips_mouseleave() {
-						$(this).next('div').slideUp('slow');
-				}
-				var hover_options = {
-						sensitivity: 2, // number = sensitivity threshold (must be 1 or higher)
-						interval: 300, // number = milliseconds for onMouseOver polling interval
-						over: tips_mouseenter, // function = onMouseOver callback (REQUIRED)
-						timeout: 500, // number = milliseconds delay before onMouseOut
-						out: tips_mouseleave // function = onMouseOut callback (REQUIRED)
-				};
-				// Replacement for hover with a delay
-                $('#'+id+' .tips').hoverIntent(hover_options)
+				
+               
                 // Make tips for this quote red in case they are required to be set
 				$('#'+id+' .tips[id^="set_"]').not('#set_heading_tip').toggleClass('ui-state-error');
 
@@ -309,10 +296,13 @@ QuotesController = MVC.Controller.extend('quotes',
 		 * Set section for quote according to choice in the quote menu
 		 * @param {string} elem Dom element whose section will be modified
 		 */
-		_do_section: function(elem, new_section) {
-				var quote, id, text;
+		_do_section: function(elem, new_section_id) {
+				var quote, id, text, new_section;
 				quote = $(elem).parents('div.quote')
 				id 		= quote.attr('id');
+                if(new_section_id == 'trans') new_section = 'Translation';
+                if(new_section_id == 'purport') new_section = 'Purport';
+                if(new_section_id == 'trans_purport') new_section = 'Translation and Purport';
 				Compilation.update_q_section(id, {section: new_section});
 		},
 		/**
@@ -334,7 +324,7 @@ QuotesController = MVC.Controller.extend('quotes',
 				that = this;
 				tip_elem = this._find_alert_tip_elem(params.elem);
 				if(!tip_elem) return;
-				if(params.type === 'heading') this.message = $.trim(window.getSelection().toString()) === '' ? 'Highlight text for the heading and choose' : 'Heading:';
+				if(params.type === 'heading') this.message = $.trim(window.getSelection().toString()) === '' ? 'Highlight text and:' : 'Heading:';
 				if(params.type === 'edit_heading') this.message = 'Heading:';
 				this.render({
 					to: tip_elem,
