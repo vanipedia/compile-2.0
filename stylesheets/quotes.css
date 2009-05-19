@@ -97,12 +97,12 @@
 .undo_quote {
 	display: none;
 }
-.q_tools, .tips {
+.q_tools, .q_tips .tips {
  visibility: hidden;
  margin: 2px 0px;
  padding: 2px;
 }
-.q_tips .tips, .q_tips .alert_tip {
+.q_tips input {
  cursor: pointer;
 }
 
@@ -168,9 +168,6 @@ margin: 2px 0px;
 padding: 2px;
 }
 
-#alert_tip > * {
- margin: 2px;
-}
 #alert_tip > span {
  font-weight: bold;
  color: #3F4C9D;
