@@ -32,7 +32,9 @@ CompileFormController = MVC.Controller.extend('compile_form',
     if(this.check_uninserted_quotes()) this.process_new_quote($(params.element).parents('#compile_form').children('textarea')[0]);
   },
   "#clear_form click": function(params) {
-    $(params.element.parentNode).children('textarea').val('');
+    var p = $(params.element).parents('#compile_form');
+    p.children('textarea').val('');
+    if($('input#link').is(':visible')) p.children('input#link').val('').hide();
   },
   process_new_quote: function(elem) {
     var that;
