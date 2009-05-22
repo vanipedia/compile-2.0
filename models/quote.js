@@ -95,10 +95,11 @@ Quote = MVC.Model.extend('quote',
             ref: 		    resp.title.replace(/\s+/g, '_'),
             type:       'new'
           };
-					// Save to Quote.cache
-					that.cache[params.ref] = new_quote;
-					// If the request is an attr request from a quote instance set the attr else it must be a new quote(publish the reference_found)
-          params.attr ? params.quote[params.attr] = resp[params.attr] : that.publish('found_reference', new_quote);
+            // Save to Quote.cache
+            that.cache[params.ref] = new_quote;
+            if(window.console) console.log(that.cache);
+            // If the request is an attr request from a quote instance set the attr else it must be a new quote(publish the reference_found)
+            params.attr ? params.quote[params.attr] = resp[params.attr] : that.publish('found_reference', new_quote);
         }
       }
 		});
@@ -216,7 +217,7 @@ Quote = MVC.Model.extend('quote',
 					first = last = false;
 				}
 				if(i + 1 === len && first !== false && last !== false) that.request_verse(quote, verses.slice(first, last + 1));
-				if(window.console) console.log('index: '+i+' first: '+first+' last: '+last);
+				//if(window.console) console.log('index: '+i+' first: '+first+' last: '+last);
 			}
 
 		}
@@ -288,19 +289,22 @@ Quote = MVC.Model.extend('quote',
 			return;
 		}
 		var that, this_sec_index, this_text, link_re, attr_requested;
-		that 					= this; // Use for introspection changes
-		link_re 			= /(?:''')?\[\[(?:Vanisource:)?(.+?)\|(.+?)\]\]:?(?:''')?/;
-		attr_requested = false;
+		that            = this; // Use for introspection changes
+		link_re         = /(?:''')\[\[(?:Vanisource:)?(.+?)\|(.+?)\]\]:(?:''')?/;
+		attr_requested  = false;
 		// Iteration to assign attributes in quote_obj to this instance independent of source of quote_obj(from a dom node or new_quote)
 		if(!quote_obj.ref)  {
-			$.each(that.Class.attr, function(i, a) { !/text|trans|purport|heading/.test(a) ? that[a] = $(quote_obj).attr(a) || false : that[a] = $(quote_obj).children('.'+a).html() || false; });
+			$.each(that.Class.attr, function(i, a) {
+                !/^(?:text|trans|purport|heading)$/.test(a) ? that[a] = $(quote_obj).attr(a) || false : that[a] = $(quote_obj).children('.'+a).html() || false;
+                //if(window.console) console.log($(quote_obj).attr('ref')+' => '+a+': '+that[a]);
+            });
 		} else {
 			$.each(that.Class.attr, function(i, a) { that[a] = quote_obj[a] || false; });
 		}
 
 		// Clean text and extract_link
 		if(this.type == 'new') this.text = this.Class.clean(this.text);
-		if(this.link === 'undefined') {
+		if(this.link == 'undefined') {
 			$.each(['trans', 'purport', 'text'], function(i, t) {
 				if(that[t]) {
 					that[t] = $.trim(that[t].replace(link_re, extract_link));
@@ -311,14 +315,17 @@ Quote = MVC.Model.extend('quote',
 
 		// Check for missing attributes before building quote
 		check_missing_attr();
+        // quote.parent is the section it belongs to. If missing request it as section as that is the attribute it returns
+		Section.exists(this.parent) ? this.parent = this.parent.replace(/\s+/, '_') : find_attr('section');
 		this_sec_index = Compilation.db.quote_count[this.parent] ?  Compilation.db.quote_count[this.parent] : 0;
 		// this.id is the ref + quote_count in this quote's section (it's parent)
-		this.ref 				? this.id 			= this.ref.replace(/\W/g, '')+'_'+this_sec_index : find_attr('ref');
-		this.parent 		? this.parent 	= this.parent.replace(/\s/, '_') 		: find_attr('parent');
-		this.book				? this.book			= this.book.replace(/\s/, '_') 			: this.parent ? this.book = Section.find_attr(this.parent, 'sec_book') : find_attr('parent');
-		this.index 			? "": find_attr('index');
+		this.ref 		? this.id 		= this.ref.replace(/\W/g, '')+'_'+this_sec_index : find_attr('ref');
+		this.book		? this.book		= this.book.replace(/\s/, '_') 			: this.parent ? this.book = Section.find_attr(this.parent, 'sec_book') : find_attr('parent');
+		this.index 		? "": find_attr('index');
 		this.heading  	? this.heading 	= this.heading.replace(/'''/g, '') 	: '';
-		this.link_text  ? transform_link_text() : find_link_text();
+		
+        // check if link_text needs to be transformed e.g.: NOI 3 to Nectar of Instruction 3
+        transform_link_text();
 
 		// Find translation and purport
 		this.Class.update_section(this);
@@ -341,13 +348,13 @@ Quote = MVC.Model.extend('quote',
 			// return empty str to replace link in text
 			return '';
 		}
-    function extract_section(all, m) {
+        function extract_section(all, m) {
 			that.section = m;
 			return '';
 		}
 		function check_missing_attr() {
 			$.each(['index', 'link', 'link_text', 'parent', 'ref'], function(i, attr) {
-				if(!that[attr]) find_attr(attr);
+                if(window.console) console.log(attr+': '+that[attr]);
 			});
 		}
 		function find_attr(attr) {
@@ -363,18 +370,17 @@ Quote = MVC.Model.extend('quote',
 					if(window.console) console.log('Quote.init.find_attr: Missing that.link to query db for missing '+attr);
 				} else {
 					if(window.console) console.log(attr+' not found in Quote.cache for '+that.link+'. Submiting request to Quote.find_reference');
-					Quote.find_reference({ quote: that, ref: that.link, type: 'title', attr: attr});
+                    // Clean link since it most probably has underscores instead of spaces
+					Quote.find_reference({ quote: that, ref: that.link.replace(/_/g, ' '), type: 'title', attr: attr});
 					attr_requested = true;
 				}
 			}
 		}
-		function find_link_text() {
-			find_attr('link_text');
-			if(that.link_index) transform_link_text();
-		}
+		
 		function transform_link_text() {
+            if(!that.link_text) that.link_text = that.link.replace(/_/g, ' ');
 			$.each(Quote.link_text_db, function(acronym, full) {
-				if(window.console) console.log('In Quote.init.transform_link_text: checking '+acronym+' against '+full);
+				//if(window.console) console.log('In Quote.init.transform_link_text: checking '+acronym+' against '+full);
 				if(that.link_text.indexOf(acronym) === 0) {
 					that.link_text = that.link_text.replace(acronym, full);
 					return false;
