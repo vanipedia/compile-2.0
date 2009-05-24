@@ -7,7 +7,7 @@
 Quote = MVC.Model.extend('quote',
 /* @Static */
 {
-	attr: new Array('ref', 'id', 'parent', 'book', 'heading', 'link', 'link_text', 'text', 'trans', 'purport', 'index', 'type', 'tips', 'verses'),
+	attr: new Array('id', 'parent', 'book', 'heading', 'link', 'link_text', 'text', 'trans', 'purport', 'index', 'type', 'tips', 'verses'),
 	tips_db: {
 		section: 			{
 			title: 	"Set Section",
@@ -55,7 +55,7 @@ Quote = MVC.Model.extend('quote',
 	cache: new Object,
 	/**
 	 * Find meta-data for a creating a quote by querying PVRA.vanisource_titles db.
-	 * @param {string} params.ref Reference string to submit for search
+	 * @param {string} params.ref Reference string to submit for search => either VB ref or quote.link
 	 * @param {string} params.type type of reference being submited: 'reference' if it is a Ref. Vedabase =>, or title.
 	 */
 	find_reference: function(params) {
@@ -88,17 +88,17 @@ Quote = MVC.Model.extend('quote',
           that.publish('not_found_reference');
         } else {
           new_quote = {
+            link:       resp.title,
             link_text:  resp.title,
-            link:       resp.title.replace(/\s/g, '_'),
             parent:     resp.section.replace(/\s+/g, '_'),
             index:      resp.index,
-            ref: 		    resp.title.replace(/\s+/g, '_'),
             type:       'new'
           };
-					// Save to Quote.cache
-					that.cache[params.ref] = new_quote;
-					// If the request is an attr request from a quote instance set the attr else it must be a new quote(publish the reference_found)
-          params.attr ? params.quote[params.attr] = resp[params.attr] : that.publish('found_reference', new_quote);
+            // Save to Quote.cache
+            that.cache[params.ref] = new_quote;
+            if(window.console) console.dir(that.cache);
+            // If the request is an attr request from a quote instance set the attr else it must be a new quote(publish the reference_found)
+            params.attr ? params.quote[params.attr] = resp[params.attr] : that.publish('found_reference', new_quote);
         }
       }
 		});
@@ -126,7 +126,7 @@ Quote = MVC.Model.extend('quote',
 		that = this;
 		quote_tips = [];
 		// Check ref for titles that require a Trans, Purport or both.
-		if(this.need_section(quote.ref)) {
+		if(this.need_section(quote.link)) {
 			// if no section is defined, set section else edit section
 			if(!quote.section) {
 				quote_tips.push(this.tips_db.section)
@@ -151,7 +151,7 @@ Quote = MVC.Model.extend('quote',
 	 */
 	update_section: function(quote) {
 		var m;
-		if(this.need_section(quote.ref)) { 		// check if this quote requires sections
+		if(this.need_section(quote.link)) { 		// check if this quote requires sections
 			if(!quote.trans && !quote.purport) { 		// if translation nor purport have not been set
 				if(quote.type === 'new') {
 					if( quote.text.indexOf("PURPORT") > -1) {
@@ -176,7 +176,7 @@ Quote = MVC.Model.extend('quote',
 			} else if(quote.purport) {
 				quote.section = 'Purport';
 			} else {
-				if(quote.type !== 'new') this.publish('warning', { msg: 'This quote '+quote.ref+' does not contain a proper section' });
+				if(quote.type !== 'new') this.publish('warning', { msg: 'This quote '+quote.link+' does not contain a proper section' });
 			}
 
 			if(quote.trans || quote.purport) quote.text = false;
@@ -216,7 +216,7 @@ Quote = MVC.Model.extend('quote',
 					first = last = false;
 				}
 				if(i + 1 === len && first !== false && last !== false) that.request_verse(quote, verses.slice(first, last + 1));
-				if(window.console) console.log('index: '+i+' first: '+first+' last: '+last);
+				//if(window.console) console.log('index: '+i+' first: '+first+' last: '+last);
 			}
 
 		}
@@ -284,23 +284,30 @@ Quote = MVC.Model.extend('quote',
 	init: function(quote_obj) {
 		if(quote_obj === undefined) {
 			new Error('Error creating new quote with quote_obj: '+quote_obj);
-			if(window.console) console.log('Quote.init was called without an quote_obj');
+			if(window.console) console.error('Quote.init was called without an quote_obj');
 			return;
 		}
 		var that, this_sec_index, this_text, link_re, attr_requested;
-		that 					= this; // Use for introspection changes
-		link_re 			= /(?:''')?\[\[(?:Vanisource:)?(.+?)\|(.+?)\]\]:?(?:''')?/;
-		attr_requested = false;
+		that            = this; // Use for introspection changes
+		link_re         = /(?:''')\[\[(?:Vanisource:)?(.+?)\|(.+?)\]\]:(?:''')?/;
+		attr_requested  = false;
 		// Iteration to assign attributes in quote_obj to this instance independent of source of quote_obj(from a dom node or new_quote)
-		if(!quote_obj.ref)  {
-			$.each(that.Class.attr, function(i, a) { !/text|trans|purport|heading/.test(a) ? that[a] = $(quote_obj).attr(a) || false : that[a] = $(quote_obj).children('.'+a).html() || false; });
+		if(!quote_obj.link)  {
+			$.each(that.Class.attr, function(i, a) {
+                !/^(?:text|trans|purport|heading)$/.test(a) ? that[a] = $(quote_obj).attr(a) || false : that[a] = $(quote_obj).children('.'+a).html() || false;
+                //if(window.console) console.log($(quote_obj).attr('link')+' => '+a+': '+that[a]);
+            });
 		} else {
 			$.each(that.Class.attr, function(i, a) { that[a] = quote_obj[a] || false; });
 		}
 
-		// Clean text and extract_link
+		// Clean text
 		if(this.type == 'new') this.text = this.Class.clean(this.text);
-		if(this.link === 'undefined') {
+
+       // Remove underscores and extraspaces
+        if(this.link) this.link = this.link.replace(/[_\s]+/g, ' ');
+        // Extract link_text if missing
+		if(this.link_text == 'undefined') {
 			$.each(['trans', 'purport', 'text'], function(i, t) {
 				if(that[t]) {
 					that[t] = $.trim(that[t].replace(link_re, extract_link));
@@ -309,24 +316,36 @@ Quote = MVC.Model.extend('quote',
 			});
 		}
 
-		// Check for missing attributes before building quote
+		// Check for missing (vital) attributes before building quote
 		check_missing_attr();
+        
+        // quote.parent is the section it belongs to. If missing request it as section as that is the attribute it returns
+		Section.exists(this.parent) ? this.parent = this.parent.replace(/\s+/, '_') : find_attr('section');
+
+        // Set index if existing else initialize it
 		this_sec_index = Compilation.db.quote_count[this.parent] ?  Compilation.db.quote_count[this.parent] : 0;
+
 		// this.id is the ref + quote_count in this quote's section (it's parent)
-		this.ref 				? this.id 			= this.ref.replace(/\W/g, '')+'_'+this_sec_index : find_attr('ref');
-		this.parent 		? this.parent 	= this.parent.replace(/\s/, '_') 		: find_attr('parent');
-		this.book				? this.book			= this.book.replace(/\s/, '_') 			: this.parent ? this.book = Section.find_attr(this.parent, 'sec_book') : find_attr('parent');
-		this.index 			? "": find_attr('index');
-		this.heading  	? this.heading 	= this.heading.replace(/'''/g, '') 	: '';
-		this.link_text  ? transform_link_text() : find_link_text();
+		if(this.link)   { this.id = this.link.replace(/\W/g, '')+'_'+this_sec_index; }
+
+        // Verify book name presence and formatting
+		if(this.book)   { this.book = this.book.replace(/\s/, '_'); } else { this.parent ? this.book = Section.find_attr(this.parent, 'sec_book') : find_attr('parent'); }
+
+        // Clean heading
+		if(this.heading){ this.heading = this.heading.replace(/'''/g, ''); }
+		
+        // check if link_text needs to be transformed e.g.: NOI 3 to Nectar of Instruction 3
+        transform_link_text();
 
 		// Find translation and purport
 		this.Class.update_section(this);
 
-		if(!this.text && !this.trans && !this.purport) if(window.console) console.log('No text, trans or purport in ref '+this.ref);
+        // Verify that we have a text
+		if(!this.text && !this.trans && !this.purport) if(window.console) console.error('No text, trans or purport in ref '+this.link);
 
 		// get_tips
 		if(!this.tips) this.Class.update_tips(this);
+        
 		// check for verse(s)
 		if(!this.verses) this.Class.check_verses(this);
 
@@ -334,47 +353,51 @@ Quote = MVC.Model.extend('quote',
 		this.publish('created', this);
 
 
-		/**** Functions ****/
+
+		/**** Helper Functions ****/
 		function extract_link(all, link1, link2) {
-			if(!that.link) that.link = $.trim(link1);
+			if(that.link !== $.trim(link1)) if(window.console) console.error('Link found is different from quote.link: '+that.link+' => '+link1);
 			if(!that.link_text) that.link_text = $.trim(link2.replace(/, ?(Translation and Purport|Translation|Purport)/i, extract_section));
 			// return empty str to replace link in text
 			return '';
 		}
-    function extract_section(all, m) {
+        function extract_section(all, m) {
 			that.section = m;
 			return '';
 		}
 		function check_missing_attr() {
-			$.each(['index', 'link', 'link_text', 'parent', 'ref'], function(i, attr) {
-				if(!that[attr]) find_attr(attr);
+			$.each(['link', 'link_text', 'parent', 'index'], function(i, attr) {
+                if(window.console) console.log(attr+': '+that[attr]);
+                if(!that[attr]) {
+                 if(window.console) console.error('Missing '+attr+' in Quote.init#check_missing_attr');
+                 find_attr(attr);
+                }
 			});
 		}
 		function find_attr(attr) {
 			var resp;
 			if(window.console) console.log('In find_attr, checking Quote.cache['+that.link+'] = '+Quote.cache[that.link]);
 			if(Quote.cache[that.link]) {
-			if(window.console) console.log('In find_attr, updating '+attr+' with '+Quote.cache[that.link][attr]);
+			if(window.console) console.info('In find_attr, updating '+attr+' with '+Quote.cache[that.link][attr]);
 				that[attr] = Quote.cache[that.link][attr];
 			} else {
 				//if (attr_requested) setTimeout(find_attr, 1000, attr);
 				if(!that.link) {
 					//that.publish('warning', {msg: attr+' not found for submitted text in find_attr'});
-					if(window.console) console.log('Quote.init.find_attr: Missing that.link to query db for missing '+attr);
+					if(window.console) console.error('Quote.init.find_attr: Missing that.link to query db for missing '+attr);
 				} else {
-					if(window.console) console.log(attr+' not found in Quote.cache for '+that.link+'. Submiting request to Quote.find_reference');
+					if(window.console) console.warn(attr+' not found in Quote.cache for '+that.link+'. Submiting request to Quote.find_reference');
+                    // Clean link since it most probably has underscores instead of spaces
 					Quote.find_reference({ quote: that, ref: that.link, type: 'title', attr: attr});
 					attr_requested = true;
 				}
 			}
 		}
-		function find_link_text() {
-			find_attr('link_text');
-			if(that.link_index) transform_link_text();
-		}
+		
 		function transform_link_text() {
+            if(!that.link_text) that.link_text = that.link.replace(/_/g, ' ');
 			$.each(Quote.link_text_db, function(acronym, full) {
-				if(window.console) console.log('In Quote.init.transform_link_text: checking '+acronym+' against '+full);
+				//if(window.console) console.log('In Quote.init.transform_link_text: checking '+acronym+' against '+full);
 				if(that.link_text.indexOf(acronym) === 0) {
 					that.link_text = that.link_text.replace(acronym, full);
 					return false;
@@ -382,13 +405,6 @@ Quote = MVC.Model.extend('quote',
 			});
 		}
 
-	}, // End of init
-	get: function(attr) {
-		return this[attr];
-	},
-	set: function(attr, value) {
-		this[attr] = value;
-		this.update_tips;
-	}
+	} // End of init
 
 });

@@ -40,6 +40,10 @@ Section = MVC.Model.extend('section',
 
 	},
 
+    exists: function(section) {
+       return this.find_attr(section) ? true: false;
+    },
+
 	/**
 	 * find_attr @params
 	 * ref: is a reference string to the section we are working on or creating
@@ -80,14 +84,14 @@ Section = MVC.Model.extend('section',
 				sec_index = false;
 			}
 		}
-		if(sec_parent || sec_class || sec_index || sec_level) {
+		if(sec_parent) {
 			all = { sec_parent: sec_parent, sec_class:  sec_class, sec_index:  sec_index, sec_level:  sec_level, sec_book: sec_book };
 			return what !== undefined ? all[what] : all;
 		} else {
 			return false;
 		}
 
-	}, // End of _set_section_and_class
+	} // End of _set_section_and_class
 
 },
 /* @Prototype */
@@ -100,37 +104,38 @@ Section = MVC.Model.extend('section',
 		}
 		if (typeof ref !== 'string') {
 		// if attr present already use _set_attr_auto else use _set_attr_man
-		$(ref).attr('parent') 	&&
-		$(ref).attr('class') 	&&
-		$(ref).attr('level') 	&&
-		$(ref).attr('sec_index') 	? this._set_attr_auto(ref) : this._set_attr_man($(ref).attr('id'));
+            $(ref).attr('parent') 	&&
+            $(ref).attr('class') 	&&
+            $(ref).attr('level') 	&&
+            $(ref).attr('sec_index') 	? this._set_attr_auto(ref) : this._set_attr_man($(ref).attr('id'));
 		} else {
 			this._set_attr_man(ref);
 		}
+        
 		this.publish('created', this)
 	},
 	_set_attr_auto: function(ref) {
 		if(window.console) console.log('Building section '+ref+' auto');
 		this.parent 		= $(ref).attr('parent');
 		this.sec_class 	= $(ref).attr('class');
-		this.level 			= $(ref).attr('level');
+		this.level 		= $(ref).attr('level');
 		this.sec_index 	= $(ref).attr('sec_index');
-		this.id 				= $(ref).attr('id');
-		this.text 			= this.id.replace(/_/g, ' ');
+		this.id 		= $(ref).attr('id');
+		this.text 		= this.id.replace(/_/g, ' ');
 	},
 	_set_attr_man: function(ref) {
-		//if(window.console) console.log('Building section '+ref+' man');
+		if(window.console) console.log('Building section '+ref+' man');
 		if(ref === undefined) {
 			if(window.console) console.log('Error in Section._set_attr_man with ref '+ref);
 			return;
 		}
 		var attr;
-		attr 						= this.Class.find_attr(ref);
-		this.parent 		= attr.sec_parent;
+		attr 			= this.Class.find_attr(ref);
+		this.parent 	= attr.sec_parent;
 		this.sec_class	= attr.sec_class;
-		this.level 			= attr.sec_level;
+		this.level 		= attr.sec_level;
 		this.sec_index 	= attr.sec_index;
-		this.id 				= ref;
-		this.text 			= ref.replace(/_/g, ' ');
+		this.id 		= ref;
+		this.text 		= ref.replace(/_/g, ' ');
 	}
 });

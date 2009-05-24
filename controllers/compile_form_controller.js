@@ -42,7 +42,7 @@ CompileFormController = MVC.Controller.extend('compile_form',
     attr = {};
     if($(elem).siblings('input#link').not(':hidden')) attr['ref'] = $(elem).siblings('input#link').val();
     attr['text'] = elem.value;
-    if(!attr['ref'] && !this.check_text(elem.value)) return;
+    if(this.action_name !== '#submit_quote click' && !attr['ref'] && !this.check_text(elem.value)) return;
     this.submit_quote(attr);
   },
   check_text: function(text) {
