@@ -10,6 +10,13 @@
   background-repeat: no-repeat;
   width: 100%;
 }
+
+#compile_form  #link {
+    display: none;
+    width: 98%;
+    margin: 10px;
+}
+
 #compile_form textarea {
   height: 170px;
   width:  99%;

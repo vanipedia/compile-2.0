@@ -22,7 +22,7 @@ Compilation = MVC.Model.extend('compilation',
 				that.new_quote(this);
 			});
 		}
-		if(window.console) console.log(this.db);
+		if(window.console) console.dir(this.db);
 	},
 
 	/**
@@ -70,7 +70,7 @@ Compilation = MVC.Model.extend('compilation',
 		function checklist(name) {
 			var q, items, miss;
 			q = that.find_in_db(name, 'q');
-			list = new Array('ref', 'id', 'index', 'link', 'link_text', 'parent', 'tips', 'type');
+			list = new Array('id', 'index', 'link', 'link_text', 'parent', 'tips', 'type');
 			miss = new Array();
 			if(Quote.need_section(name)) {
 				if(!q.trans && !q.purport) miss.push('section');

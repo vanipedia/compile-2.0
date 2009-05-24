@@ -45,7 +45,7 @@ QuotesController = MVC.Controller.extend('quotes',
 				edit_quote_text = $(params.element).parents('.quote').children('#text')[0];
 				// if no selection has been made to insert the speaker
 				if(edit_quote_text.value.length === edit_quote_text.selectionStart) {
-						this.publish('warning', { msg: 'You must place the cursor in the text where Prabhupāda is the speaker' });
+						this.publish('warning', { msg: 'You must place the cursor in the text where Prabhup&#257;da is the speaker' });
 						return;
 				}
 				this.insert_prabhupada_speaker(edit_quote_text);
@@ -452,7 +452,7 @@ QuotesController = MVC.Controller.extend('quotes',
 						var startPos = quote_textarea.selectionStart;
 						var endPos = quote_textarea.selectionEnd;
 						quote_textarea.value = quote_textarea.value.substring(0, startPos)
-						+ 'Prabhupāda: '
+						+ 'Prabhup&#257;da: '
 						+ quote_textarea.value.substring(endPos, quote_textarea.value.length);
 				}
 		},

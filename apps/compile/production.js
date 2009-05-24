@@ -1,5 +1,5 @@
 include.set_path('apps');
-include.resources("jquery-1.3.2","ejs_fulljslint","jquery.tinysort.packed","jquery.autogrow","jquery.easing","jquery.scrollTo","jquery.jeditable","jquery.copy.min","jquery.hoverIntent","jquery-autocomplete/jquery.autocomplete","jquery-ui-1.7.1.custom","BaltoUni.min","UnitoASCII","jquery.highlight_sanskrit","JsAutoP");
+include.resources("jquery-1.3.2","ejs_fulljslint","jquery.tinysort.packed","jquery.autogrow","jquery.easing","jquery.scrollTo","jquery.jeditable","jquery.copy.min","jquery.hoverIntent","jquery-autocomplete/jquery.autocomplete","jquery-ui-1.7.1.custom","BaltoUni2","UnitoASCII","jquery.highlight_sanskrit","JsAutoP");
 include.engines();
 include.plugins("controller","controller/hover","controller/view","view","view/helpers","model");
 include(function(){
@@ -12029,37 +12029,37 @@ elem.dequeue();
 ;
 include.set_path('resources');
 function BaltoUni(_1){
-_1=_1.replace(/ä/g, "ā");
-_1=_1.replace(/é/g, "ī");
-_1=_1.replace(/ü/g, "ū");
-_1=_1.replace(/å/g, "ṛ");
-_1=_1.replace(/è/g, "ṟ");
-_1=_1.replace(/ì/g, "ṅ");
-_1=_1.replace(/ñ/g, "ṣ");
-_1=_1.replace(/ï/g, "ñ");
-_1=_1.replace(/ö/g, "ṭ");
-_1=_1.replace(/ò/g, "ḍ");
-_1=_1.replace(/ë/g, "ṇ");
-_1=_1.replace(/ç/g, "ś");
-_1=_1.replace(/à/g, "ṁ");
-_1=_1.replace(/ù/g, "ḥ");
-_1=_1.replace(/ÿ/g, "ḷ");
-_1=_1.replace(/û/g, "ḻ");
-_1=_1.replace(/Ä/g, "Ā");
-_1=_1.replace(/É/g, "Ī");
-_1=_1.replace(/Ü/g, "Ū");
-_1=_1.replace(/Å/g, "Ṛ");
-_1=_1.replace(/È/g, "Ṟ");
-_1=_1.replace(/Ì/g, "&#7748;");
-_1=_1.replace(/Ñ/g, "Ṣ");
-_1=_1.replace(/Ï/g, "Ñ");
-_1=_1.replace(/Ö/g, "Ṭ");
-_1=_1.replace(/Ò/g, "Ḍ");
-_1=_1.replace(/Ë/g, "Ṇ");
-_1=_1.replace(/Ç/g, "Ś");
-_1=_1.replace(/À/g, "Ṁ");
-_1=_1.replace(/Ù/g, "Ḥ");
-_1=_1.replace(/ß/g, "Ḷ");
+_1=_1.replace(/ä/g,"&#257;");
+_1=_1.replace(/é/g,"&#299;");
+_1=_1.replace(/ü/g,"&#363;");
+_1=_1.replace(/å/g,"&#7771;");
+_1=_1.replace(/è/g,"&#7773;");
+_1=_1.replace(/ì/g,"&#7749;");
+_1=_1.replace(/ñ/g,"&#7779;");
+_1=_1.replace(/ï/g,"&#xf1;");
+_1=_1.replace(/ö/g,"&#7789;");
+_1=_1.replace(/ò/g,"&#7693;");
+_1=_1.replace(/ë/g,"&#7751;");
+_1=_1.replace(/ç/g,"&#347;");
+_1=_1.replace(/à/g,"&#7745;");
+_1=_1.replace(/ù/g,"&#7717;");
+_1=_1.replace(/ÿ/g,"&#7735;");
+_1=_1.replace(/û/g,"&#7737;");
+_1=_1.replace(/Ä/g,"&#256;");
+_1=_1.replace(/É/g,"&#298;");
+_1=_1.replace(/Ü/g,"&#362;");
+_1=_1.replace(/Å/g,"&#7770;");
+_1=_1.replace(/È/g,"&#7772;");
+_1=_1.replace(/Ì/g,"&#7748;");
+_1=_1.replace(/Ñ/g,"&#7778;");
+_1=_1.replace(/Ï/g,"&#xd1;");
+_1=_1.replace(/Ö/g,"&#7788;");
+_1=_1.replace(/Ò/g,"&#7692;");
+_1=_1.replace(/Ë/g,"&#7750;");
+_1=_1.replace(/Ç/g,"&#346;");
+_1=_1.replace(/À/g,"&#7744;");
+_1=_1.replace(/Ù/g,"&#7716;");
+_1=_1.replace(/ß/g,"&#7734;");
 return _1;
 };
 ;
@@ -14902,7 +14902,7 @@ _3.new_quote(this);
 });
 }
 if(window.console){
-console.log(this.db);
+console.dir(this.db);
 }
 },new_quote:function(_4){
 var q;
@@ -14935,7 +14935,7 @@ this.publish("warning",{msg:"Missing "+_14.join(", ")});
 function _15(_16){
 var q,_18,_19;
 q=_12.find_in_db(_16,"q");
-list=new Array("ref","id","index","link","link_text","parent","tips","type");
+list=new Array("id","index","link","link_text","parent","tips","type");
 _19=new Array();
 if(Quote.need_section(_16)){
 if(!q.trans&&!q.purport){
@@ -15212,7 +15212,7 @@ return _66==="s"?"sections":_66==="q"?"quotes":"undo_quotes";
 }}},{});
 ;
 include.set_path('models');
-Quote=MVC.Model.extend("quote",{attr:new Array("ref","id","parent","book","heading","link","link_text","text","trans","purport","index","type","tips","verses"),tips_db:{section:{title:"Set Section",desc:"...this quote requires a section. Click here",id:"set_section_tip"},edit_section:{title:"Edit Section",desc:"...by clicking here!",id:"edit_section_tip"},heading:{title:"Set Heading",desc:"...by highlighting a part of the quote",id:"set_heading_tip"},edit_heading:{title:"Edit Heading",desc:"...by highlighting a part of the quote",id:"edit_heading_tip"},edit_quote:{title:"Edit quote",desc:"...by doubleClicking on it or clicking here",id:"edit_quote_tip"},insert_new:{title:"Insert!",desc:"...this quote to the compilation by clicking here",id:"set_insert_tip"}},link_text_db:{"NOD":"Nectar of Devotion","ISO":"Sri Isopanisad","TLC":"Teachings of Lord Caitanya, Chapter","RTW":"Renunciation Through Wisdom","NOI":"Nectar of Instruction","KB":"Krsna Book","EJ":"Easy Journey to Other Planets","LOB":"Light of the Bhagavata","MOG":"Message of Godhead","NBS":"Narada Bhakti Sutra "},cache:new Object,find_reference:function(_1){
+Quote=MVC.Model.extend("quote",{attr:new Array("id","parent","book","heading","link","link_text","text","trans","purport","index","type","tips","verses"),tips_db:{section:{title:"Set Section",desc:"...this quote requires a section. Click here",id:"set_section_tip"},edit_section:{title:"Edit Section",desc:"...by clicking here!",id:"edit_section_tip"},heading:{title:"Set Heading",desc:"...by highlighting a part of the quote",id:"set_heading_tip"},edit_heading:{title:"Edit Heading",desc:"...by highlighting a part of the quote",id:"edit_heading_tip"},edit_quote:{title:"Edit quote",desc:"...by doubleClicking on it or clicking here",id:"edit_quote_tip"},insert_new:{title:"Insert!",desc:"...this quote to the compilation by clicking here",id:"set_insert_tip"}},link_text_db:{"NOD":"Nectar of Devotion","ISO":"Sri Isopanisad","TLC":"Teachings of Lord Caitanya, Chapter","RTW":"Renunciation Through Wisdom","NOI":"Nectar of Instruction","KB":"Krsna Book","EJ":"Easy Journey to Other Planets","LOB":"Light of the Bhagavata","MOG":"Message of Godhead","NBS":"Narada Bhakti Sutra "},cache:new Object,find_reference:function(_1){
 var _2,_3,_4;
 _2=this;
 _3={};
@@ -15236,8 +15236,11 @@ result=_5.result;
 _2.publish("warning",{msg:"Quote not found for "+_1.ref});
 _2.publish("not_found_reference");
 }else{
-new_quote={link_text:_5.title,link:_5.title.replace(/\s/g,"_"),parent:_5.section.replace(/\s+/g,"_"),index:_5.index,ref:_5.title.replace(/\s+/g,"_"),type:"new"};
+new_quote={link:_5.title,link_text:_5.title,parent:_5.section.replace(/\s+/g,"_"),index:_5.index,type:"new"};
 _2.cache[_1.ref]=new_quote;
+if(window.console){
+console.dir(_2.cache);
+}
 _1.attr?_1.quote[_1.attr]=_5[_1.attr]:_2.publish("found_reference",new_quote);
 }
 }});
@@ -15258,7 +15261,7 @@ return /^(SB_\d+.\d+.\d+|BG_\d+.\d+|CC_(Adi|Madhya|Antya)_\d+.\d+|NOI_\d+)/.test
 var _8,_9,_a;
 _8=this;
 _9=[];
-if(this.need_section(_7.ref)){
+if(this.need_section(_7.link)){
 if(!_7.section){
 _9.push(this.tips_db.section);
 }else{
@@ -15273,7 +15276,7 @@ _9.push(this.tips_db.insert_new);
 _7.tips=_9;
 },update_section:function(_b){
 var m;
-if(this.need_section(_b.ref)){
+if(this.need_section(_b.link)){
 if(!_b.trans&&!_b.purport){
 if(_b.type==="new"){
 if(_b.text.indexOf("PURPORT")>-1){
@@ -15299,7 +15302,7 @@ if(_b.purport){
 _b.section="Purport";
 }else{
 if(_b.type!=="new"){
-this.publish("warning",{msg:"This quote "+_b.ref+" does not contain a proper section"});
+this.publish("warning",{msg:"This quote "+_b.link+" does not contain a proper section"});
 }
 }
 }
@@ -15346,9 +15349,6 @@ _16=last=false;
 if(i+1===len&&_16!==false&&last!==false){
 _10.request_verse(_f,_13.slice(_16,last+1));
 }
-if(window.console){
-console.log("index: "+i+" first: "+_16+" last: "+last);
-}
 }
 }
 },request_verse:function(_17,_18){
@@ -15392,17 +15392,17 @@ return f?"([[Vanisource:"+f+"|"+f+"]])":"("+l+")";
 if(_26===undefined){
 new Error("Error creating new quote with quote_obj: "+_26);
 if(window.console){
-console.log("Quote.init was called without an quote_obj");
+console.error("Quote.init was called without an quote_obj");
 }
 return;
 }
 var _27,_28,_29,_2a,_2b;
 _27=this;
-_2a=/(?:''')?\[\[(?:Vanisource:)?(.+?)\|(.+?)\]\]:?(?:''')?/;
+_2a=/(?:''')\[\[(?:Vanisource:)?(.+?)\|(.+?)\]\]:(?:''')?/;
 _2b=false;
-if(!_26.ref){
+if(!_26.link){
 $.each(_27.Class.attr,function(i,a){
-!/text|trans|purport|heading/.test(a)?_27[a]=$(_26).attr(a)||false:_27[a]=$(_26).children("."+a).html()||false;
+!/^(?:text|trans|purport|heading)$/.test(a)?_27[a]=$(_26).attr(a)||false:_27[a]=$(_26).children("."+a).html()||false;
 });
 }else{
 $.each(_27.Class.attr,function(i,a){
@@ -15412,7 +15412,10 @@ _27[a]=_26[a]||false;
 if(this.type=="new"){
 this.text=this.Class.clean(this.text);
 }
-if(this.link==="undefined"){
+if(this.link){
+this.link=this.link.replace(/[_\s]+/g," ");
+}
+if(this.link_text=="undefined"){
 $.each(["trans","purport","text"],function(i,t){
 if(_27[t]){
 _27[t]=$.trim(_27[t].replace(_2a,_32));
@@ -15421,17 +15424,24 @@ return false;
 });
 }
 _33();
+Section.exists(this.parent)?this.parent=this.parent.replace(/\s+/,"_"):_34("section");
 _28=Compilation.db.quote_count[this.parent]?Compilation.db.quote_count[this.parent]:0;
-this.ref?this.id=this.ref.replace(/\W/g,"")+"_"+_28:_34("ref");
-this.parent?this.parent=this.parent.replace(/\s/,"_"):_34("parent");
-this.book?this.book=this.book.replace(/\s/,"_"):this.parent?this.book=Section.find_attr(this.parent,"sec_book"):_34("parent");
-this.index?"":_34("index");
-this.heading?this.heading=this.heading.replace(/'''/g,""):"";
-this.link_text?_35():_36();
+if(this.link){
+this.id=this.link.replace(/\W/g,"")+"_"+_28;
+}
+if(this.book){
+this.book=this.book.replace(/\s/,"_");
+}else{
+this.parent?this.book=Section.find_attr(this.parent,"sec_book"):_34("parent");
+}
+if(this.heading){
+this.heading=this.heading.replace(/'''/g,"");
+}
+_35();
 this.Class.update_section(this);
 if(!this.text&&!this.trans&&!this.purport){
 if(window.console){
-console.log("No text, trans or purport in ref "+this.ref);
+console.error("No text, trans or purport in ref "+this.link);
 }
 }
 if(!this.tips){
@@ -15441,154 +15451,156 @@ if(!this.verses){
 this.Class.check_verses(this);
 }
 this.publish("created",this);
-function _32(all,_38,_39){
-if(!_27.link){
-_27.link=$.trim(_38);
+function _32(all,_37,_38){
+if(_27.link!==$.trim(_37)){
+if(window.console){
+console.error("Link found is different from quote.link: "+_27.link+" => "+_37);
+}
 }
 if(!_27.link_text){
-_27.link_text=$.trim(_39.replace(/, ?(Translation and Purport|Translation|Purport)/i,_3a));
+_27.link_text=$.trim(_38.replace(/, ?(Translation and Purport|Translation|Purport)/i,_39));
 }
 return "";
 };
-function _3a(all,m){
+function _39(all,m){
 _27.section=m;
 return "";
 };
 function _33(){
-$.each(["index","link","link_text","parent","ref"],function(i,_3e){
-if(!_27[_3e]){
-_34(_3e);
+$.each(["link","link_text","parent","index"],function(i,_3d){
+if(window.console){
+console.log(_3d+": "+_27[_3d]);
+}
+if(!_27[_3d]){
+if(window.console){
+console.error("Missing "+_3d+" in Quote.init#check_missing_attr");
+}
+_34(_3d);
 }
 });
 };
-function _34(_3f){
-var _40;
+function _34(_3e){
+var _3f;
 if(window.console){
 console.log("In find_attr, checking Quote.cache["+_27.link+"] = "+Quote.cache[_27.link]);
 }
 if(Quote.cache[_27.link]){
 if(window.console){
-console.log("In find_attr, updating "+_3f+" with "+Quote.cache[_27.link][_3f]);
+console.info("In find_attr, updating "+_3e+" with "+Quote.cache[_27.link][_3e]);
 }
-_27[_3f]=Quote.cache[_27.link][_3f];
+_27[_3e]=Quote.cache[_27.link][_3e];
 }else{
 if(!_27.link){
 if(window.console){
-console.log("Quote.init.find_attr: Missing that.link to query db for missing "+_3f);
+console.error("Quote.init.find_attr: Missing that.link to query db for missing "+_3e);
 }
 }else{
 if(window.console){
-console.log(_3f+" not found in Quote.cache for "+_27.link+". Submiting request to Quote.find_reference");
+console.warn(_3e+" not found in Quote.cache for "+_27.link+". Submiting request to Quote.find_reference");
 }
-Quote.find_reference({quote:_27,ref:_27.link,type:"title",attr:_3f});
+Quote.find_reference({quote:_27,ref:_27.link,type:"title",attr:_3e});
 _2b=true;
 }
 }
 };
-function _36(){
-_34("link_text");
-if(_27.link_index){
-_35();
-}
-};
 function _35(){
-$.each(Quote.link_text_db,function(_41,_42){
-if(window.console){
-console.log("In Quote.init.transform_link_text: checking "+_41+" against "+_42);
+if(!_27.link_text){
+_27.link_text=_27.link.replace(/_/g," ");
 }
-if(_27.link_text.indexOf(_41)===0){
-_27.link_text=_27.link_text.replace(_41,_42);
+$.each(Quote.link_text_db,function(_40,_41){
+if(_27.link_text.indexOf(_40)===0){
+_27.link_text=_27.link_text.replace(_40,_41);
 return false;
 }
 });
 };
-},get:function(_43){
-return this[_43];
-},set:function(_44,_45){
-this[_44]=_45;
-this.update_tips;
 }});
 ;
 include.set_path('models');
-Section=MVC.Model.extend("section",{sections_tree:{"Bhagavad-gita_As_It_Is":{child:["BG_Preface_and_Introduction","BG_Chapters_1_-_6","BG_Chapters_7_-_12","BG_Chapters_13_-_18"],name:"BG"},"Srimad-Bhagavatam":{child:["SB_Preface_and_Introduction","SB_Canto_1","SB_Canto_2","SB_Canto_3","SB_Canto_4","SB_Canto_5","SB_Canto_6","SB_Canto_7","SB_Canto_8","SB_Canto_9","SB_Canto_10.1_to_10.13","SB_Cantos_10.14_to_12 (Translations_Only)"],name:"SB"},"Sri_Caitanya-caritamrta":{child:["CC_Preface_and_Introduction","CC_Adi-lila","CC_Madhya-lila","CC_Antya-lila"],name:"CC"},"Other_Books_by_Srila_Prabhupada":{child:["Teachings_of_Lord_Caitanya","Nectar_of_Devotion","Nectar_of_Instruction","Easy_Journey_to_Other_Planets","Krsna,_The_Supreme_Personality_of_Godhead","Renunciation_Through_Wisdom","Message_of_Godhead","Light_of_the_Bhagavata","Sri_Isopanisad","Mukunda-mala-stotra_(mantras_1_to_6_only)","Narada-bhakti-sutra_(sutras_1_to_8_only)"],name:"OB"},"Lectures":{child:["Bhagavad-gita_As_It_Is_Lectures","Srimad-Bhagavatam_Lectures","Nectar_of_Devotion_Lectures","Sri_Caitanya-caritamrta_Lectures","Sri_Isopanisad_Lectures","Sri_Brahma-samhita_Lectures","Festival_Lectures","Arrival_Addresses_and_Talks","Initiation_Lectures","Cornerstone_Ceremonies","Wedding_Ceremonies","General_Lectures","Departure_Talks","Philosophy_Discussions","Purports_to_Songs"],name:"Lec"},"Conversations_and_Morning_Walks":{child:["1967_Conversations_and_Morning_Walks","1968_Conversations_and_Morning_Walks","1969_Conversations_and_Morning_Walks","1970_Conversations_and_Morning_Walks","1971_Conversations_and_Morning_Walks","1972_Conversations_and_Morning_Walks","1973_Conversations_and_Morning_Walks","1974_Conversations_and_Morning_Walks","1975_Conversations_and_Morning_Walks","1976_Conversations_and_Morning_Walks","1977_Conversations_and_Morning_Walks"],name:"Con"},"Correspondence":{child:["1947_to_1965_Correspondence","1966_Correspondence","1967_Correspondence","1968_Correspondence","1969_Correspondence","1970_Correspondence","1971_Correspondence","1972_Correspondence","1973_Correspondence","1974_Correspondence","1975_Correspondence","1976_Correspondence","1977_Correspondence"],name:"Let"}},find_attr:function(_1,_2){
-if(!_1||_1==="undefined"||_1===""){
+Section=MVC.Model.extend("section",{sections_tree:{"Bhagavad-gita_As_It_Is":{child:["BG_Preface_and_Introduction","BG_Chapters_1_-_6","BG_Chapters_7_-_12","BG_Chapters_13_-_18"],name:"BG"},"Srimad-Bhagavatam":{child:["SB_Preface_and_Introduction","SB_Canto_1","SB_Canto_2","SB_Canto_3","SB_Canto_4","SB_Canto_5","SB_Canto_6","SB_Canto_7","SB_Canto_8","SB_Canto_9","SB_Canto_10.1_to_10.13","SB_Cantos_10.14_to_12 (Translations_Only)"],name:"SB"},"Sri_Caitanya-caritamrta":{child:["CC_Preface_and_Introduction","CC_Adi-lila","CC_Madhya-lila","CC_Antya-lila"],name:"CC"},"Other_Books_by_Srila_Prabhupada":{child:["Teachings_of_Lord_Caitanya","Nectar_of_Devotion","Nectar_of_Instruction","Easy_Journey_to_Other_Planets","Krsna,_The_Supreme_Personality_of_Godhead","Renunciation_Through_Wisdom","Message_of_Godhead","Light_of_the_Bhagavata","Sri_Isopanisad","Mukunda-mala-stotra_(mantras_1_to_6_only)","Narada-bhakti-sutra_(sutras_1_to_8_only)"],name:"OB"},"Lectures":{child:["Bhagavad-gita_As_It_Is_Lectures","Srimad-Bhagavatam_Lectures","Nectar_of_Devotion_Lectures","Sri_Caitanya-caritamrta_Lectures","Sri_Isopanisad_Lectures","Sri_Brahma-samhita_Lectures","Festival_Lectures","Arrival_Addresses_and_Talks","Initiation_Lectures","Cornerstone_Ceremonies","Wedding_Ceremonies","General_Lectures","Departure_Talks","Philosophy_Discussions","Purports_to_Songs"],name:"Lec"},"Conversations_and_Morning_Walks":{child:["1967_Conversations_and_Morning_Walks","1968_Conversations_and_Morning_Walks","1969_Conversations_and_Morning_Walks","1970_Conversations_and_Morning_Walks","1971_Conversations_and_Morning_Walks","1972_Conversations_and_Morning_Walks","1973_Conversations_and_Morning_Walks","1974_Conversations_and_Morning_Walks","1975_Conversations_and_Morning_Walks","1976_Conversations_and_Morning_Walks","1977_Conversations_and_Morning_Walks"],name:"Con"},"Correspondence":{child:["1947_to_1965_Correspondence","1966_Correspondence","1967_Correspondence","1968_Correspondence","1969_Correspondence","1970_Correspondence","1971_Correspondence","1972_Correspondence","1973_Correspondence","1974_Correspondence","1975_Correspondence","1976_Correspondence","1977_Correspondence"],name:"Let"}},exists:function(_1){
+return this.find_attr(_1)?true:false;
+},find_attr:function(_2,_3){
+if(!_2||_2==="undefined"||_2===""){
 if(window.console){
-console.log("Error in Section.find_attr for ref: "+_1+" attr: "+_2);
+console.log("Error in Section.find_attr for ref: "+_2+" attr: "+_3);
 }
 return;
 }
-var _3,_4,_5,_6,_7,_8,_9,_a,_b;
-_b=this;
-_8=0;
-for(var _c in _b.sections_tree){
-if(_1===_c){
-_3="compilation";
-_4="section";
-_5=2;
-_6=_8;
-_7=_b.sections_tree[_c].name;
+var _4,_5,_6,_7,_8,_9,_a,_b,_c;
+_c=this;
+_9=0;
+for(var _d in _c.sections_tree){
+if(_2===_d){
+_4="compilation";
+_5="section";
+_6=2;
+_7=_9;
+_8=_c.sections_tree[_d].name;
 break;
 }
-_8++;
+_9++;
 }
-if(_3===undefined){
-for(var _d in _b.sections_tree){
-_6=$.inArray(_1,_b.sections_tree[_d].child);
-if(_6>-1){
-_3=_d;
-_4="sub_section";
-_5=3;
-_7=_b.sections_tree[_d].name;
+if(_4===undefined){
+for(var _e in _c.sections_tree){
+_7=$.inArray(_2,_c.sections_tree[_e].child);
+if(_7>-1){
+_4=_e;
+_5="sub_section";
+_6=3;
+_8=_c.sections_tree[_e].name;
 break;
 }
-_6=false;
+_7=false;
 }
 }
-if(_3||_4||_6||_5){
-_a={sec_parent:_3,sec_class:_4,sec_index:_6,sec_level:_5,sec_book:_7};
-return _2!==undefined?_a[_2]:_a;
+if(_4){
+_b={sec_parent:_4,sec_class:_5,sec_index:_7,sec_level:_6,sec_book:_8};
+return _3!==undefined?_b[_3]:_b;
 }else{
 return false;
 }
-},},{init:function(_e){
+}},{init:function(_f){
 if(window.console){
-console.log("Building section "+_e);
+console.log("Building section "+_f);
 }
-if(_e===undefined||_e===""){
+if(_f===undefined||_f===""){
 if(window.console){
-console.log("Error in Section.init creating new section with ref: "+_e);
+console.log("Error in Section.init creating new section with ref: "+_f);
 }
 return;
 }
-if(typeof _e!=="string"){
-$(_e).attr("parent")&&$(_e).attr("class")&&$(_e).attr("level")&&$(_e).attr("sec_index")?this._set_attr_auto(_e):this._set_attr_man($(_e).attr("id"));
+if(typeof _f!=="string"){
+$(_f).attr("parent")&&$(_f).attr("class")&&$(_f).attr("level")&&$(_f).attr("sec_index")?this._set_attr_auto(_f):this._set_attr_man($(_f).attr("id"));
 }else{
-this._set_attr_man(_e);
+this._set_attr_man(_f);
 }
 this.publish("created",this);
-},_set_attr_auto:function(_f){
+},_set_attr_auto:function(ref){
 if(window.console){
-console.log("Building section "+_f+" auto");
+console.log("Building section "+ref+" auto");
 }
-this.parent=$(_f).attr("parent");
-this.sec_class=$(_f).attr("class");
-this.level=$(_f).attr("level");
-this.sec_index=$(_f).attr("sec_index");
-this.id=$(_f).attr("id");
+this.parent=$(ref).attr("parent");
+this.sec_class=$(ref).attr("class");
+this.level=$(ref).attr("level");
+this.sec_index=$(ref).attr("sec_index");
+this.id=$(ref).attr("id");
 this.text=this.id.replace(/_/g," ");
 },_set_attr_man:function(ref){
+if(window.console){
+console.log("Building section "+ref+" man");
+}
 if(ref===undefined){
 if(window.console){
 console.log("Error in Section._set_attr_man with ref "+ref);
 }
 return;
 }
-var _11;
-_11=this.Class.find_attr(ref);
-this.parent=_11.sec_parent;
-this.sec_class=_11.sec_class;
-this.level=_11.sec_level;
-this.sec_index=_11.sec_index;
+var _12;
+_12=this.Class.find_attr(ref);
+this.parent=_12.sec_parent;
+this.sec_class=_12.sec_class;
+this.level=_12.sec_level;
+this.sec_index=_12.sec_index;
 this.id=ref;
 this.text=ref.replace(/_/g," ");
 }});
@@ -16234,7 +16246,7 @@ var _9;
 _8.event.kill();
 _9=$(_8.element).parents(".quote").children("#text")[0];
 if(_9.value.length===_9.selectionStart){
-this.publish("warning",{msg:"You must place the cursor in the text where Prabhupāda is the speaker"});
+this.publish("warning",{msg:"You must place the cursor in the text where Prabhup&#257;da is the speaker"});
 return;
 }
 this.insert_prabhupada_speaker(_9);
@@ -16572,7 +16584,7 @@ return;
 if(_5b.selectionStart||_5b.selectionStart=="0"){
 var _5c=_5b.selectionStart;
 var _5d=_5b.selectionEnd;
-_5b.value=_5b.value.substring(0,_5c)+"Prabhupāda: "+_5b.value.substring(_5d,_5b.value.length);
+_5b.value=_5b.value.substring(0,_5c)+"Prabhup&#257;da: "+_5b.value.substring(_5d,_5b.value.length);
 }
 },_transition_hilite:function(_5e,_5f,_60){
 var w,q,_63,off;
@@ -16736,25 +16748,29 @@ if(this.check_uninserted_quotes()){
 this.process_new_quote($(_3.element).parents("#compile_form").children("textarea")[0]);
 }
 },"#clear_form click":function(_4){
-$(_4.element.parentNode).children("textarea").val("");
-},process_new_quote:function(_5){
-var _6;
-_6=this;
-attr={};
-if($(_5).siblings("input#link").not(":hidden")){
-attr["ref"]=$(_5).siblings("input#link").val();
+var p=$(_4.element).parents("#compile_form");
+p.children("textarea").val("");
+if($("input#link").is(":visible")){
+p.children("input#link").val("").hide();
 }
-attr["text"]=_5.value;
-if(!attr["ref"]&&!this.check_text(_5.value)){
+},process_new_quote:function(_6){
+var _7;
+_7=this;
+attr={};
+if($(_6).siblings("input#link").not(":hidden")){
+attr["ref"]=$(_6).siblings("input#link").val();
+}
+attr["text"]=_6.value;
+if(this.action_name!=="#submit_quote click"&&!attr["ref"]&&!this.check_text(_6.value)){
 return;
 }
 this.submit_quote(attr);
-},check_text:function(_7){
-_7=$.trim(_7);
-if(_7===""||_7===this.Class.last_quote_value||!this.check_uninserted_quotes()){
+},check_text:function(_8){
+_8=$.trim(_8);
+if(_8===""||_8===this.Class.last_quote_value||!this.check_uninserted_quotes()){
 return false;
 }
-this.Class.last_quote_value=_7;
+this.Class.last_quote_value=_8;
 return true;
 },check_uninserted_quotes:function(){
 if($("div.building_quote").length!==0){
@@ -16764,18 +16780,18 @@ $.scrollTo(".building_quote","slow",{easing:"easeOutExpo",offset:-50});
 return false;
 }
 return true;
-},submit_quote:function(_8){
-var re,_a,_b,_c,_d,_e;
+},submit_quote:function(_9){
+var re,_b,_c,_d,_e,_f;
 re=new RegExp(">>> Ref. VedaBase => (.+)");
-_a=_8["text"];
-if(re.test(_a)){
-_e={};
-_d=$.trim(_a.replace(re,""));
-_d=BaltoUni(_d);
-this.Class.temp_quote=_d;
-_e["ref"]=_8["ref"]?_8["ref"]:$.trim(re.exec(_a)[1]);
-_8["ref"]?_e["type"]="title":"";
-Quote.find_reference(_e);
+_b=_9["text"];
+if(re.test(_b)){
+_f={};
+_e=$.trim(_b.replace(re,""));
+_e=BaltoUni(_e);
+this.Class.temp_quote=_e;
+_f["ref"]=_9["ref"]?_9["ref"]:$.trim(re.exec(_b)[1]);
+_9["ref"]?_f["type"]="title":"";
+Quote.find_reference(_f);
 }else{
 this.publish("warning",{msg:"No Vedabase Reference in pasted quote!\nPerhaps you forgot to use the \"Copy with Reference\" button in Vedabase"});
 return;
@@ -16784,19 +16800,19 @@ return;
 if($("#compile_form textarea").length){
 $("#compile_form textarea").val("");
 }
-},"quote.not_found_reference subscribe":function(_f){
+},"quote.not_found_reference subscribe":function(_10){
 if($("#compile_tools input#link").is(":hidden")){
 $("#compile_tools input#link").show().val("Try finding the link for this quote by typing it here").one("click",function(){
 $(this).val("");
 });
 }
-},"quote.title_req_failed subscribe":function(_10){
-this.publish("warning",{msg:_10.msg});
-},"quote.ajax subscribe":function(_11){
-if(_11.type==="start"){
+},"quote.title_req_failed subscribe":function(_11){
+this.publish("warning",{msg:_11.msg});
+},"quote.ajax subscribe":function(_12){
+if(_12.type==="start"){
 $("#ajax").show();
 }
-if(_11.type==="end"){
+if(_12.type==="end"){
 $("#ajax").hide();
 }
 }});
