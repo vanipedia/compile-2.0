@@ -28,8 +28,6 @@ Compilation = MVC.Model.extend('compilation',
 	/**
 	 * Method to create a new quote and insert it into the Compilation.db
 	 * @param {Object} elem to build into this compilation db
-	 * @param {String} ref Reference to object: The name or id of the element. It must have underscores (_) instead of spaces
-	 * @param {String} parent Name of the parent of the element
 	 **/
 	new_quote: function(elem) {
 		var q;
@@ -56,20 +54,27 @@ Compilation = MVC.Model.extend('compilation',
 		}
 	},
 
-	insert_new_quote: function(name, attr, type) {
+    /*
+     * Insert quote to compilation. Technically simply change from type: new => quote.
+     * @param {String} id of quote (dom id matches id in Compilation.db)
+     * @param {String} name of the quote e.g.: SB 2.1.1.
+     * @param {Object} attr is a json object that carries attributes to update. I should carry always the type: 'quote' in this istance
+     * @param {String} type of element to be updated q for quote, s for section
+     */
+	insert_new_quote: function(id, name, attr, type) {
 		var that, quote, check;
 		that = this;
-		check = checklist(name);
+		check = checklist(id, name);
 		if ( check.length === 0) {
-			this.db.update(name, attr, type);
-			this.publish('quote_inserted', {id: name});
+			this.db.update(id, attr, type);
+			this.publish('quote_inserted', {id: id});
 			//that.publish('warning', { msg: 'Quote Inserted!'});
 		} else {
 			this.publish('warning', { msg: 'Missing '+check.join(', ') });
 		}
-		function checklist(name) {
+		function checklist(id, name) {
 			var q, items, miss;
-			q = that.find_in_db(name, 'q');
+			q = that.find_in_db(id, 'q');
 			list = new Array('id', 'index', 'link', 'link_text', 'parent', 'tips', 'type');
 			miss = new Array();
 			if(Quote.need_section(name)) {
@@ -88,10 +93,10 @@ Compilation = MVC.Model.extend('compilation',
 	add_to_db: function(elem, ref, parent, type) {
 		var resp;
 		if( arguments.length !== 4 || !elem || !ref || !parent || !type ) {
-			if(window.console) console.log('Error adding to db with elem: '+elem+' and ref '+ref);
+			if(window.console) console.error('Compilation#add_to_db: Error adding to db with elem: '+elem+' and ref '+ref);
 			return;
 		}
-		if (parent === 'undefined') parent = Section.find_attr(ref, 'sec_parent');
+		//if (parent === 'undefined') parent = Section.find_attr(ref, 'sec_parent');
 		if (type === 's') {
 				if (parent === 'compilation') {
 						//if(window.console) console.log('adding '+ref+' to db')
@@ -124,23 +129,23 @@ Compilation = MVC.Model.extend('compilation',
 		}
 	},
 	/**
-	 * @param name {string} name/ref of the quote (name in Compilation.db is the same as "id" in DOM)
+	 * @param id {string} id/ref of the quote (id in Compilation.db is the same as "id" in DOM)
 	 * @param attr {object} must contain section attribute with the new section for this quote
 	 */
-	update_q_section: function(name, attr) {
-		if(arguments.length !== 2) {
+	update_q_section: function(id, link, attr) {
+		if(arguments.length !== 3) {
 			if(window.console) console.log('missing arguments in udpate_q_section');
 			return;
 		}
 		// check if this quote actually requires a section
-		if(Quote.need_section(name)) {
+		if(Quote.need_section(link)) {
 			var new_attributes, q, miss;
 			// 1. set the text to "section" (e.g.: q.trans or q.purport, depending on the choice found in attr.section)
 			// 2. submit the result quote to Quote.update_section to update q.section (text that will appear in quote in view mode)
 			new_attributes = new Object();
 			new_attributes.section = attr.section; 		// copy the section in the attr obj
 			// get the quote
-			q = this.find_in_db(name, 'q');
+			q = this.find_in_db(id, 'q');
 
 			// set_text_to_section iterates through the posible new_attributes in the quote to find where the text is currently residing
 			// It set the quote text to the new_section and sets the old one to false
@@ -183,8 +188,8 @@ Compilation = MVC.Model.extend('compilation',
 				}
 				this.publish('warning', { msg: 'You have chosen "Translation and Purport" but you are missing the '+miss+' text.' });
 			}
-			this.update_db(name, new_attributes, 'q'); 		// submit the new data to the db
-			//Quote.update_section(this.find_in_db(name, 'q')); 		// update_section to set the section_text to the current (updated) section
+			this.update_db(id, new_attributes, 'q'); 		// submit the new data to the db
+			//Quote.update_section(this.find_in_db(id, 'q')); 		// update_section to set the section_text to the current (updated) section
 		} else {
 			this.publish('warning', { msg: 'This quote does not require a section' });
 		}
@@ -243,19 +248,19 @@ Compilation = MVC.Model.extend('compilation',
 	},
 	/**
 	 * Update local(client) db (quote or section)
-	 * @param {string} name of quote to be updated
+	 * @param {string} id of quote to be updated
 	 * @param {obj} attr json object with attributes to be updated e.g.: attr.heading, attr.section, etc.
 	 * @param {string} type indicate which db to search for the object to be updated: 'q' for quote or 's' for section.
 	 */
-	update_db: function(name, attr, type) {
-		if(!name || !attr || !type) if(window.console) console.log('Missing parameters in udpate_db');
-		this.db.update(name, attr, type);
-		Quote.update_section(this.find_in_db(name, 'q'));
-		this.publish('updated', {id: name});
+	update_db: function(id, attr, type) {
+		if(!id || !attr || !type) if(window.console) console.log('Missing parameters in udpate_db');
+		this.db.update(id, attr, type);
+		Quote.update_section(this.find_in_db(id, 'q'));
+		this.publish('updated', {id: id});
 	},
 
-	del_from_db: function(ref, type) {
-		this.db.del(ref, type);
+	del_from_db: function(id, type) {
+		this.db.del(id, type);
 		this.publish('deleted', {id: ref});
 	},
 
@@ -273,10 +278,10 @@ Compilation = MVC.Model.extend('compilation',
 		resp = this.db.find(ref, type);
 		return resp;
 	},
-	check_sec_consistency: function(name) {
+	check_sec_consistency: function(id) {
 		var that, q, sec;
 		that = this;
-		q = this.find_in_db(name, 'q');
+		q = this.find_in_db(id, 'q');
 		if(!q.section) return;
 		sec = q.section.match(/trans|purport/ig);
 		if(sec) {
@@ -297,17 +302,17 @@ Compilation = MVC.Model.extend('compilation',
 				}
 			}
 			// then the sections seems ok
-			that.publish('section_checked', {id: name, result: 'good'});
+			that.publish('section_checked', {id: id, result: 'good'});
 		}
 
 		function publish_error() {
-			that.publish('section_checked', {id: name, result: 'bad'});
+			that.publish('section_checked', {id: id, result: 'bad'});
 			that.publish('warning', { warning: 'You have set "'+q.section+'" as your section but this quote appears to be missing the corresponding text(s)!' });
 		}
 	},
-	undo: function(name, type) {
-		this.db.undo(name, type);
-		this.publish('undone', { id: name });
+	undo: function(id, type) {
+		this.db.undo(id, type);
+		this.publish('undone', { id: id });
 	},
 
 	/* DB holds data about every quote and section in the compilation */
@@ -319,75 +324,75 @@ Compilation = MVC.Model.extend('compilation',
 		undo_quotes: 	new Object(),
 		quote_count: 	new Object(),
 
-		add: function(obj, name, type) {
+		add: function(obj, id, type) {
 				var where;
 				where = this._where(type);
 				if (type === 'q') {
 						if (this.quote_count[obj.parent] === undefined) this.quote_count[obj.parent] = 0;
-						//name = name.replace(/\./g, '_')+'_'+this.quote_count[obj.parent];
+						//id = id.replace(/\./g, '_')+'_'+this.quote_count[obj.parent];
 						this.quote_count[obj.parent]++;
 				} else {
 						this.sec_count++;
 				}
-				this[where][name] = obj;
+				this[where][id] = obj;
 		},
 
-		find: function(name, type) {
+		find: function(id, type) {
 				var where;
 				where = this._where(type);
-				//if(window.console) console.log('find: searching for '+name+' in '+where);
+				//if(window.console) console.log('find: searching for '+id+' in '+where);
 				for(var obj in this[where]) {
-						if (obj == name) {
-								//if(window.console) console.log('found '+name+' in '+where);
+						if (obj == id) {
+								//if(window.console) console.log('found '+id+' in '+where);
 								return this[where][obj];
 						}
 				}
-				//if(window.console) console.log(name+' not found!');
+				//if(window.console) console.log(id+' not found!');
 				return false;
 		},
 
-		update: function(name, attributes, type) {
+		update: function(id, attributes, type) {
 				var where, undo;
 				where = this._where(type);
-				this._backup(name, where);
+				this._backup(id, where);
 				from = attributes;
-				to 		= this[where][name];
+				to 		= this[where][id];
 				this._clone(from, to);
-				if (type === 'q') Quote.update_tips(this[where][name]);
+				if (type === 'q') Quote.update_tips(this[where][id]);
 		},
 
-		del: function(name, type) {
+		del: function(id, type) {
 				var where;
 				where = this._where(type);
-				this._backup(name, where);
+				this._backup(id, where);
 				// Set val of this quote to false
-				this[where][name] = false;
+				this[where][id] = false;
 
 		},
 
-		undo: function(name, type) {
+		undo: function(id, type) {
 				var where, undo, from, to;
 				where = this._where(type);
 				undo 	= 'undo_'+where;
 				// Save back to original array
-				if(this[undo][name] === undefined) return;
-				if(this[where][name] === false) this[where][name] = new Object();
-				from 	= this[undo][name];
-				to 		= this[where][name];
+				if(this[undo][id] === undefined) return;
+				if(this[where][id] === false) this[where][id] = new Object();
+				from 	= this[undo][id];
+				to 		= this[where][id];
 				this._clone(from, to);
 				return;
 		},
 
-		_backup: function(name, where) {
+		_backup: function(id, where) {
 				var undo, from, to;
 				undo 	= 'undo_'+where;
-				if(this[undo][name] === undefined) this[undo][name] = new Object();
-				/*for(var attr in this[where][name]) {
-						this[undo][name][attr] = this[where][name][attr];
+				if(this[undo][id] === undefined) this[undo][id] = new Object();
+				/*for(var attr in this[where][id]) {
+						this[undo][id][attr] = this[where][id][attr];
 				}*/
-				from 	= this[where][name];
-				to 		= this[undo][name];
-				this._clone(this[where][name], this[undo][name]);
+				from 	= this[where][id];
+				to 		= this[undo][id];
+				this._clone(this[where][id], this[undo][id]);
 		},
 
 		_clone: function(from , to) {

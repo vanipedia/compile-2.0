@@ -94,7 +94,7 @@ CompileController = MVC.Controller.extend('compilation',
     _loading: function(now) {
         var that = this;
         if (now === 'init') {
-            $('#editform, #toolbar').hide();
+            //$('#editform, #toolbar').hide();
             this.loading = {};
             this.loading.message = 'Loading compiling data...';
             this.render({

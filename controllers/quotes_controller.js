@@ -298,12 +298,13 @@ QuotesController = MVC.Controller.extend('quotes',
 		 */
 		_do_section: function(elem, new_section_id) {
 				var quote, id, text, new_section;
-				quote = $(elem).parents('div.quote')
-				id 		= quote.attr('id');
+				quote   = $(elem).parents('div.quote')
+				id      = quote.attr('id');
+                link    = quote.attr('link');
                 if(new_section_id == 'trans') new_section = 'Translation';
                 if(new_section_id == 'purport') new_section = 'Purport';
                 if(new_section_id == 'trans_purport') new_section = 'Translation and Purport';
-				Compilation.update_q_section(id, {section: new_section});
+				Compilation.update_q_section(id, link, {section: new_section});
 		},
 		/**
 		 * Tips handler receives event from clicking on a tip
@@ -361,7 +362,7 @@ QuotesController = MVC.Controller.extend('quotes',
 		},
 
 		insert_new_quote: function(quote) {
-				Compilation.insert_new_quote($(quote).attr('id'), {type: 'quote'}, 'q');
+				Compilation.insert_new_quote($(quote).attr('id'), $(quote).attr('link'), {type: 'quote'}, 'q');
 		},
 
 		/**

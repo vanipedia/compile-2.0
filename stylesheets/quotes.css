@@ -15,7 +15,8 @@
 	padding: 4px;
 }
 .quote .highlight_terms {
- padding: 0px 1px;
+    background: #EEE8AA;
+    padding: 0px 1px;
 }
 .quote:hover .highlight_terms {
  background: #D2C1F2;
