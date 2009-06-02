@@ -51,13 +51,14 @@
 }
 
 .suggest_results {
+    position: absolute;
 	padding: 0px;
 	border: 1px solid black;
 	background-color: white;
 	overflow: hidden;
 	z-index: 99999;
-    top: -10px;
-    left: 10px;
+    top: 84px;
+    left: 34px;
 
 }
 

@@ -578,11 +578,12 @@ $.Autocompleter.Select = function (options, input, select, config) {
 			return;
 		element = $("<div/>")
 		.hide()
-		.addClass(options.resultsClass);
+		.addClass(options.resultsClass)
+        .css("position", "absolute");
 		if(!options.fixed) {
-            element.css("position", "absolute").appendTo(document.body);
+            element.appendTo(document.body);
         } else {
-            element.css("position", "relative").insertAfter(input); // mod by AndresRamirez108@gmail.com
+            element.insertAfter(input); // mod by AndresRamirez108@gmail.com
         }
 	
 		list = $("<ul/>").appendTo(element).mouseover( function(event) {
