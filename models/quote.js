@@ -82,31 +82,31 @@ Quote = MVC.Model.extend('quote',
 			async: async,
 			data: request,
 			success: function(resp) {
-        if(resp.result !== 'Found') {
-          result = resp.result;
-          if(window.console) console.error('Quote#find_reference: Ref not found in database');
-          that.publish('warning', { msg: 'Ref not found for '+params.ref });
-          that.publish('not_found_reference');
-        } else {
-          new_quote = {
-            link:       resp.title,
-            link_text:  resp.title,
-            parent:     resp.parent.replace(/\s+/g, '_'),
-            index:      resp.index,
-            type:       'new'
-          };
-            // Save to Quote.cache
-            that.cache[params.ref] = new_quote;
-            if(window.console) console.info('Updated Quote.cache with:'); console.dir(that.cache);
-            // If the request is an attr request from a quote instance set the attr else it must be a new quote(publish the reference_found)
-            if(params.attr) {
-                if(window.console) console.info('Quote#find_reference: updating '+params.attr+' => '+that.cache[params.ref][params.attr]);
-                params.quote[params.attr] = that.cache[params.ref][params.attr];
-            } else {
-                that.publish('found_reference', new_quote);
+                if(resp.result !== 'Found') {
+                  result = resp.result;
+                  if(window.console) console.error('Quote#find_reference: Ref not found in database');
+                  that.publish('warning', { msg: 'Ref not found for '+params.ref });
+                  that.publish('not_found_reference');
+                } else {
+                  new_quote = {
+                    link:       resp.title,
+                    link_text:  resp.title,
+                    parent:     resp.parent.replace(/\s+/g, '_'),
+                    index:      resp.index,
+                    type:       'new'
+                  };
+                    // Save to Quote.cache
+                    that.cache[params.ref] = new_quote;
+                    if(window.console) console.info('Updated Quote.cache with:'); console.dir(that.cache);
+                    // If the request is an attr request from a quote instance set the attr else it must be a new quote(publish the reference_found)
+                    if(params.attr) {
+                        if(window.console) console.info('Quote#find_reference: updating '+params.attr+' => '+that.cache[params.ref][params.attr]);
+                        params.quote[params.attr] = that.cache[params.ref][params.attr];
+                    } else {
+                        that.publish('found_reference', new_quote);
+                    }
+                }
             }
-        }
-      }
 		});
     $(document).ajaxStart(function() {
       that.publish('ajax', { type: 'start', msg: 'Quote being processed...'})

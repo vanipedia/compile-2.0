@@ -130,6 +130,27 @@ text-decoration:none;
   top:4px;
 }
 
+#info {
+  display:none;
+  position: fixed;
+  top: 35%;
+  left: 35%;
+  width: 35%;
+  min-height: 5%;
+  font-size: medium;
+  text-align: center;
+  z-index:201;
+}
+#info p {
+ padding: 5px;
+}
+#info span {
+  float:left;
+  margin:0 2px;
+  position:relative;
+  top:4px;
+}
+
 #ajax {
   display: none;
   background-image: url("images/ajax-loader.gif");

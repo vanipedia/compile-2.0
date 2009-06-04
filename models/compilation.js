@@ -119,7 +119,7 @@ Compilation = MVC.Model.extend('compilation',
 				if(parent) {
 					this.create_new_section(parent);
 				} else {
-					if(window.console) console.log('Error in Compilation.add_to_db: creating new section for '+ref+', missing parent');
+					if(window.console) console.error('Error in Compilation.add_to_db: creating new section for '+ref+', missing parent');
 					return;
 				}
 			}
@@ -255,8 +255,10 @@ Compilation = MVC.Model.extend('compilation',
 	update_db: function(id, attr, type) {
 		if(!id || !attr || !type) if(window.console) console.log('Missing parameters in udpate_db');
 		this.db.update(id, attr, type);
-		Quote.update_section(this.find_in_db(id, 'q'));
-		this.publish('updated', {id: id});
+        // Test to check speed of controller response on publish
+        var q = this.find_in_db(id, 'q')
+		Quote.update_section(q);
+		this.publish('updated', {id: id, quote: q});
 	},
 
 	del_from_db: function(id, type) {

@@ -94,7 +94,7 @@ CompileController = MVC.Controller.extend('compilation',
     _loading: function(now) {
         var that = this;
         if (now === 'init') {
-            //$('#editform, #toolbar').hide();
+            $('#editform, #toolbar').hide();
             this.loading = {};
             this.loading.message = 'Loading compiling data...';
             this.render({
@@ -305,6 +305,18 @@ CompileController = MVC.Controller.extend('compilation',
             action: 'new_compilation_message'
         });
     },
+    info: function(msg) {
+        this.info = msg;
+        this.render({
+            to: 'info',
+            action: 'info'
+        });
+        $('#info:hidden, #darken:hidden').fadeIn();
+        $(window).click(function() {
+            $('#info, #darken').fadeOut();
+            $(this).unbind('click');
+        });
+    },
     /**
    * Warning dialog
    * @param {string} msg Message to be displayed
@@ -342,6 +354,10 @@ CompileController = MVC.Controller.extend('compilation',
     },
     "hide_compile_tools subscribe": function() {
         this.hide_compile_tools();
+    },
+    "info subscribe": function(params) {
+        if(window.console) console.info('Info: '+params.msg);
+        this.info(params.msg);
     },
 
     "warning subscribe": function(params) {

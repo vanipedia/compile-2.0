@@ -14,8 +14,9 @@ FactsController = MVC.Controller.extend('facts',
       that.add(params);
     }
   },
-  "#copy_terms click": function(params) {
-    var all_terms;
+  "#copy_terms .copy click": function(params) {
+    var that, all_terms;
+    that = this;
     params.event.kill();
     all_terms = Facts.get_all_terms();
     if(all_terms === '') {
@@ -23,8 +24,7 @@ FactsController = MVC.Controller.extend('facts',
       return;
     }
     if(window.console) console.log(all_terms);
-    $.copy(all_terms);
-    this.publish('warning', { msg: 'The expressions list has been copied to your clipboard'});
+    $('#copy_terms_man').val(all_terms).show().select();
   },
 
   /****** functions and Event handlers *****/

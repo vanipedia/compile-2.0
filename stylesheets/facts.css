@@ -43,3 +43,6 @@ margin: 2px 0px;
 cursor:pointer;
 margin: 2px 0px;
 }
+#facts #terms_tools #copy_terms_man {
+    display: none;
+}
