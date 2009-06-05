@@ -101,6 +101,8 @@ CompileController = MVC.Controller.extend('compilation',
                 top: 'bodyContent',
                 action: 'loading'
             });
+            // fix logo z-index for overlays in compile tools
+            $('#p-logo').css('z-index', 1);
         }
 
         if (now === 'end_gracefully') {
@@ -200,9 +202,7 @@ CompileController = MVC.Controller.extend('compilation',
     show_compile_tools: function(pos) {
         var that;
         that = this;
-        $('#compile_tools').css({
-            opacity: 1
-        }).fadeIn('fast', function() {
+        $('#compile_tools').css('opacity', 1).fadeIn('fast', function() {
             if(pos) window.scrollTo(0, pos);
         });
         $('#compile_tools_toggle > a > #compile_tools_toggle_text').text('Hide Tools');
@@ -213,11 +213,17 @@ CompileController = MVC.Controller.extend('compilation',
     hide_compile_tools: function() {
         var that;
         that = this;
+        // Make transparent background dissapear. This bg is used to enable click on anywhere but inside compie_tools element to hide it.
         $('#transparent_background').hide();
-        $('#compile_tools').hide().effect('transfer', {
+
+        // Blind first => transfer effect => hide
+        $('#compile_tools').css('opacity', 0);
+        $('#compile_tools').effect('transfer', {
             to: "#compile_tools_toggle",
             className: 'compile_tools_transfer'
         }, "medium");
+        $('#compile_tools').hide('fast');
+        
         $('#compile_tools_toggle > a > #compile_tools_toggle_text').text('Show Tools');
         setTimeout( that.Class.hide_tools_menu, 5000);
     },

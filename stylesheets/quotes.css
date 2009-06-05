@@ -68,7 +68,7 @@
 
 .quote:hover .q_menu {
 	background: #D2C1F2;
-  border: 2px solid #A68940;
+  border: 1px solid #603F9D;
   padding: 2px;
   text-align: left;
   -moz-border-radius-bottomright:15px;
@@ -171,5 +171,5 @@ padding: 2px;
 
 #alert_tip > span {
  font-weight: bold;
- color: #3F4C9D;
+ color: #603F9D;
 }

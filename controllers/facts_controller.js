@@ -131,8 +131,8 @@ FactsController = MVC.Controller.extend('facts',
 		});*/
     $('#facts').accordion({
 			autoHeight: false,
-			collapsible: true,
-      active: false
+			//collapsible: true,
+            active: false
 		});
     $('.term, .category, .compiler, #complete > div, #totals_by_section > div').filter(':even').css({
      background: '#D4D9F9'

@@ -40,6 +40,7 @@
   position: relative;
   float: right;
   margin: 0px 2px;
+  cursor: pointer;
 }
 
 #compile_form #submit_quote {
