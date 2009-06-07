@@ -116,25 +116,34 @@ CompileController = MVC.Controller.extend('compilation',
                 $('#loading').fadeOut('slow', function() {
                     $('#compilation').fadeIn('slow').removeClass('hidden');
                 });
-                // jQuery Event attachments
-                $('#compile_tools').tabs().draggable();
-                $('#compile_tools_menu').hoverIntent(that.Class.compile_tools_menu_hover_options);
-                // SetTimeout to hide the tools_menu
-                setTimeout( that.Class.hide_tools_menu, 5000);
 
-                $('#compile_tools_menu p').bind('mouseenter', function() {
-                    $(this).addClass('ui-state-hover');
-                }).bind('mouseleave', function() {
-                    $(this).removeClass('ui-state-hover');
-                });
+                // Attach jQuery bindings to elements
+                that.attach_events();
+
+                setTimeout(function() {
+                    that.publish('warning', {
+                        msg: "Your session will time out soon, please save your work soon to avoid a wiki session timeout."
+                    });
+                }, 900000);
             });
-            setTimeout(function() {
-                that.publish('warning', {
-                    msg: "Your session will time out soon, please save your work soon to avoid a wiki session timeout."
-                });
-            }, 900000);
         }
         return;
+    },
+    // jQuery bindings/effects/widgets
+    attach_events: function() {
+        var that;
+        that = this;
+        // jQuery Event attachments
+        $('#compile_tools').tabs().draggable();
+        $('#compile_tools_menu').hoverIntent(that.Class.compile_tools_menu_hover_options);
+        // SetTimeout to hide the tools_menu
+        setTimeout( that.Class.hide_tools_menu, 5000);
+
+        $('#compile_tools_menu p').bind('mouseenter', function() {
+            $(this).addClass('ui-state-hover');
+        }).bind('mouseleave', function() {
+            $(this).removeClass('ui-state-hover');
+        });
     },
     // Function to render sections
     _render_section: function(section) {
@@ -205,7 +214,7 @@ CompileController = MVC.Controller.extend('compilation',
         $('#compile_tools').css('opacity', 1).fadeIn('fast', function() {
             if(pos) window.scrollTo(0, pos);
         });
-        $('#compile_tools_toggle > a > #compile_tools_toggle_text').text('Hide Tools');
+        $('#compile_tools_toggle #compile_tools_toggle_text').text('Hide Tools');
         $('#transparent_background').show();
 
     },
@@ -224,7 +233,7 @@ CompileController = MVC.Controller.extend('compilation',
         }, "medium");
         $('#compile_tools').hide('fast');
         
-        $('#compile_tools_toggle > a > #compile_tools_toggle_text').text('Show Tools');
+        $('#compile_tools_toggle > #compile_tools_toggle_text').text('Show Tools');
         setTimeout( that.Class.hide_tools_menu, 5000);
     },
     

@@ -169,6 +169,8 @@ FactsController = MVC.Controller.extend('facts',
         this.checked === true ? $('#goal').prev().hide(): $('#goal').prev().show();
       }
     });
+    // Check if ALL is already checked and hide Goal field in Facts table
+    if($("#complete_ALL").is(':checked')) $('#facts #goal').prev().hide();
     this.editable();
   },
   checkbox: function(elem) {

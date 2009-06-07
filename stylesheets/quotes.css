@@ -105,6 +105,7 @@
 }
 .q_tips input {
  cursor: pointer;
+ font-size: 0.8em;
 }
 
 .q_tips > div {
