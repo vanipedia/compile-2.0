@@ -1,10 +1,10 @@
 <div id="compilation" class="hidden">
   <div id="compile_tools_menu">
-    <p id="compile_tools_toggle" class="ui-state-default ui-corner-all"><a href="#"><span class="ui-icon ui-icon-newwin"></span><span id="compile_tools_toggle_text">Hide Tools</span></a></p>
-    <p id="compile_tools_save" class="ui-state-default ui-corner-all"><a href="#"><span class="ui-icon ui-icon-disk"></span>Save</a></p>
+    <p id="compile_tools_toggle" class="ui-state-default ui-corner-all"><span class="ui-icon ui-icon-newwin"></span><span id="compile_tools_toggle_text">Hide Tools</span></p>
+    <p id="compile_tools_save" class="ui-state-default ui-corner-all"><span class="ui-icon ui-icon-disk"></span><span>Save</span></p>
     <div id="compile_tools_menu_bak" class="ui-corner-left"></div>
   </div>
-  <div id="transparent_background"></div>
+  <div id="transparent_background" class="ui-widget-overlay"></div>
   <div id="compile_tools">
     <ul>
       <li><a href="#compile_form">Compile Form</a></li>
@@ -18,8 +18,8 @@
     <div id="compile_form">
       <%= input_field_tag("link") %>
       <div>
-        <p id="clear_form" class="ui-state-default ui-corner-all"title="Clear form"><a href="#"><span class="ui-icon ui-icon-refresh"></span></a></p>
-        <p id="submit_quote" class="ui-state-default ui-corner-all" title="Submit new quote"><a href="#">Submit</a></p>
+        <p id="clear_form" class="ui-state-default ui-corner-all"title="Clear form"><span class="ui-icon ui-icon-refresh"></span></p>
+        <p id="submit_quote" class="ui-state-default ui-corner-all" title="Submit new quote">Submit</p>
         <div id="form_text"><span>Copy new quote by clicking </span><div id="veda_img" title="copy with ref"></div><span>in Vedabase and paste it here</span></div>
       </div>
       <%= text_area_tag() %>
@@ -29,5 +29,6 @@
     <div id="verses"></div>
   </div>
   <div id="warning" class="ui-state-error ui-corner-all"></div>
+  <div id="info" class=" ui-state-highlight ui-corner-all"></div>
   <div id="darken"></div>
 </div>

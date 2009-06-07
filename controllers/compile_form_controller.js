@@ -22,16 +22,20 @@ CompileFormController = MVC.Controller.extend('compile_form',
   // Events to submit a new_quote for rendering and ref request
   // the event is triggered by onkeyup
   "textarea keyup": function(params) {
+    params.event.kill();
     this.process_new_quote(params.element);
   },
   "textarea change": function(params) {
+    params.event.kill();
     this.process_new_quote(params.element);
   },
 
   "#submit_quote click": function(params) {
+    params.event.kill();
     if(this.check_uninserted_quotes()) this.process_new_quote($(params.element).parents('#compile_form').children('textarea')[0]);
   },
   "#clear_form click": function(params) {
+    params.event.kill();
     var p = $(params.element).parents('#compile_form');
     p.children('textarea').val('');
     if($('input#link').is(':visible')) p.children('input#link').val('').hide();

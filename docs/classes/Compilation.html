@@ -234,7 +234,7 @@
 </div>
         <div id='right_side'><div><h1>Compilation <label>API</label></h1>
 
-<div id='shortcuts'><a href='#Compilation'>Compilation</a>, <a href='#Compilation.prototype'>prototype</a>, <a href='#Compilation.static'>static</a>, <a href='#Compilation.static.build'>build</a>, <a href='#Compilation.static.db'>db</a>, <a href='#Compilation.static.find_in_db'>find_in_db</a>, <a href='#Compilation.static.from'>from</a>, <a href='#Compilation.static.new_quote'>new_quote</a>, <a href='#Compilation.static.process_verse'>process_verse</a>, <a href='#Compilation.static.update_db'>update_db</a>, <a href='#Compilation.static.update_heading'>update_heading</a>, <a href='#Compilation.static.update_q_section'>update_q_section</a></div>
+<div id='shortcuts'><a href='#Compilation'>Compilation</a>, <a href='#Compilation.prototype'>prototype</a>, <a href='#Compilation.static'>static</a>, <a href='#Compilation.static.build'>build</a>, <a href='#Compilation.static.db'>db</a>, <a href='#Compilation.static.find_in_db'>find_in_db</a>, <a href='#Compilation.static.from'>from</a>, <a href='#Compilation.static.insert_new_quote'>insert_new_quote</a>, <a href='#Compilation.static.new_quote'>new_quote</a>, <a href='#Compilation.static.process_verse'>process_verse</a>, <a href='#Compilation.static.update_db'>update_db</a>, <a href='#Compilation.static.update_heading'>update_heading</a>, <a href='#Compilation.static.update_q_section'>update_q_section</a></div>
 
 
     <div class='inherits'>Inherits: <b><a href='MVC.Model.html'>MVC.Model</a></b></div>
@@ -281,30 +281,51 @@
  
 
                 
-</div><div class='attribute' id="Compilation.static.from"><h3>from</h3><p>for(var attr in this[where][name]) {
-						this[undo][name][attr] = this[where][name][attr];
+</div><div class='attribute' id="Compilation.static.from"><h3>from</h3><p>for(var attr in this[where][id]) {
+						this[undo][id][attr] = this[where][id][attr];
 				}
 </p></div><div class='method'>
  
  
+ <h3 id="Compilation.static.insert_new_quote">insert_new_quote</h3>
+ <pre class='signiture'><code>insert_new_quote(id, name, attr, type) -> undefined</code></pre>
+ <div class='real_comment'>Insert quote to compilation. Technically simply change from type: new => quote.
+</div>
+   
+      <div class='param '>
+          <label>id</label>
+          <code>{String}</code> - of quote (dom id matches id in Compilation.db)
+      </div>
+   
+      <div class='param '>
+          <label>name</label>
+          <code>{String}</code> - of the quote e.g.: SB 2.1.1.
+      </div>
+   
+      <div class='param '>
+          <label>attr</label>
+          <code>{Object}</code> - is a json object that carries attributes to update. I should carry always the type: 'quote' in this istance
+      </div>
+   
+      <div class='param '>
+          <label>type</label>
+          <code>{String}</code> - of element to be updated q for quote, s for section
+     
+      </div>
+ 
+
+                
+</div><div class='method'>
+ 
+ 
  <h3 id="Compilation.static.new_quote">new_quote</h3>
- <pre class='signiture'><code>new_quote(elem, ref, parent) -> undefined</code></pre>
+ <pre class='signiture'><code>new_quote(elem) -> undefined</code></pre>
  <div class='real_comment'>Method to create a new quote and insert it into the Compilation.db
 </div>
    
       <div class='param '>
           <label>elem</label>
           <code>{Object}</code> - to build into this compilation db
-      </div>
-   
-      <div class='param '>
-          <label>ref</label>
-          <code>{String}</code> - Reference to object: The name or id of the element. It must have underscores (_) instead of spaces
-      </div>
-   
-      <div class='param '>
-          <label>parent</label>
-          <code>{String}</code> - Name of the parent of the element
 	 
       </div>
  
@@ -345,12 +366,12 @@
  
  
  <h3 id="Compilation.static.update_db">update_db</h3>
- <pre class='signiture'><code>update_db(name, attr, type) -> undefined</code></pre>
+ <pre class='signiture'><code>update_db(id, attr, type) -> undefined</code></pre>
  <div class='real_comment'>Update local(client) db (quote or section)
 </div>
    
       <div class='param '>
-          <label>name</label>
+          <label>id</label>
           <code>{string}</code> - of quote to be updated
       </div>
    
@@ -402,12 +423,17 @@
  
  
  <h3 id="Compilation.static.update_q_section">update_q_section</h3>
- <pre class='signiture'><code>update_q_section(name, attr) -> undefined</code></pre>
+ <pre class='signiture'><code>update_q_section(id, link, attr) -> undefined</code></pre>
  <div class='real_comment'>	 
 </div>
    
       <div class='param '>
-          <label>name</label>
+          <label>id</label>
+          <code>{}</code> - 
+      </div>
+   
+      <div class='param '>
+          <label>link</label>
           <code>{}</code> - 
       </div>
    

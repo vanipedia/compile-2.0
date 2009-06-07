@@ -41,6 +41,7 @@ Section = MVC.Model.extend('section',
 	},
 
     exists: function(section) {
+       if(window.console) console.log('Section#exists: checking '+section);
        return this.find_attr(section) ? true: false;
     },
 
@@ -50,7 +51,10 @@ Section = MVC.Model.extend('section',
 	 */
 	find_attr: function(ref, what) {
 		if(!ref || ref === 'undefined' || ref === '') {
-			if(window.console) console.log('Error in Section.find_attr for ref: '+ref+' attr: '+what);
+			if(window.console) {
+                console.error('Error in Section#find_attr for ref: '+ref+' attr: '+what);
+                console.trace();
+            }
 			return;
 		}
 		var sec_parent, sec_class, sec_level, sec_index, sec_book, ms_i, sub_index, all, that;
