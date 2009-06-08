@@ -2,12 +2,11 @@
 	background: none;
 	border: 2px solid white;
 	padding: 4px;
-  margin: 10px 0px;
- position: relative;
- left: -6px;
- width: 97%;
- overflow: auto;
-
+    margin: 10px 0px;
+    position: relative;
+    left: -6px;
+    width: 97%;
+    overflow: auto;
 }
 .quote:hover {
 	background: #FFFEC6;
@@ -60,7 +59,7 @@
  background: transparent;
  position: relative;
  float: right;
- border: 2px solid transparent;
+ border: 1px solid transparent;
  padding: 2px;
  margin: 2px;
  width: 100px;
@@ -119,8 +118,8 @@
  background: white;
  border: 25px solid #3F4C9D;
  padding: 25px;
--moz-border-radius: 15px;
--webkit-border-radius: 15px;
+-moz-border-radius: 5px;
+-webkit-border-radius: 5px;
  position: relative;
  width: 85%;
  z-index: 2;
@@ -130,13 +129,13 @@ background-image: url(/images/Vaniquotes-logo-small2.png);
 }
 
 .building_quote .q_menu {
-	background: #D2C1F2;
-  border: 2px solid #977A31;
-  padding: 2px;
-  text-align: left;
-  -moz-border-radius-bottomright:15px;
-  -moz-border-radius-topright:15px;
-  z-index: 2;
+    background: #D2C1F2;
+    border: 1px solid #603F9D;
+    padding: 2px;
+    text-align: left;
+    -moz-border-radius-bottomright:15px;
+    -moz-border-radius-topright:15px;
+    z-index: 2;
 }
 
 .building_quote .q_menu * {

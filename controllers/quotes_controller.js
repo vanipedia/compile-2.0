@@ -606,7 +606,7 @@ QuotesController = MVC.Controller.extend('quotes',
 		"compilation.new_quote subscribe": function(params) {
 				var that = this;
 				this.render_quote({elem: params.elem, id: params.elem.id, view: 'view'});
-				$(params.elem).parents('.sub_section').children('.quote').tsort({ attr: "index" });
+				$('#'+params.elem.id).parents('.sub_section').children('.quote').tsort({ attr: "index" });
 				$.scrollTo('#'+params.elem.id+'.q_new', 'slow', { easing: 'easeOutExpo', offset: -50, onAfter: that.display_verses});
 		},
 
