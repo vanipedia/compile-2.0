@@ -2,12 +2,11 @@
 	background: none;
 	border: 2px solid white;
 	padding: 4px;
-  margin: 10px 0px;
- position: relative;
- left: -6px;
- width: 97%;
- overflow: auto;
-
+    margin: 10px 0px;
+    position: relative;
+    left: -6px;
+    width: 97%;
+    overflow: auto;
 }
 .quote:hover {
 	background: #FFFEC6;
@@ -60,7 +59,7 @@
  background: transparent;
  position: relative;
  float: right;
- border: 2px solid transparent;
+ border: 1px solid transparent;
  padding: 2px;
  margin: 2px;
  width: 100px;
