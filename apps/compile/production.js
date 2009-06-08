@@ -12989,7 +12989,7 @@ Quote.update_section(q);
 this.publish("updated",{id:id,quote:q});
 },del_from_db:function(id,_41){
 this.db.del(id,_41);
-this.publish("deleted",{id:ref});
+this.publish("deleted",{id:id});
 },find_in_db:function(ref,_43){
 if(!ref||!_43){
 if(window.console){
@@ -14640,7 +14640,7 @@ this._transition_hilite(_87,"#EEF7D9",5);
 },"compilation.new_quote subscribe":function(_88){
 var _89=this;
 this.render_quote({elem:_88.elem,id:_88.elem.id,view:"view"});
-$(_88.elem).parents(".sub_section").children(".quote").tsort({attr:"index"});
+$("#"+_88.elem.id).parents(".sub_section").children(".quote").tsort({attr:"index"});
 $.scrollTo("#"+_88.elem.id+".q_new","slow",{easing:"easeOutExpo",offset:-50,onAfter:_89.display_verses});
 },"compilation.section_checked subscribe":function(_8a){
 var id,_8c;

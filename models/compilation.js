@@ -263,7 +263,7 @@ Compilation = MVC.Model.extend('compilation',
 
 	del_from_db: function(id, type) {
 		this.db.del(id, type);
-		this.publish('deleted', {id: ref});
+		this.publish('deleted', {id: id});
 	},
 
 	/**
