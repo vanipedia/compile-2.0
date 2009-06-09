@@ -11,6 +11,9 @@
   width: 100%;
 }
 
+#compile_form  #ref {
+    display: none;
+}
 #compile_form  #link {
     display: none;
     width: 98%;
@@ -57,7 +60,7 @@
 	background-color: white;
 	overflow: hidden;
 	z-index: 99999;
-    top: 84px;
+    top: 124px;
     left: 34px;
 
 }

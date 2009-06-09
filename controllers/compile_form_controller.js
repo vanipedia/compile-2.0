@@ -38,7 +38,7 @@ CompileFormController = MVC.Controller.extend('compile_form',
     params.event.kill();
     var p = $(params.element).parents('#compile_form');
     p.children('textarea').val('');
-    if($('input#link').is(':visible')) p.children('input#link').val('').hide();
+    if($('input#link').is(':visible')) p.children('input#link, #ref').val('').hide();
   },
   process_new_quote: function(elem) {
     var that;
@@ -96,14 +96,9 @@ CompileFormController = MVC.Controller.extend('compile_form',
   },
   "quote.not_found_reference subscribe": function(params) {
         if($("#compile_tools input#link").is(':hidden')) {
-            $("#compile_tools input#link")
-                .show()
-                .val("Try finding the link for this quote by typing it here")
-                .one("click",
-                    function(){
-                        $(this).val("");
-                    }
-                );
+            $("#compile_tools #ref").html("Search for link for this quote and click submit.<br/>Orig ref. was: <b>"+params.ref+"</b>").show();
+            $("#compile_tools input#link").show()
+
         }
   },
   "quote.title_req_failed subscribe": function(resp) {

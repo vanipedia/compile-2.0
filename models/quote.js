@@ -83,18 +83,18 @@ Quote = MVC.Model.extend('quote',
 			data: request,
 			success: function(resp) {
                 if(resp.result !== 'Found') {
-                  result = resp.result;
-                  if(window.console) console.error('Quote#find_reference: Ref not found in database');
-                  that.publish('warning', { msg: 'Ref not found for '+params.ref });
-                  that.publish('not_found_reference');
+                    result = resp.result;
+                    if(window.console) console.error('Quote#find_reference: Ref not found in database');
+                    that.publish('warning', { msg: 'Ref not found for '+params.ref });
+                    that.publish('not_found_reference', { ref: params.ref });
                 } else {
-                  new_quote = {
-                    link:       resp.title,
-                    link_text:  resp.title,
-                    parent:     resp.parent.replace(/\s+/g, '_'),
-                    index:      resp.index,
-                    type:       'new'
-                  };
+                    new_quote = {
+                        link:       resp.title,
+                        link_text:  resp.title,
+                        parent:     resp.parent.replace(/\s+/g, '_'),
+                        index:      resp.index,
+                        type:       'new'
+                    };
                     // Save to Quote.cache
                     that.cache[params.ref] = new_quote;
                     if(window.console) console.info('Updated Quote.cache with:'); console.dir(that.cache);
