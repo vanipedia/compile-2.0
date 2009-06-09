@@ -250,6 +250,7 @@ CompileController = MVC.Controller.extend('compilation',
             $.scrollTo('.building_quote', 'fast');
             return;
         }
+        if(QuotesController.currently_editing) $(".edit_quote #Cancel_quote").click();
 
         new_compilation = $('<div id="compilation"></div>');
 
