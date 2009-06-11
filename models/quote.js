@@ -97,7 +97,7 @@ Quote = MVC.Model.extend('quote',
                     };
                     // Save to Quote.cache
                     that.cache[params.ref] = new_quote;
-                    if(window.console) console.info('Updated Quote.cache with:'); console.dir(that.cache);
+                    if(window.console) { console.info('Updated Quote.cache with:'); console.dir(that.cache); }
                     // If the request is an attr request from a quote instance set the attr else it must be a new quote(publish the reference_found)
                     if(params.attr) {
                         if(window.console) console.info('Quote#find_reference: updating '+params.attr+' => '+that.cache[params.ref][params.attr]);
@@ -120,7 +120,10 @@ Quote = MVC.Model.extend('quote',
 	 * @param ref {string} reference or id
 	 */
 	need_section: function(ref) {
-		if(!ref) if(window.console) console.log('ref argument missing in Quote.need_section');
+		if(!ref) {
+            if(window.console) console.error('ref argument missing in Quote.need_section');
+            return;
+        }
         if(window.console) console.log('Quote#need_section: checking '+ref);
 		if(/^(SB \d+.\d+.\d+|BG \d+.\d+|CC (Adi|Madhya|Antya) \d+.\d+|NOI \d+)/.test(ref)) {
             if(window.console) console.info('Quote#need_section: quote '+ref+' needs section');
@@ -354,7 +357,7 @@ Quote = MVC.Model.extend('quote',
 		this.Class.update_section(this);
 
         // Verify that we have a text
-		if(!this.text && !this.trans && !this.purport) if(window.console) console.error('No text, trans or purport in ref '+this.link);
+		if(!this.text && !this.trans && !this.purport) { if(window.console) console.error('No text, trans or purport in ref '+this.link); }
 
 		// get_tips
 		if(!this.tips) this.Class.update_tips(this);
@@ -395,9 +398,9 @@ Quote = MVC.Model.extend('quote',
 		}
 		function find_attr(attr) {
 			var resp;
-			if(window.console) console.log('In Quote.init#find_attr, checking Quote.cache['+that.link+'] = '); console.dir(Quote.cache[that.link]);
+			if(window.console) { console.log('In Quote.init#find_attr, checking Quote.cache['+that.link+'] = '); console.dir(Quote.cache[that.link]); }
 			if(Quote.cache[that.link]) {
-			if(window.console) console.info('In Quote.init#find_attr, updating '+attr+' with '+Quote.cache[that.link][attr]);
+                if(window.console) console.info('In Quote.init#find_attr, updating '+attr+' with '+Quote.cache[that.link][attr]);
 				that[attr] = Quote.cache[that.link][attr];
 			} else {
 				//if (attr_requested) setTimeout(find_attr, 1000, attr);
