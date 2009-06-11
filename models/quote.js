@@ -207,7 +207,7 @@ Quote = MVC.Model.extend('quote',
 	},
 	// check for verse in quote
 	check_verses: function(quote) {
-		var that, text, lines, verses, longest, count, first;
+		var that, text, lines, verses, longest, count, first, i, len, line_len;
 		if(quote.type === 'new' && (quote.text || quote.purport)) {
 			that = this;
 			text = quote.text || quote.purport;
@@ -217,9 +217,11 @@ Quote = MVC.Model.extend('quote',
 			first = false;
 			last = false;
 
-			for(i=0, len = lines.length; i < len; i++) {
-				if(lines[i].length > longest) longest = lines[i].length;
-				if(lines[i].length < 89 && !/[:,"\?]/.test(lines[i]) && !/^\s*$/.test(lines[i])) {
+			for(i = 0, len = lines.length; i < len; i++) {
+				// Define current line length
+				line_len = lines[i].length;
+				if(line_len > longest) longest = lines[i].length;
+				if(line_len < 89 && !/[:,"\?]/.test(lines[i]) && !/^\s*$/.test(lines[i])) {
 					if(first === false) {
 						first = i;
 						last = i;
@@ -234,7 +236,6 @@ Quote = MVC.Model.extend('quote',
 				if(i + 1 === len && first !== false && last !== false) that.request_verse(quote, verses.slice(first, last + 1));
 				//if(window.console) { console.log('index: '+i+' first: '+first+' last: '+last); }
 			}
-
 		}
 	},
 	/**
@@ -287,7 +288,6 @@ Quote = MVC.Model.extend('quote',
 			return f ? '([[Vanisource:'+f+'|'+f+']])' : '('+l+')';
 		}
 	}
-
 },
 /* @Prototype */
 {
@@ -335,10 +335,9 @@ Quote = MVC.Model.extend('quote',
             }
         });
 
-
 		// Check for missing (vital) attributes before building quote
 		check_missing_attr();
-        
+
         // quote.parent is the section it belongs to. If missing request it as section as that is the attribute it returns
 		Section.exists(this.parent) ? this.parent = this.parent.replace(/\s+/, '_') : find_attr('parent');
 
@@ -353,7 +352,7 @@ Quote = MVC.Model.extend('quote',
 
         // Clean heading
 		if(this.heading){ this.heading = this.heading.replace(/'''/g, ''); }
-		
+
         // check if link_text needs to be transformed e.g.: NOI 3 to Nectar of Instruction 3
         transform_link_text();
 
@@ -365,29 +364,15 @@ Quote = MVC.Model.extend('quote',
 
 		// get_tips
 		if(!this.tips) this.Class.update_tips(this);
-        
+
 		// check for verse(s)
 		if(!this.verses) this.Class.check_verses(this);
 
 		// Publish creation of new quote!
 		this.publish('created', this);
 
-
-
 		/**** Helper Functions ****/
-
-        // extract_link deprecated
-//		function extract_link(all, link1, link2) {
-//			if(that.link !== $.trim(link1)) if(window.console) { console.error('Quote.init#extract_link: Link found is different from quote.link: '+that.link+' => '+link1); }
-//			if(!that.link_text) {
-//                that.link_text = $.trim(link2.replace(/, ?(Translation and Purport|Translation|Purport)/i, extract_section));
-//            } else {
-//                if(that.link_text !== $.trim(link2) && window.console) console.warning('Quote.init#extract_link: Link_text found in text id different from quote.link_text: '+that.link_text+' => '+link2);
-//            }
-//			// return empty str to replace link in text
-//			return '';
-//		}
-        function extract_section(all, m) {
+    function extract_section(all, m) {
 			that.section = m;
 			return '';
 		}
@@ -419,7 +404,7 @@ Quote = MVC.Model.extend('quote',
 				}
 			}
 		}
-		
+
 		function transform_link_text() {
             if(!that.link_text) that.link_text = that.link.replace(/_/g, ' ');
 			$.each(Quote.link_text_db, function(acronym, full) {

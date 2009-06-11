@@ -24,7 +24,6 @@ QuotesController = MVC.Controller.extend('quotes',
 				params.event.kill();
 				if (this.Class.currently_editing) { this.render_quote(this.Class.currently_editing); }
 				this.render_quote({elem: params.element, view: 'edit'});
-				//$.scrollTo(params.element, 'slow', { easing: 'easeOutExpo', offset: -50 });
 		},
 		"#Update_quote click": function(params) {
 				var quote;
@@ -179,8 +178,8 @@ QuotesController = MVC.Controller.extend('quotes',
 
 				// Some CSS and behavior ------ Where should this go?
 				$('#'+id+'.edit_quote').children('#heading, #trans, #purport, #text').autogrow();
-				
-               
+
+
                 // Make tips for this quote red in case they are required to be set
 				$('#'+id+' .tips[id^="set_"]').not('#set_heading_tip').toggleClass('ui-state-error');
 
@@ -606,8 +605,10 @@ QuotesController = MVC.Controller.extend('quotes',
 		"compilation.new_quote subscribe": function(params) {
 				var that = this;
 				this.render_quote({elem: params.elem, id: params.elem.id, view: 'view'});
-				$('#'+params.elem.id).parents('.sub_section').children('.quote').tsort({ attr: "index" });
-				$.scrollTo('#'+params.elem.id+'.q_new', 'slow', { easing: 'easeOutExpo', offset: -50, onAfter: that.display_verses});
+				if(!CompileController.loading) {
+						$('#'+params.elem.id).parents('.sub_section').children('.quote').tsort({ attr: "index" });
+						$.scrollTo('#'+params.elem.id+'.q_new', 'slow', { easing: 'easeOutExpo', offset: -50, onAfter: that.display_verses });
+				}
 		},
 
 		"compilation.section_checked subscribe": function(params) {
