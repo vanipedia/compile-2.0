@@ -323,11 +323,15 @@ Quote = MVC.Model.extend('quote',
        // Remove underscores and extraspaces
         if(this.link) this.link = this.link.replace(/[_\s]+/g, ' ');
         if(!this.link_text) this.link_text = this.link;
-        // Extract link_text if missing
+        // Extract link_text if missing and remove <br/>
+        var link_ready = false;
         $.each(['trans', 'purport', 'text'], function(i, t) {
             if(that[t]) {
-                that[t] = $.trim(that[t].replace(link_re, ''));
-                return false;
+                if(!link_ready) {
+                    that[t] = $.trim(that[t].replace(link_re, ''));
+                    link_ready = true;
+                }
+                that[t] = that[t].replace(/<br\/?>/g, '\n');
             }
         });
 

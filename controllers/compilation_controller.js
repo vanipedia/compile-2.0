@@ -302,7 +302,7 @@ CompileController = MVC.Controller.extend('compilation',
         }
 
         // Append all to new_compilation
-        final_html = new_compilation.wrap('<div></div>').parent('div').html().replace(/^\s+/mg, '').replace(/<\/span>\n/g, '</span>').replace(/(<div[^>]+?class="(?:quote|section|sub_section)")/g, '\n$1').replace(/<br\/?>/g, '\n\n');
+        final_html = new_compilation.wrap('<div></div>').parent('div').html().replace(/^\s+/mg, '').replace(/<\/span>\n/g, '</span>').replace(/(<div[^>]+?class="(?:quote|section|sub_section)")/g, '\n$1');
         $('#wpTextbox1').val(final_html);
         if(window.console) {
             console.log(facts);

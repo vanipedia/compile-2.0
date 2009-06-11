@@ -515,7 +515,7 @@ QuotesController = MVC.Controller.extend('quotes',
 								var this_html;
 								this_html = $(this).html();
 								//this_html = JsAutoP(this_html);
-								this_html = this_html.replace(/([^>])\n+([^<])/g, '$1<br />$2');
+								this_html = this_html.replace(/([^>])\n+([^<])/g, '$1<br/>$2');
 								$(this).html(this_html);
 						});
 				}
