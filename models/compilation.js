@@ -22,7 +22,7 @@ Compilation = MVC.Model.extend('compilation',
 				that.new_quote(this);
 			});
 		}
-		if(window.console) console.dir(this.db);
+		if(window.console) { console.dir(this.db); }
 	},
 
 	/**
@@ -39,7 +39,7 @@ Compilation = MVC.Model.extend('compilation',
 		that = this;
 		if ($('.section, .sub_section', data).length > 0) {
 			$('.section, .sub_section', data).each(function() {
-				//if(window.console) console.log('Creating '+id+' with element: '+$this);
+				//if(window.console) { console.log('Creating '+id+' with element: '+$this); }
 				that.create_new_section(this);
 			});
 		}
@@ -93,20 +93,20 @@ Compilation = MVC.Model.extend('compilation',
 	add_to_db: function(elem, ref, parent, type) {
 		var resp;
 		if( arguments.length !== 4 || !elem || !ref || !parent || !type ) {
-			if(window.console) console.error('Compilation#add_to_db: Error adding to db with elem: '+elem+' and ref '+ref);
+			if(window.console) { console.error('Compilation#add_to_db: Error adding to db with elem: '+elem+' and ref '+ref); }
 			return;
 		}
 		//if (parent === 'undefined') parent = Section.find_attr(ref, 'sec_parent');
 		if (type === 's') {
 				if (parent === 'compilation') {
-						//if(window.console) console.log('adding '+ref+' to db')
+						//if(window.console) { console.log('adding '+ref+' to db'); }
 						this.db.add(elem, ref, 's');
 				} else {
 						if ( !this.find_in_db(parent, 's') ) {
-							//if(window.console) console.log('adding missing '+parent+' for '+ref)
+							//if(window.console) { console.log('adding missing '+parent+' for '+ref); }
 							this.create_new_section(parent);
 						}
-						//if(window.console) console.log('adding '+ref+' to db');
+						//if(window.console) { console.log('adding '+ref+' to db'); }
 						this.db.add(elem, ref, 's');
 				}
 		}
@@ -119,7 +119,7 @@ Compilation = MVC.Model.extend('compilation',
 				if(parent) {
 					this.create_new_section(parent);
 				} else {
-					if(window.console) console.error('Error in Compilation.add_to_db: creating new section for '+ref+', missing parent');
+					if(window.console) { console.error('Error in Compilation.add_to_db: creating new section for '+ref+', missing parent'); }
 					return;
 				}
 			}
@@ -134,7 +134,7 @@ Compilation = MVC.Model.extend('compilation',
 	 */
 	update_q_section: function(id, link, attr) {
 		if(arguments.length !== 3) {
-			if(window.console) console.log('missing arguments in udpate_q_section');
+			if(window.console) { console.log('missing arguments in udpate_q_section'); }
 			return;
 		}
 		// check if this quote actually requires a section
@@ -253,7 +253,7 @@ Compilation = MVC.Model.extend('compilation',
 	 * @param {string} type indicate which db to search for the object to be updated: 'q' for quote or 's' for section.
 	 */
 	update_db: function(id, attr, type) {
-		if(!id || !attr || !type) if(window.console) console.log('Missing parameters in udpate_db');
+		if(!id || !attr || !type) if(window.console) { console.log('Missing parameters in udpate_db'); }
 		this.db.update(id, attr, type);
         // Test to check speed of controller response on publish
         var q = this.find_in_db(id, 'q')
@@ -273,7 +273,7 @@ Compilation = MVC.Model.extend('compilation',
 	 */
 	find_in_db: function(ref, type) {
 		if(!ref || !type) {
-			if(window.console) console.log('Missing parameters in find_in_db');
+			if(window.console) { console.log('Missing parameters in find_in_db'); }
 			return;
 		}
 		var resp;
@@ -342,14 +342,14 @@ Compilation = MVC.Model.extend('compilation',
 		find: function(id, type) {
 				var where;
 				where = this._where(type);
-				//if(window.console) console.log('find: searching for '+id+' in '+where);
+				//if(window.console) { console.log('find: searching for '+id+' in '+where); }
 				for(var obj in this[where]) {
 						if (obj == id) {
-								//if(window.console) console.log('found '+id+' in '+where);
+								//if(window.console) { console.log('found '+id+' in '+where); }
 								return this[where][obj];
 						}
 				}
-				//if(window.console) console.log(id+' not found!');
+				//if(window.console) { console.log(id+' not found!'); }
 				return false;
 		},
 

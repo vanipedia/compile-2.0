@@ -24,7 +24,7 @@ Facts = MVC.Model.extend('facts',
       {id: id},
       function(resp) {
         if(resp.result !== 'Found') {
-          if(window.console) console.log('No existing facts for article '+id+' in facts.db');
+          if(window.console) { console.log('No existing facts for article '+id+' in facts.db'); }
           return false;
         } else {
            that.db = resp.db;
@@ -63,13 +63,18 @@ Facts = MVC.Model.extend('facts',
     re_categories = /\[\[Category:\s?(.+?)\s?\]\]/ig;
 
     // Check for data
-    if(!data) { if(window.console) console.log('Missing facts data in Facts.build_manually!'); return; }
+    if(!data) {
+        if(window.console) { console.log('Missing facts data in Facts.build_manually!'); }
+        return;
+    }
 
     /**** Facts ****/
     // Split data into its fields e.g: {{terms| etc...}}
     f_array = data.split('{{');
     f_array.shift();
-    if(!f_array.length) if(window.console) console.log('Error creating facts array');
+    if(!f_array.length) {
+        if(window.console) { console.error('Error creating facts array');  }
+    }
     // Loop through array to build temp facts obj
     $.each(f_array, function(i, val) {
       var name, value;
@@ -80,17 +85,17 @@ Facts = MVC.Model.extend('facts',
       }
       name = $.trim(val.substring(0, val.indexOf('|')));
       value = $.trim(val.substr(val.indexOf('|') + 1));
-      if(window.console) console.log('Setting '+name+' to '+value);
+      if(window.console) { console.log('Setting '+name+' to '+value); }
       facts[name] = value;
     });
 
     // set the Facts.db to with the values found and saved in the facts obj
     $.each(that.db, function(name, val) {
-      if(window.console) console.log(name+' is '+typeof facts[name]+' in facts');
+      if(window.console) { console.log(name+' is '+typeof facts[name]+' in facts'); }
       if(typeof facts[name] !== 'undefined') {
         process_fact(name, facts[name]);
       } else {
-        if(window.console) console.log('In Facts.build: '+name+' was not found in extracted facts db');
+        if(window.console) { console.log('In Facts.build: '+name+' was not found in extracted facts db'); }
       }
     });
 
@@ -126,6 +131,7 @@ Facts = MVC.Model.extend('facts',
     }
 
     function clean(str) {
+      var now;
       now = str.replace(/"/g, '\"');
       now = now.replace(/<.+/, '');
       now = now.replace(/\n+/g, '');
@@ -154,7 +160,7 @@ Facts = MVC.Model.extend('facts',
     /**** User ****/
     this.add_user();
 
-    if(window.console) console.log(this.db);
+    if(window.console) { console.log(this.db); }
   }, // End of build_manually
 
   /**
@@ -166,7 +172,7 @@ Facts = MVC.Model.extend('facts',
   update: function(fact, index, value) {
     value = $.trim(value);
     if(this.db[fact] === undefined) {
-      if(window.console) console.log('Error updating Facts.db in '+fact+' with '+value);
+      if(window.console) { console.log('Error updating Facts.db in '+fact+' with '+value); }
       return false;
     }
     // Exceptions for empty values submitted
@@ -197,7 +203,7 @@ Facts = MVC.Model.extend('facts',
     var that;
     that = this;
     if(!name || !value) {
-      if(window.console) console.log('Parameters missing in Facts.set(). name: '+name+' value: '+value);
+      if(window.console) { console.log('Parameters missing in Facts.set(). name: '+name+' value: '+value); }
     }
     that.db[name] = value;
   },
@@ -209,7 +215,7 @@ Facts = MVC.Model.extend('facts',
    */
   add: function(fact, value) {
     if(this.db[fact] === undefined || value === '') {
-      if(window.console) console.log('Bad fact in Facts.add '+fact+' val '+value);
+      if(window.console) { console.log('Bad fact in Facts.add '+fact+' val '+value); }
       return;
     }
     this.db[fact].push($.trim(value));
@@ -281,7 +287,7 @@ Facts = MVC.Model.extend('facts',
     } else {
       complete.splice($.inArray(book, complete), 1);
     }
-    //if(window.console) console.log(complete);
+    //if(window.console) { console.log(complete); }
   },
 
   /**
@@ -312,23 +318,23 @@ Facts = MVC.Model.extend('facts',
     that = this;
     total = 0;
     book_count = new Object();
-    if(window.console) console.log('In Facts.check_totals');
+    if(window.console) { console.log('In Facts.check_totals'); }
     $.each(Compilation.db.quotes, function(name, attr) {
       book_attr = Compilation.db.quotes[name]['book'];
       book_count[book_attr] ? book_count[book_attr]++: book_count[book_attr] = 1;
-      if(window.console) console.log('In quote: '+name+' count for '+book_attr+' is: '+book_count[book_attr]);
+      if(window.console) { console.log('In quote: '+name+' count for '+book_attr+' is: '+book_count[book_attr]); }
     });
     $.each(Facts.db.totals_by_section, function(book, val) {
       if(!book_count[book]) book_count[book] = 0;
       if( val !== book_count[book]) {
-        //if(window.console) console.log('Facts.db totals_by_section doesnt match totals in Compilation.quotes.db for '+book+' totals: '+val+' => '+book_count[book]);
+        //if(window.console) { console.log('Facts.db totals_by_section doesnt match totals in Compilation.quotes.db for '+book+' totals: '+val+' => '+book_count[book]); }
         Facts.db.totals_by_section[book] = book_count[book];
         updated = true;
       }
       total += book_count[book];
     });
     if(updated) {
-      if(window.console) console.log('Updating Facts.db');
+      if(window.console) { console.log('Updating Facts.db'); }
       this.db.total = total;
       this.publish('totals_updated');
     }

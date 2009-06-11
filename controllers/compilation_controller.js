@@ -43,7 +43,7 @@ CompileController = MVC.Controller.extend('compilation',
         data = $('#wpTextbox1').val();
         // Check this page for existing compilation tags
         if(data !== '' && data.indexOf('<div id="compilation">') === -1) {
-            if(window.console) console.log('No compilation found in this page!' );
+            if(window.console) { console.log('No compilation found in this page!' ); }
             this._loading('end_gracefully');
             return;
         }
@@ -79,7 +79,7 @@ CompileController = MVC.Controller.extend('compilation',
         // calculate pos in page for callback to scroll page back to its current location
         var pos = params.event.pageY - 50;
         this.toggle_compile_tools(pos);
-    //if(window.console) console.log(pos);
+    //if(window.console) { console.log(pos); }
     },
     "#compile_tools_save click": function(params) {
         this.save();
@@ -106,7 +106,7 @@ CompileController = MVC.Controller.extend('compilation',
         }
 
         if (now === 'end_gracefully') {
-            if(window.console) console.log('In CompilationController._loading ending gracefully...');
+            if(window.console) { console.log('In CompilationController._loading ending gracefully...'); }
             $('#loading').fadeOut('slow');
             $('#editform, #toolbar').show();
         }
@@ -150,7 +150,7 @@ CompileController = MVC.Controller.extend('compilation',
         var parent;
         this.section = section;
         parent = this.section.parent;
-        if(window.console) console.assert(parent);
+        if(window.console) { console.assert(parent); }
         // Render parent first if not already in dom
         if(parent !== 'compilation' && $('#'+parent).length !== 1) {
             this._render_section(Compilation.find_in_db(parent, 's'));
@@ -250,6 +250,7 @@ CompileController = MVC.Controller.extend('compilation',
             $.scrollTo('.building_quote', 'fast');
             return;
         }
+        if(QuotesController.currently_editing) $(".edit_quote #Cancel_quote").click();
 
         new_compilation = $('<div id="compilation"></div>');
 
@@ -301,7 +302,7 @@ CompileController = MVC.Controller.extend('compilation',
         }
 
         // Append all to new_compilation
-        final_html = new_compilation.wrap('<div></div>').parent('div').html().replace(/^\s+/mg, '').replace(/<\/span>\n/g, '</span>').replace(/(<div[^>]+?class="(?:quote|section|sub_section)")/g, '\n$1').replace(/<br\/?>/g, '\n\n');
+        final_html = new_compilation.wrap('<div></div>').parent('div').html().replace(/^\s+/mg, '').replace(/<\/span>\n/g, '</span>').replace(/(<div[^>]+?class="(?:quote|section|sub_section)")/g, '\n$1');
         $('#wpTextbox1').val(final_html);
         if(window.console) {
             console.log(facts);
@@ -355,7 +356,7 @@ CompileController = MVC.Controller.extend('compilation',
 
     },
     "quote.found_reference subscribe": function(params) {
-        if($('#compile_form input#link').is(':visible')) $('#compile_form input#link').val('').hide();
+        if($('#compile_form input#link').is(':visible')) $('#compile_form input#link, #compile_form #ref').val('').hide();
         if($('#compile_tools').is(':visible')) this.hide_compile_tools();
     },
     "compilation.quote_inserted subscribe": function(params) {
@@ -371,24 +372,24 @@ CompileController = MVC.Controller.extend('compilation',
         this.hide_compile_tools();
     },
     "info subscribe": function(params) {
-        if(window.console) console.info('Info: '+params.msg);
+        if(window.console) { console.info('Info: '+params.msg); }
         this.info(params.msg);
     },
 
     "warning subscribe": function(params) {
-        if(window.console) console.log('Warning: '+params.msg);
+        if(window.console) { console.log('Warning: '+params.msg); }
         this.warning(params.msg);
     },
     "quote.warning subscribe": function(params) {
-        if(window.console) console.log('Warning: '+params.msg);
+        if(window.console) { console.log('Warning: '+params.msg); }
         this.warning(params.msg);
     },
     "facts.warning subscribe": function(params) {
-        if(window.console) console.log('Warning: '+params.msg);
+        if(window.console) { console.log('Warning: '+params.msg); }
         this.warning(params.msg);
     },
     "compilation.warning subscribe": function(params) {
-        if(window.console) console.log('Warning: '+params.msg);
+        if(window.console) { console.log('Warning: '+params.msg); }
         this.warning(params.msg);
     }
 }); // End of CompileController

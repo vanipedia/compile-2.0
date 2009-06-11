@@ -19,7 +19,7 @@ QuotesController = MVC.Controller.extend('quotes',
 		/****** Events ******/
 		// Problems handling mouseup and dblclick event confusion
 		dblclick: function(params){
-				if(window.console) console.log('In dblclick');
+				if(window.console) { console.log('In dblclick'); }
 				if (params.element.has_class('edit_quote') !== undefined) return;
 				params.event.kill();
 				if (this.Class.currently_editing) { this.render_quote(this.Class.currently_editing); }
@@ -71,7 +71,7 @@ QuotesController = MVC.Controller.extend('quotes',
 		},
 		".text mouseup": function(params) {
 				if(window.getSelection().toString() === '') { return; }
-				//if(window.console) console.log('In mouseup');
+				//if(window.console) { console.log('In mouseup'); }
 				if (params.element.has_class('edit_quote') !== undefined) return;
 				params.event.kill();
 				var elem;
@@ -121,7 +121,7 @@ QuotesController = MVC.Controller.extend('quotes',
 				params.event.kill();
 				elem = params.element
 				selected_section = elem.id;
-				if(window.console) console.log(elem+' with '+selected_section);
+				if(window.console) { console.log(elem+' with '+selected_section); }
 				this._do_section(elem, selected_section)
 		},
         ".ui-state-default mouseover": function(params) {
@@ -138,7 +138,7 @@ QuotesController = MVC.Controller.extend('quotes',
 		 * @param action {string} Rendering mode: view, edit, delete
 		 **/
 		render_quote: function(params){
-				//if(window.console) console.log('in render_quote');
+				//if(window.console) { console.log('in render_quote'); }
 				var id, elem, action;
 				elem = params['elem'];
 				// check for id in elem depending whether is an custom object or a dom object
@@ -347,7 +347,7 @@ QuotesController = MVC.Controller.extend('quotes',
 		 */
 		cancel_tip: function(elem) {
 				if( !elem ) {
-					if(window.console) console.log('Error in QuoteController.cancel_tip: missing elem argument');
+					if(window.console) { console.log('Error in QuoteController.cancel_tip: missing elem argument'); }
 				}
 				if($(elem).hasClass('edit_quote') || $(elem).parents('.edit_quote').length) return; 		// If we are in edit_quote form, exit!
 				var tip_elem;
@@ -404,7 +404,7 @@ QuotesController = MVC.Controller.extend('quotes',
 		hi_terms: function(elem) {
 				var terms;
 				terms = Facts.db.terms;
-				if(!terms) { if(window.console) console.log('No terminologies to highlight in hi_terms!'); return; }
+				if(!terms) { if(window.console) { console.log('No terminologies to highlight in hi_terms!'); return; } }
 				$.each(terms, function(i, term) {
 						if(term === '') return true;
 						$(elem).highlight_sanskrit(term);
@@ -468,7 +468,7 @@ QuotesController = MVC.Controller.extend('quotes',
 				q = $(elem).height();
 				diff = w - q;
 				off = diff <= 0 ? -50 : -diff/2;
-				//if(window.console) console.log('Tesing offset: w is '+w+' q is '+q+' diff is '+diff+' and off is '+off);
+				//if(window.console) { console.log('Tesing offset: w is '+w+' q is '+q+' diff is '+diff+' and off is '+off); }
 				$.scrollTo($(elem), 'fast', { easing: 'easeOutElastic', offset: off });
 		},
 		// Display dialog(s) for verse in quote
@@ -515,7 +515,7 @@ QuotesController = MVC.Controller.extend('quotes',
 								var this_html;
 								this_html = $(this).html();
 								//this_html = JsAutoP(this_html);
-								this_html = this_html.replace(/([^>])\n+([^<])/g, '$1<br />$2');
+								this_html = this_html.replace(/([^>])\n+([^<])/g, '$1<br/>$2');
 								$(this).html(this_html);
 						});
 				}
