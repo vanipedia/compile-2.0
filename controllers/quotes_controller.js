@@ -605,8 +605,10 @@ QuotesController = MVC.Controller.extend('quotes',
 		"compilation.new_quote subscribe": function(params) {
 				var that = this;
 				this.render_quote({elem: params.elem, id: params.elem.id, view: 'view'});
-				$('#'+params.elem.id).parents('.sub_section').children('.quote').tsort({ attr: "index" });
-				$.scrollTo('#'+params.elem.id+'.q_new', 'slow', { easing: 'easeOutExpo', offset: -50, onAfter: that.display_verses });
+				if(!CompileController.loading) {
+						$('#'+params.elem.id).parents('.sub_section').children('.quote').tsort({ attr: "index" });
+						$.scrollTo('#'+params.elem.id+'.q_new', 'slow', { easing: 'easeOutExpo', offset: -50, onAfter: that.display_verses });
+				}
 		},
 
 		"compilation.section_checked subscribe": function(params) {

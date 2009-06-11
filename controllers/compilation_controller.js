@@ -8,6 +8,8 @@
 CompileController = MVC.Controller.extend('compilation',
 /* @Static */
 {
+		loading: false,
+
     compile_tools_menu_hover_options: {
         sensitivity: 2, // number = sensitivity threshold (must be 1 or higher)
         interval: 300, // number = milliseconds for onMouseOver polling interval
@@ -93,6 +95,7 @@ CompileController = MVC.Controller.extend('compilation',
     // Loading message while building compilation
     _loading: function(now) {
         var that = this;
+				this.Class.loading = true;
         if (now === 'init') {
             $('#editform, #toolbar').hide();
             this.loading = {};
@@ -123,7 +126,7 @@ CompileController = MVC.Controller.extend('compilation',
 						setTimeout(function() {
 								that.publish('warning', { msg: "Your session will time out soon, please save your work soon to avoid a wiki session timeout." });
 						}, 900000);
-						if(window.console) console.info('CompilationController#_loading ending...');
+						this.Class.loading = false;
         }
         return;
     },
@@ -142,6 +145,7 @@ CompileController = MVC.Controller.extend('compilation',
         }).bind('mouseleave', function() {
             $(this).removeClass('ui-state-hover');
         });
+				return;
     },
     // Function to render sections
     _render_section: function(section) {
@@ -168,6 +172,7 @@ CompileController = MVC.Controller.extend('compilation',
     clean_up: function() {
         this._sort_sections();
         this._remove_empty_secs();
+				this._sort_quotes();
     },
     // Sort an individual section's children
     sort_section: function(section) {
@@ -200,8 +205,9 @@ CompileController = MVC.Controller.extend('compilation',
             }
         });
     },
-    sort_quotes: function(quote) {
-        return;
+		// Sort quotes within their (sub_)section
+    _sort_quotes: function() {
+        $('.quote').tsort({ attr: "index" });
     },
     toggle_compile_tools: function(pos) {
         $('#compile_tools').is(':hidden') ? this.show_compile_tools(pos) : this.hide_compile_tools(pos);
