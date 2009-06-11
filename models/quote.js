@@ -64,7 +64,7 @@ Quote = MVC.Model.extend('quote',
 		request = {};
 		// Check first if we already queried this ref
 		if(that.cache[params.ref]) {
-			if(window.console) console.info('Quote#find_reference: found submitted ref in Quote.cache. '+params.ref);
+			if(window.console) { console.info('Quote#find_reference: found submitted ref in Quote.cache. '+params.ref); }
 			that.publish('found_reference', that.cache[params.ref]);
 			return;
 		}
@@ -84,7 +84,7 @@ Quote = MVC.Model.extend('quote',
 			success: function(resp) {
                 if(resp.result !== 'Found') {
                     result = resp.result;
-                    if(window.console) console.error('Quote#find_reference: Ref not found in database');
+                    if(window.console) { console.error('Quote#find_reference: Ref not found in database'); }
                     that.publish('warning', { msg: 'Ref not found for '+params.ref });
                     that.publish('not_found_reference', { ref: params.ref });
                 } else {
@@ -100,7 +100,7 @@ Quote = MVC.Model.extend('quote',
                     if(window.console) { console.info('Updated Quote.cache with:'); console.dir(that.cache); }
                     // If the request is an attr request from a quote instance set the attr else it must be a new quote(publish the reference_found)
                     if(params.attr) {
-                        if(window.console) console.info('Quote#find_reference: updating '+params.attr+' => '+that.cache[params.ref][params.attr]);
+                        if(window.console) { console.info('Quote#find_reference: updating '+params.attr+' => '+that.cache[params.ref][params.attr]); }
                         params.quote[params.attr] = that.cache[params.ref][params.attr];
                     } else {
                         that.publish('found_reference', new_quote);
@@ -121,12 +121,12 @@ Quote = MVC.Model.extend('quote',
 	 */
 	need_section: function(ref) {
 		if(!ref) {
-            if(window.console) console.error('ref argument missing in Quote.need_section');
+            if(window.console) { console.error('ref argument missing in Quote.need_section'); }
             return;
         }
-        if(window.console) console.log('Quote#need_section: checking '+ref);
+        if(window.console) { console.log('Quote#need_section: checking '+ref); }
 		if(/^(SB \d+.\d+.\d+|BG \d+.\d+|CC (Adi|Madhya|Antya) \d+.\d+|NOI \d+)/.test(ref)) {
-            if(window.console) console.info('Quote#need_section: quote '+ref+' needs section');
+            if(window.console) { console.info('Quote#need_section: quote '+ref+' needs section'); }
             return true;
         } else {
             return false;
@@ -167,7 +167,7 @@ Quote = MVC.Model.extend('quote',
 	update_section: function(quote) {
 		var m;
 		if(this.need_section(quote.link)) { 		// check if this quote requires sections
-            if(window.console) console.log('Quote#update_section: '+quote.link);
+            if(window.console) { console.log('Quote#update_section: '+quote.link); }
 			if(!quote.trans && !quote.purport) { 		// if translation nor purport have not been set
 				if(quote.type === 'new') {
 					if( quote.text.indexOf("PURPORT") > -1) {
@@ -232,7 +232,7 @@ Quote = MVC.Model.extend('quote',
 					first = last = false;
 				}
 				if(i + 1 === len && first !== false && last !== false) that.request_verse(quote, verses.slice(first, last + 1));
-				//if(window.console) console.log('index: '+i+' first: '+first+' last: '+last);
+				//if(window.console) { console.log('index: '+i+' first: '+first+' last: '+last); }
 			}
 
 		}
@@ -245,7 +245,7 @@ Quote = MVC.Model.extend('quote',
 	request_verse: function(quote, verse) {
 		var v = verse.join('<br/>');
 		if(typeof quote === 'string') quote = Compilation.find_in_db(quote, 'q');
-		if(window.console) console.log("Is this a verse?\n"+v);
+		if(window.console) { console.log("Is this a verse?\n"+v); }
 		if(quote.verses === false) quote.verses = new Array();
 		this.publish('verse_request', { verse: v, id: quote.verses.length, quote: quote.id });
 		quote.verses.push(verse.join('\n'));
@@ -300,7 +300,7 @@ Quote = MVC.Model.extend('quote',
 	init: function(quote_obj) {
 		if(quote_obj === undefined) {
 			new Error('Error creating new quote with quote_obj: '+quote_obj);
-			if(window.console) console.error('Quote.init was called without an quote_obj');
+			if(window.console) { console.error('Quote.init was called without an quote_obj'); }
 			return;
 		}
 		var that, this_sec_index, this_text, link_re, attr_requested;
@@ -311,7 +311,7 @@ Quote = MVC.Model.extend('quote',
 		if(!quote_obj.link)  {
 			$.each(that.Class.attr, function(i, a) {
                 !/^(?:text|trans|purport|heading)$/.test(a) ? that[a] = $(quote_obj).attr(a) || false : that[a] = $(quote_obj).children('.'+a).html() || false;
-                //if(window.console) console.log($(quote_obj).attr('link')+' => '+a+': '+that[a]);
+                //if(window.console) { console.log($(quote_obj).attr('link')+' => '+a+': '+that[a]); }
             });
 		} else {
 			$.each(that.Class.attr, function(i, a) { that[a] = quote_obj[a] || false; });
@@ -357,7 +357,7 @@ Quote = MVC.Model.extend('quote',
 		this.Class.update_section(this);
 
         // Verify that we have a text
-		if(!this.text && !this.trans && !this.purport) { if(window.console) console.error('No text, trans or purport in ref '+this.link); }
+		if(!this.text && !this.trans && !this.purport) { if(window.console) { console.error('No text, trans or purport in ref '+this.link); } }
 
 		// get_tips
 		if(!this.tips) this.Class.update_tips(this);
@@ -374,7 +374,7 @@ Quote = MVC.Model.extend('quote',
 
         // extract_link deprecated
 //		function extract_link(all, link1, link2) {
-//			if(that.link !== $.trim(link1)) if(window.console) console.error('Quote.init#extract_link: Link found is different from quote.link: '+that.link+' => '+link1);
+//			if(that.link !== $.trim(link1)) if(window.console) { console.error('Quote.init#extract_link: Link found is different from quote.link: '+that.link+' => '+link1); }
 //			if(!that.link_text) {
 //                that.link_text = $.trim(link2.replace(/, ?(Translation and Purport|Translation|Purport)/i, extract_section));
 //            } else {
@@ -389,9 +389,9 @@ Quote = MVC.Model.extend('quote',
 		}
 		function check_missing_attr() {
 			$.each(['link', 'link_text', 'parent', 'index'], function(i, attr) {
-                if(window.console) console.log('Quote.init#check_missing_attr: '+attr+': '+that[attr]);
+                if(window.console) { console.log('Quote.init#check_missing_attr: '+attr+': '+that[attr]); }
                 if(!that[attr]) {
-                 if(window.console) console.warn('Quote.init#check_missing_attr: Missing '+attr);
+                 if(window.console) { console.warn('Quote.init#check_missing_attr: Missing '+attr); }
                  find_attr(attr);
                 }
 			});
@@ -400,15 +400,15 @@ Quote = MVC.Model.extend('quote',
 			var resp;
 			if(window.console) { console.log('In Quote.init#find_attr, checking Quote.cache['+that.link+'] = '); console.dir(Quote.cache[that.link]); }
 			if(Quote.cache[that.link]) {
-                if(window.console) console.info('In Quote.init#find_attr, updating '+attr+' with '+Quote.cache[that.link][attr]);
+                if(window.console) { console.info('In Quote.init#find_attr, updating '+attr+' with '+Quote.cache[that.link][attr]); }
 				that[attr] = Quote.cache[that.link][attr];
 			} else {
 				//if (attr_requested) setTimeout(find_attr, 1000, attr);
 				if(!that.link) {
 					//that.publish('warning', {msg: attr+' not found for submitted text in find_attr'});
-					if(window.console) console.error('Quote.init#find_attr: Missing that.link to query db for missing '+attr);
+					if(window.console) { console.error('Quote.init#find_attr: Missing that.link to query db for missing '+attr); }
 				} else {
-					if(window.console) console.warn('Quote.init#find_attr: '+attr+' not found in Quote.cache for '+that.link+'. Submiting request to Quote.find_reference');
+					if(window.console) { console.warn('Quote.init#find_attr: '+attr+' not found in Quote.cache for '+that.link+'. Submiting request to Quote.find_reference'); }
                     // Clean link since it most probably has underscores instead of spaces
 					Quote.find_reference({ quote: that, ref: that.link, type: 'title', attr: attr});
 					attr_requested = true;
@@ -419,7 +419,7 @@ Quote = MVC.Model.extend('quote',
 		function transform_link_text() {
             if(!that.link_text) that.link_text = that.link.replace(/_/g, ' ');
 			$.each(Quote.link_text_db, function(acronym, full) {
-				//if(window.console) console.log('In Quote.init.transform_link_text: checking '+acronym+' against '+full);
+				//if(window.console) { console.log('In Quote.init.transform_link_text: checking '+acronym+' against '+full); }
 				if(that.link_text.indexOf(acronym) === 0) {
 					that.link_text = that.link_text.replace(acronym, full);
 					return false;

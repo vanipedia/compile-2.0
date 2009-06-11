@@ -13126,14 +13126,14 @@ if(window.console){
 console.error("Quote#find_reference: Ref not found in database");
 }
 _2.publish("warning",{msg:"Ref not found for "+_1.ref});
-_2.publish("not_found_reference");
+_2.publish("not_found_reference",{ref:_1.ref});
 }else{
 new_quote={link:_5.title,link_text:_5.title,parent:_5.parent.replace(/\s+/g,"_"),index:_5.index,type:"new"};
 _2.cache[_1.ref]=new_quote;
 if(window.console){
 console.info("Updated Quote.cache with:");
-}
 console.dir(_2.cache);
+}
 if(_1.attr){
 if(window.console){
 console.info("Quote#find_reference: updating "+_1.attr+" => "+_2.cache[_1.ref][_1.attr]);
@@ -13153,8 +13153,9 @@ _2.publish("ajax",{type:"end",msg:"Quote request done"});
 },need_section:function(_6){
 if(!_6){
 if(window.console){
-console.log("ref argument missing in Quote.need_section");
+console.error("ref argument missing in Quote.need_section");
 }
+return;
 }
 if(window.console){
 console.log("Quote#need_section: checking "+_6);
@@ -13386,8 +13387,8 @@ function _33(_3a){
 var _3b;
 if(window.console){
 console.log("In Quote.init#find_attr, checking Quote.cache["+_27.link+"] = ");
-}
 console.dir(Quote.cache[_27.link]);
+}
 if(Quote.cache[_27.link]){
 if(window.console){
 console.info("In Quote.init#find_attr, updating "+_3a+" with "+Quote.cache[_27.link][_3a]);
@@ -14021,6 +14022,9 @@ this.publish("warning",{msg:"You must insert all quotes before saving!"});
 $.scrollTo(".building_quote","fast");
 return;
 }
+if(QuotesController.currently_editing){
+$(".edit_quote #Cancel_quote").click();
+}
 _1e=$("<div id=\"compilation\"></div>");
 _1a=Facts.save();
 $("<div id=\"facts\">"+_1a+"</div>").appendTo(_1e);
@@ -14099,7 +14103,7 @@ this.clean_up();
 this._loading("end");
 },"quote.found_reference subscribe":function(_2a){
 if($("#compile_form input#link").is(":visible")){
-$("#compile_form input#link").val("").hide();
+$("#compile_form input#link, #compile_form #ref").val("").hide();
 }
 if($("#compile_tools").is(":visible")){
 this.hide_compile_tools();
@@ -14684,7 +14688,7 @@ _4.event.kill();
 var p=$(_4.element).parents("#compile_form");
 p.children("textarea").val("");
 if($("input#link").is(":visible")){
-p.children("input#link").val("").hide();
+p.children("input#link, #ref").val("").hide();
 }
 },process_new_quote:function(_6){
 var _7;
@@ -14735,9 +14739,8 @@ $("#compile_form textarea").val("");
 }
 },"quote.not_found_reference subscribe":function(_10){
 if($("#compile_tools input#link").is(":hidden")){
-$("#compile_tools input#link").show().val("Try finding the link for this quote by typing it here").one("click",function(){
-$(this).val("");
-});
+$("#compile_tools #ref").html("Search for link for this quote and click submit.<br/>Orig ref. was: <b>"+_10.ref+"</b>").show();
+$("#compile_tools input#link").show();
 }
 },"quote.title_req_failed subscribe":function(_11){
 this.publish("warning",{msg:_11.msg});
