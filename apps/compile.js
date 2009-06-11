@@ -1,10 +1,10 @@
 include.resources(
     'jquery-1.3.2',
     'ejs_fulljslint',
-    'jquery.tinysort.packed', 'jquery.autogrow','jquery.easing', 'jquery.scrollTo', 
+    'jquery.tinysort.packed', 'jquery.autogrow','jquery.easing', 'jquery.scrollTo',
     'jquery.jeditable', 'jquery.hoverIntent', 'jquery-autocomplete/jquery.autocomplete',
     'jquery-ui-1.7.2.custom.min',
-    'BaltoUni2', 'UnitoASCII', 'jquery.highlight_sanskrit', 'JsAutoP'
+    'BaltoUni', 'UnitoASCII', 'jquery.highlight_sanskrit', 'JsAutoP'
     );
 include.engines();
 include.plugins(

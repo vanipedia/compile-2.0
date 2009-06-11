@@ -11,11 +11,11 @@ CompileController = MVC.Controller.extend('compilation',
     compile_tools_menu_hover_options: {
         sensitivity: 2, // number = sensitivity threshold (must be 1 or higher)
         interval: 300, // number = milliseconds for onMouseOver polling interval
-        over: function() { 
+        over: function() {
             CompileController.show_tools_menu();
         }, // function = onMouseOver callback (REQUIRED)
         timeout: 500, // number = milliseconds delay before onMouseOut
-        out: function() { 
+        out: function() {
             CompileController.hide_tools_menu();
         } // function = onMouseOut callback (REQUIRED)
     },
@@ -26,7 +26,7 @@ CompileController = MVC.Controller.extend('compilation',
         }, 'slow');
     },
     show_tools_menu: function() {
-        $('#compile_tools_menu').animate({ 
+        $('#compile_tools_menu').animate({
             right: "0px"
         }, 'fast');
     }
@@ -106,26 +106,24 @@ CompileController = MVC.Controller.extend('compilation',
         }
 
         if (now === 'end_gracefully') {
-            if(window.console) { console.log('In CompilationController._loading ending gracefully...'); }
+            if(window.console) { console.info('In CompilationController._loading ending gracefully...'); }
             $('#loading').fadeOut('slow');
             $('#editform, #toolbar').show();
         }
 
         if (now === 'end') {
             $(document).ready(function() {
-                $('#loading').fadeOut('slow', function() {
-                    $('#compilation').fadeIn('slow').removeClass('hidden');
-                });
-
                 // Attach jQuery bindings to elements
                 that.attach_events();
 
-                setTimeout(function() {
-                    that.publish('warning', {
-                        msg: "Your session will time out soon, please save your work soon to avoid a wiki session timeout."
-                    });
-                }, 900000);
+								$('#loading').fadeOut('slow', function() {
+                    $('#compilation').fadeIn('slow').removeClass('hidden');
+                });
             });
+						setTimeout(function() {
+								that.publish('warning', { msg: "Your session will time out soon, please save your work soon to avoid a wiki session timeout." });
+						}, 900000);
+						if(window.console) console.info('CompilationController#_loading ending...');
         }
         return;
     },
@@ -232,11 +230,11 @@ CompileController = MVC.Controller.extend('compilation',
             className: 'compile_tools_transfer'
         }, "medium");
         $('#compile_tools').hide('fast');
-        
+
         $('#compile_tools_toggle > #compile_tools_toggle_text').text('Show Tools');
         setTimeout( that.Class.hide_tools_menu, 5000);
     },
-    
+
     /**
    * Save compilation data will dump all the quotes, sections and facts compiled to the original wiki editbox.
    */

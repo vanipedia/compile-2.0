@@ -318,7 +318,7 @@ Facts = MVC.Model.extend('facts',
     that = this;
     total = 0;
     book_count = new Object();
-    if(window.console) { console.log('In Facts.check_totals'); }
+    if(window.console) { console.info('In Facts.check_totals'); }
     $.each(Compilation.db.quotes, function(name, attr) {
       book_attr = Compilation.db.quotes[name]['book'];
       book_count[book_attr] ? book_count[book_attr]++: book_count[book_attr] = 1;

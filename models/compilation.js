@@ -68,7 +68,6 @@ Compilation = MVC.Model.extend('compilation',
 		if ( check.length === 0) {
 			this.db.update(id, attr, type);
 			this.publish('quote_inserted', {id: id});
-			//that.publish('warning', { msg: 'Quote Inserted!'});
 		} else {
 			this.publish('warning', { msg: 'Missing '+check.join(', ') });
 		}
