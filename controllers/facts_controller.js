@@ -23,7 +23,7 @@ FactsController = MVC.Controller.extend('facts',
       this.publish('warning', { msg: 'You have no expressions to copy'});
       return;
     }
-    if(window.console) console.log(all_terms);
+    if(window.console) { console.log(all_terms); }
     $('#copy_terms_man').val(all_terms).show().select();
   },
 
@@ -58,7 +58,7 @@ FactsController = MVC.Controller.extend('facts',
     this.f_class  = params.fact;
     this.value  = Facts.get(params.fact, params.index);
     if($('#'+parent).length === 0) {
-      if(window.console) console.log('Error in FactsController.append: '+parent+' does not exist in dom');
+      if(window.console) { console.log('Error in FactsController.append: '+parent+' does not exist in dom'); }
       return;
     }
     this.render({
@@ -85,7 +85,7 @@ FactsController = MVC.Controller.extend('facts',
    */
   un_hilite: function(term) {
     if(!term) {
-      if(window.console) console.log('term missing in FactsController.un_hilite '+term);
+      if(window.console) { console.log('term missing in FactsController.un_hilite '+term); }
       return;
     }
     var v, re;

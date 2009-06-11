@@ -13585,7 +13585,7 @@ _d=_a.split("{{");
 _d.shift();
 if(!_d.length){
 if(window.console){
-console.log("Error creating facts array");
+console.error("Error creating facts array");
 }
 }
 $.each(_d,function(i,val){

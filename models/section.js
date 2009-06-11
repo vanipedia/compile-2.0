@@ -41,7 +41,7 @@ Section = MVC.Model.extend('section',
 	},
 
     exists: function(section) {
-       if(window.console) console.log('Section#exists: checking '+section);
+       if(window.console) { console.log('Section#exists: checking '+section); }
        return this.find_attr(section) ? true: false;
     },
 
@@ -101,9 +101,9 @@ Section = MVC.Model.extend('section',
 /* @Prototype */
 {
 	init: function(ref) {
-		if(window.console) console.log('Building section '+ref);
+		if(window.console) { console.log('Building section '+ref); }
 		if(ref === undefined || ref === '') {
-			if(window.console) console.log('Error in Section.init creating new section with ref: '+ref);
+			if(window.console) { console.log('Error in Section.init creating new section with ref: '+ref); }
 			return;
 		}
 		if (typeof ref !== 'string') {
@@ -119,7 +119,7 @@ Section = MVC.Model.extend('section',
 		this.publish('created', this)
 	},
 	_set_attr_auto: function(ref) {
-		if(window.console) console.log('Building section '+ref+' auto');
+		if(window.console) { console.log('Building section '+ref+' auto'); }
 		this.parent 		= $(ref).attr('parent');
 		this.sec_class 	= $(ref).attr('class');
 		this.level 		= $(ref).attr('level');
@@ -128,9 +128,9 @@ Section = MVC.Model.extend('section',
 		this.text 		= this.id.replace(/_/g, ' ');
 	},
 	_set_attr_man: function(ref) {
-		if(window.console) console.log('Building section '+ref+' man');
+		if(window.console) { console.log('Building section '+ref+' man'); }
 		if(ref === undefined) {
-			if(window.console) console.log('Error in Section._set_attr_man with ref '+ref);
+			if(window.console) { console.log('Error in Section._set_attr_man with ref '+ref); }
 			return;
 		}
 		var attr;
