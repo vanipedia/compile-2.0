@@ -13282,6 +13282,8 @@ _1a.verses.push(_1b.join("\n"));
 },clean:function(_1d){
 _1d=BaltoUni(_1d);
 _1d=_1d.replace(/'{2,3}/g,"\"");
+_1d=_1d.replace(/(^|\s)[“‘]+/g,"$1\"");
+_1d=_1d.replace(/[”’]+(\s|$)/g,"\"$1");
 _1d=_1e(_1d);
 return _1d;
 function _1e(_1f){
