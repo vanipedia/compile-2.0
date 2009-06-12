@@ -111,7 +111,10 @@ QuotesController = MVC.Controller.extend('quotes',
 				id = params.element.id;
 				quote = $(params.element).parents('div.quote');
 				if(id === 'heading_new') {
+						// Update heading with an empty string
 						Compilation.update_heading({id: quote.attr('id'), heading: ' ', action: 'new'});
+						// Give focus to the heading
+						$('#heading', quote).focus();
 				}
 				if(id === 'heading_edit') {
 						// if other quote is in edit mode, render it to view mode
@@ -123,6 +126,8 @@ QuotesController = MVC.Controller.extend('quotes',
 								// render in edit mode
 								this.render_quote({elem: quote, view: 'edit'});
 						}
+						// Give focus and select text in heading
+						$('#heading', quote).focus().select();
 				}
 				if(id === 'heading_create') this.tip_alert({elem: quote, type: 'heading'});
 				if(id === 'heading_set' || id === 'heading_append') this._do_heading(quote, id);
@@ -244,7 +249,8 @@ QuotesController = MVC.Controller.extend('quotes',
 		 * @param {string} text_elem Dom element where event (highlight) ocurred. It can be passed as params.element or $(text_elem)
 		 */
 		check_selection: function(text_elem) {
-				if($('#alert_tip').is(':visible')) return;
+				var q = $(text_elem).parents('.quote');
+				if($('#alert_tip', q).is(':visible')) return;
 				var that, heading_selection, quote, tip_elem;
 				that = this;
 				heading_selection = $.trim(window.getSelection().toString());
@@ -340,8 +346,8 @@ QuotesController = MVC.Controller.extend('quotes',
 				that = this;
 				tip_elem = this._find_alert_tip_elem(params.elem);
 				if(!tip_elem) return;
-				if(params.type === 'heading') this.message = $.trim(window.getSelection().toString()) === '' ? 'Highlight text and:' : 'Heading:';
-				if(params.type === 'edit_heading') this.message = 'Heading:';
+				if(params.type === 'heading') this.message = $.trim(window.getSelection().toString()) === '' ? 'Highlight text and:' : 'Set heading:';
+				if(params.type === 'edit_heading') this.message = 'Set heading:';
 				this.render({
 					to: tip_elem,
 					action: params.type
