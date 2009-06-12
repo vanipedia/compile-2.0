@@ -256,8 +256,12 @@ Quote = MVC.Model.extend('quote',
 	 * @param {strin} text to be cleaned up from wiki markup and balaram encoding
 	 */
 	clean: function(text) {
+		// Convert Balaram to Unicode
 		text = BaltoUni(text);
+		// fix apostrophies and quotation marks
 		text = text.replace(/'{2,3}/g, '"');
+		text = text.replace(/(^|\s)[“‘]+/g, '$1"');
+		text = text.replace(/[”’]+(\s|$)/g, '"$1');
 		text = fix_links(text);
 		return text;
 
