@@ -1,7 +1,8 @@
 QuotesController = MVC.Controller.extend('quotes',
 /* @Static */
 {
-		currently_editing: false
+		currently_editing: false,
+		focused_textarea: false
 
 },
 /* @Prototype */
@@ -19,7 +20,6 @@ QuotesController = MVC.Controller.extend('quotes',
 		/****** Events ******/
 		// Problems handling mouseup and dblclick event confusion
 		dblclick: function(params){
-				if(window.console) { console.log('In dblclick'); }
 				if (params.element.has_class('edit_quote') !== undefined) return;
 				params.event.kill();
 				if (this.Class.currently_editing) { this.render_quote(this.Class.currently_editing); }
@@ -48,6 +48,21 @@ QuotesController = MVC.Controller.extend('quotes',
 						return;
 				}
 				this.insert_prabhupada_speaker(edit_quote_text);
+		},
+		"#diacritics a click": function(params) {
+				var edit_quote_text, diacritic;
+				params.event.kill();
+				edit_quote_text = this.Class.focused_textarea;
+				// if no selection has been made to insert the speaker
+				if(!edit_quote_text) {
+						this.publish('warning', { msg: 'You must place the cursor in the text where you wish to insert the diacritic character' });
+						return;
+				}
+				diacritc = params.element.innerHTML;
+				this.insert_diacritic(edit_quote_text, diacritc);
+		},
+		"textarea focus": function(params) {
+				this.Class.focused_textarea = params.element;
 		},
 		".undo_quote click": function(params) {
 				if (params.element.has_class('edit_quote') !== undefined) return;
@@ -146,6 +161,7 @@ QuotesController = MVC.Controller.extend('quotes',
 				if(params['view'] === 'view') {
 						action = 'quote';
 						this.Class.currently_editing = false;
+						this.Class.focused_textarea = false;
 						$('#'+id).removeClass('edit_quote');
 						if (elem.type === 'new') $('#'+id).addClass('q_new building_quote');
 				} else if (params['view'] === 'edit') {
@@ -454,6 +470,17 @@ QuotesController = MVC.Controller.extend('quotes',
 						quote_textarea.value = quote_textarea.value.substring(0, startPos)
 						+ 'Prabhup&#257;da: '
 						+ quote_textarea.value.substring(endPos, quote_textarea.value.length);
+				}
+		},
+		insert_diacritic: function(quote_textarea, diacritic) {
+				if (quote_textarea.selectionStart || quote_textarea.selectionStart == '0') {
+						var startPos = quote_textarea.selectionStart;
+						var endPos = quote_textarea.selectionEnd;
+						quote_textarea.value = quote_textarea.value.substring(0, startPos)
+						+ diacritic
+						+ quote_textarea.value.substring(endPos, quote_textarea.value.length);
+						quote_textarea.setSelectionRange(endPos + 1, endPos + 1);
+						quote_textarea.focus();
 				}
 		},
 		_transition_hilite: function(elem, color, time) {

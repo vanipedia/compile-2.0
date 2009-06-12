@@ -27,7 +27,7 @@ function BaltoUni(obj) {
       obj = obj.replace (/Ü/g, "Ū"); // long u
       obj = obj.replace (/Å/g, "Ṛ"); // r cedilla
       obj = obj.replace (/È/g, "Ṟ"); // long r cedilla
-      obj = obj.replace (/Ì/g, "&#7748;"); // n dot over
+      obj = obj.replace (/Ì/g, "Ṅ"); // n dot over
 
       obj = obj.replace (/Ñ/g, "Ṣ"); // s cedilla
       obj = obj.replace (/Ï/g, "Ñ"); // n tilde
@@ -40,6 +40,6 @@ function BaltoUni(obj) {
       obj = obj.replace (/À/g, "Ṁ"); // m dot over (anusvara)
       obj = obj.replace (/Ù/g, "Ḥ"); // h cedilla (visarga)
       obj = obj.replace (/ß/g, "Ḷ"); // l cedilla
-      
+
     return obj;
 }

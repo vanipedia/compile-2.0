@@ -42,6 +42,13 @@
  cursor: pointer;
  padding: 3px;
 }
+.edit_quote #diacritics {
+    position: relative;
+    float: right;
+    right: 5%;
+    margin: 0px 10px;
+    font-size: 1.1em;
+}
 .edit_quote #prabhupada_icon {
   background-image: url("images/prabhupada_icon.png");
   background-repeat: no-repeat;
