@@ -19,5 +19,5 @@ include(function(){ //runs after prior includes are loaded
   include.views();
 });
 include.css('compilation', 'quotes', 'edit_quote', 'deleted_quote', 'compile_form', 'facts',
-            'compile-default/jquery-ui', 'jquery.autocomplete'
+            'skins/light_blue/jquery-ui', 'jquery.autocomplete'
             );
