@@ -234,7 +234,7 @@
 </div>
         <div id='right_side'><div><h1>Compilation <label>API</label></h1>
 
-<div id='shortcuts'><a href='#Compilation'>Compilation</a>, <a href='#Compilation.prototype'>prototype</a>, <a href='#Compilation.static'>static</a>, <a href='#Compilation.static.build'>build</a>, <a href='#Compilation.static.db'>db</a>, <a href='#Compilation.static.find_in_db'>find_in_db</a>, <a href='#Compilation.static.from'>from</a>, <a href='#Compilation.static.insert_new_quote'>insert_new_quote</a>, <a href='#Compilation.static.new_quote'>new_quote</a>, <a href='#Compilation.static.process_verse'>process_verse</a>, <a href='#Compilation.static.update_db'>update_db</a>, <a href='#Compilation.static.update_heading'>update_heading</a>, <a href='#Compilation.static.update_q_section'>update_q_section</a></div>
+<div id='shortcuts'><a href='#Compilation'>Compilation</a>, <a href='#Compilation.prototype'>prototype</a>, <a href='#Compilation.static'>static</a>, <a href='#Compilation.static.build'>build</a>, <a href='#Compilation.static.db'>db</a>, <a href='#Compilation.static.find_in_db'>find_in_db</a>, <a href='#Compilation.static.from'>from</a>, <a href='#Compilation.static.insert_new_quote'>insert_new_quote</a>, <a href='#Compilation.static.new_quote'>new_quote</a>, <a href='#Compilation.static.process_verse'>process_verse</a>, <a href='#Compilation.static.type'>type</a>, <a href='#Compilation.static.update_db'>update_db</a>, <a href='#Compilation.static.update_heading'>update_heading</a>, <a href='#Compilation.static.update_q_section'>update_q_section</a></div>
 
 
     <div class='inherits'>Inherits: <b><a href='MVC.Model.html'>MVC.Model</a></b></div>
@@ -362,7 +362,14 @@
  
 
                 
-</div><div class='method'>
+</div><div class='attribute' id="Compilation.static.type"><h3>type</h3><p>if( arguments.length !== 4 || !elem || !ref || !parent || !type ) {
+			if(window.console) {
+								console.error('Compilation#add_to_db: Error adding to db ref '+ref+' element:');
+								console.dir(elem);
+				}
+			return;
+		}
+</p></div><div class='method'>
  
  
  <h3 id="Compilation.static.update_db">update_db</h3>

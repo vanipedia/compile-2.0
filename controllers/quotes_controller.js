@@ -38,6 +38,10 @@ QuotesController = MVC.Controller.extend('quotes',
 				params.event.kill();
 				this._event_resp({elem: quote, action: 'cancel'});
 		},
+		"#link_text click": function(params) {
+				params.event.kill();
+				$(params.element).parents('.edit_quote').children('#fix_link').toggle().children('#fix_link_input').focus();
+		},
 		"#prabhupada_icon click": function(params) {
 				var edit_quote_text;
 				params.event.kill();
@@ -135,20 +139,20 @@ QuotesController = MVC.Controller.extend('quotes',
 		},
 
 		// Event handler for sections in the q_menu
-		"#alert_tip input click": function(params) {
-				var selected_section, elem;
-				params.event.kill();
-				elem = params.element
-				selected_section = elem.id;
-				if(window.console) { console.log(elem+' with '+selected_section); }
-				this._do_section(elem, selected_section)
-		},
-        ".ui-state-default mouseover": function(params) {
-            $(params.element).addClass('ui-state-hover');
-        },
-        ".ui-state-default mouseout": function(params) {
-            $(params.element).removeClass('ui-state-hover');
-        },
+				"#alert_tip input click": function(params) {
+						var selected_section, elem;
+						params.event.kill();
+						elem = params.element
+						selected_section = elem.id;
+						if(window.console) { console.log(elem+' with '+selected_section); }
+						this._do_section(elem, selected_section)
+				},
+				".ui-state-default mouseover": function(params) {
+								$(params.element).addClass('ui-state-hover');
+				},
+				".ui-state-default mouseout": function(params) {
+								$(params.element).removeClass('ui-state-hover');
+				},
 
 		/****** Event responders ********/
 		/**
@@ -164,23 +168,23 @@ QuotesController = MVC.Controller.extend('quotes',
 				elem.id ? id = elem.id : id = $(elem).attr('id');
 				if($('#'+id).length !== 1) this._append_quote(elem);
 				if(params['view'] === 'view') {
-						action = 'quote';
-						this.Class.currently_editing = false;
-						this.Class.focused_textarea = false;
-						$('#'+id).removeClass('edit_quote');
-						if (elem.type === 'new') $('#'+id).addClass('q_new building_quote');
+								action = 'quote';
+								this.Class.currently_editing = false;
+								this.Class.focused_textarea = false;
+								$('#'+id).removeClass('edit_quote');
+								if (elem.type === 'new') $('#'+id).addClass('q_new building_quote');
 				} else if (params['view'] === 'edit') {
-						action = 'quote_edit';
-						this.Class.currently_editing = { elem: elem, view: 'view' };
-						$('#'+id).addClass('edit_quote');
-						$(document).unbind('click');
+								action = 'quote_edit';
+								this.Class.currently_editing = { elem: elem, view: 'view' };
+								$('#'+id).addClass('edit_quote');
+								$(document).unbind('click');
 				} else if (params['view'] === 'delete') {
-						action = 'delete';
-						$('#'+id).addClass('deleted_quote');
+								action = 'delete';
+								$('#'+id).addClass('deleted_quote');
 				}
 				action === 'delete' ?
-						this.deleted 	= Compilation.db.find(id, 'd'):
-						this.quote 		= Compilation.db.find(id, 'q');
+								this.deleted 	= Compilation.db.find(id, 'd'):
+								this.quote 		= Compilation.db.find(id, 'q');
 
 				// Change render action if quote is missing trans or purport text
 				if(action === 'quote' && this.quote.section === 'Translation and Purport' && (this.quote.trans === ' ' || this.quote.purport === ' ') ) {
@@ -192,6 +196,10 @@ QuotesController = MVC.Controller.extend('quotes',
 						this.render_quote({elem: elem, view: 'edit' });
 						return;
 				}
+				//if(window.console) { console.info("In QuoteController#render_quote: rendering "+this.quote.id+" to "+id+" in template "+action); }
+				if(params['view'] === 'edit') {
+								this.edit_class = this.quote.bad_link ? 'ui-state-error ui-corner-all' : 'ui-state-default ui-corner-all';
+				}
 				this.render({
 					to: id,
 					action: action
@@ -201,8 +209,14 @@ QuotesController = MVC.Controller.extend('quotes',
 				$('#'+id+'.edit_quote').children('#heading, #trans, #purport, #text').autogrow();
 
 
-                // Make tips for this quote red in case they are required to be set
+    // Make tips for this quote red in case they are required to be set
 				$('#'+id+' .tips[id^="set_"]').not('#set_heading_tip').toggleClass('ui-state-error');
+
+				// Set autocomplete for bad_links
+				if(params['view'] === 'edit') {
+								CompileController.autocomplete($('#'+id+' #fix_link_input'), false);
+								if(this.quote.bad_link) { $('#'+id+' #fix_link').show().children('#fix_link_input').focus(); }
+				}
 
 				this.publish('rendered', $('#'+id).not('.edit_quote'));
 
@@ -416,9 +430,12 @@ QuotesController = MVC.Controller.extend('quotes',
 		},
 		// Add the container for the just 'created' quote
 		_append_quote: function(quote) {
+				var section;
 				this.quote = quote;
+				section = this.quote.parent ? this.quote.parent : 'compilation';
+				if(window.console) { console.info('QuotesController#_append_quote: appending '+quote.id+' to '+section); }
 				this.render({
-						bottom: this.quote.parent,
+						bottom: section,
 						action: 'new_quote'
 				});
 		},
@@ -445,7 +462,7 @@ QuotesController = MVC.Controller.extend('quotes',
 				}
 		},
 		update: function(quote) {
-				var id, attr;
+				var id, attr, new_link;
 				id = $(quote).attr('id');
 				// Current values when Update button is clicked
 				attr = {};
@@ -460,7 +477,16 @@ QuotesController = MVC.Controller.extend('quotes',
 								return false;
 						}
 				}
-				if ($(quote).children('#text').length) { attr['text'] = $(quote).children('#text').val(); }
+				if($(quote).children('#text').length) { attr['text'] = $(quote).children('#text').val(); }
+				new_link = $('#fix_link_input', quote);
+				if($(new_link).is(':visible') && $(new_link).val() !== '') {
+								var link;
+								link = $('#fix_link_input', quote).val();
+								$(quote).attr('link', link).removeAttr('link_text').removeAttr('parent').removeAttr('book');
+								if(window.console) { console.info('QuotesController#update: fixing link to: '+link); }
+								this.publish('changed_link', { elem: quote});
+								return;
+				}
 				Compilation.update_db(id, attr, 'q');
 				//Quote.update_section(Compilation.find_in_db(id, 'q'));
 				return;
@@ -672,6 +698,13 @@ QuotesController = MVC.Controller.extend('quotes',
 
 		"quote.found_reference subscribe": function(quote) {
 				quote.text = CompileFormController.temp_quote;
+				q = new Quote(quote);
+		},
+		"changed_link subscribe": function(params) {
+				if(window.console) { console.info('In QuotesController.changed_link observer'); }
+				var quote = params.elem;
+				this.render_quote({elem: quote, view: 'view'});
+				Compilation.del_from_db($(quote).attr('id'), 'q');
 				q = new Quote(quote);
 		}
 }); // End of EditQuotesController

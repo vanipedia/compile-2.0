@@ -314,27 +314,31 @@ Facts = MVC.Model.extend('facts',
    * For individual quotes added to compilation call update_totals instead
    */
   check_totals: function() {
-    var that, book_attr, book_name, book_count, total, updated;
+    var that, book_count, total, updated;
     that = this;
     total = 0;
-    book_count = new Object();
-    if(window.console) { console.info('In Facts.check_totals'); }
+    book_count = {};
+    if(window.console) { console.info('In Facts#check_totals'); }
     $.each(Compilation.db.quotes, function(name, attr) {
-      book_attr = Compilation.db.quotes[name]['book'];
-      book_count[book_attr] ? book_count[book_attr]++: book_count[book_attr] = 1;
-      if(window.console) { console.log('In quote: '+name+' count for '+book_attr+' is: '+book_count[book_attr]); }
+      var book = Compilation.db.quotes[name]['book'];
+      book_count[book] ? book_count[book]++: book_count[book] = 1;
+      if(window.console) { console.log('Facts#check_totals: In quote: '+name+' count for '+book+' is: '+book_count[book]); }
     });
+		
     $.each(Facts.db.totals_by_section, function(book, val) {
-      if(!book_count[book]) book_count[book] = 0;
+      if(!book_count[book]) {
+				if(window.console) { console.warn('Facts#check_totals: No book_count for '+book+' => '+book_count[book]); }
+				book_count[book] = 0;
+			}
       if( val !== book_count[book]) {
-        //if(window.console) { console.log('Facts.db totals_by_section doesnt match totals in Compilation.quotes.db for '+book+' totals: '+val+' => '+book_count[book]); }
+        if(window.console) { console.warn("Facts#check_totals: Facts.db totals_by_section doesn't match totals in Compilation.quotes.db for "+book+" totals: "+val+" => "+book_count[book]); }
         Facts.db.totals_by_section[book] = book_count[book];
         updated = true;
       }
       total += book_count[book];
     });
     if(updated) {
-      if(window.console) { console.log('Updating Facts.db'); }
+      if(window.console) { console.info('Updating Facts.db with quotes total '+total); }
       this.db.total = total;
       this.publish('totals_updated');
     }

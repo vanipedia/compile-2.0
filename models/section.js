@@ -41,8 +41,8 @@ Section = MVC.Model.extend('section',
 	},
 
     exists: function(section) {
-       if(window.console) { console.log('Section#exists: checking '+section); }
-       return this.find_attr(section) ? true: false;
+       if(window.console) { console.log('Section#exists: checking TOC '+section); }
+       return this.find_attr(section) ? true : false;
     },
 
 	/**
@@ -101,7 +101,6 @@ Section = MVC.Model.extend('section',
 /* @Prototype */
 {
 	init: function(ref) {
-		if(window.console) { console.log('Building section '+ref); }
 		if(ref === undefined || ref === '') {
 			if(window.console) { console.log('Error in Section.init creating new section with ref: '+ref); }
 			return;
@@ -110,27 +109,27 @@ Section = MVC.Model.extend('section',
 		// if attr present already use _set_attr_auto else use _set_attr_man
             $(ref).attr('parent') 	&&
             $(ref).attr('class') 	&&
-            $(ref).attr('level') 	&&
+            //$(ref).attr('level') 	&& No need to save this attr to the page if we know the class "section" || "sub_section"
             $(ref).attr('sec_index') 	? this._set_attr_auto(ref) : this._set_attr_man($(ref).attr('id'));
 		} else {
 			this._set_attr_man(ref);
 		}
-        
+
 		this.publish('created', this)
 	},
 	_set_attr_auto: function(ref) {
 		if(window.console) { console.log('Building section '+ref+' auto'); }
 		this.parent 		= $(ref).attr('parent');
 		this.sec_class 	= $(ref).attr('class');
-		this.level 		= $(ref).attr('level');
+		this.level 		= this.sec_class === "section" ? 2 : 3;
 		this.sec_index 	= $(ref).attr('sec_index');
 		this.id 		= $(ref).attr('id');
 		this.text 		= this.id.replace(/_/g, ' ');
 	},
 	_set_attr_man: function(ref) {
-		if(window.console) { console.log('Building section '+ref+' man'); }
+		if(window.console) { console.log('Building section '+ref+' manually'); }
 		if(ref === undefined) {
-			if(window.console) { console.log('Error in Section._set_attr_man with ref '+ref); }
+			if(window.console) { console.error('Error in Section._set_attr_man with ref '+ref); }
 			return;
 		}
 		var attr;
