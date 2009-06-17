@@ -73,14 +73,6 @@ CompileController = MVC.Controller.extend('compilation',
         Facts.build(data);
         Compilation.build(data);
     },
-
-    "#compile_tools_fix click": function(params) {
-        //$('#darken').hide();
-        $(params.element).parents('#compile_tools').addClass('compile_tools_fixed').draggable('destroy');
-    },
-    "#compile_tools_float click": function(params) {
-        $(params.element).parents('#compile_tools').removeClass('compile_tools_fixed').draggable();
-    },
     "#compile_tools_hide click": function(params) {
         this.hide_compile_tools();
     },
