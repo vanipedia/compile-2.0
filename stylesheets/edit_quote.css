@@ -17,14 +17,20 @@
   position:relative;
   left:6px;
 }
-.edit_quote > div#link {
+.edit_quote > #link_text {
   position: relative;
   float: right;
   right: 5%;
   margin: 2px;
   padding:4px;
+		cursor: pointer;
 }
-
+.edit_quote > #fix_link {
+		display: none;
+}
+.edit_quote #fix_link_input {
+    width: 500px;
+}
 .edit_quote > input#heading, .edit_quote > textarea {
   color: #62326D;
   padding: 4px;

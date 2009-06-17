@@ -24,14 +24,24 @@ CompileController = MVC.Controller.extend('compilation',
     // define hiding and show functions for compile_tools_menu
     hide_tools_menu: function() {
         $('#compile_tools_menu').animate({
-            right: "-90px"
+            right: "-72px"
         }, 'slow');
     },
     show_tools_menu: function() {
         $('#compile_tools_menu').animate({
             right: "0px"
         }, 'fast');
-    }
+    },
+				autocomplete: function(elem, fixed) {
+								// autocomplete for suggest box on quote or link not found
+								// jQuery.autocomplete was customized in order to display properly
+								// in our fixed compile_tools box
+								$(elem).autocomplete("/php/get_vanisource_title.php", {
+												extraParams: { type: 'title', suggest: true, minChars: 2},
+												resultsClass: 'suggest_results',
+												fixed: fixed
+								});
+				}
 },
 /* @Prototype */
 {
@@ -63,14 +73,6 @@ CompileController = MVC.Controller.extend('compilation',
         Facts.build(data);
         Compilation.build(data);
     },
-
-    "#compile_tools_fix click": function(params) {
-        //$('#darken').hide();
-        $(params.element).parents('#compile_tools').addClass('compile_tools_fixed').draggable('destroy');
-    },
-    "#compile_tools_float click": function(params) {
-        $(params.element).parents('#compile_tools').removeClass('compile_tools_fixed').draggable();
-    },
     "#compile_tools_hide click": function(params) {
         this.hide_compile_tools();
     },
@@ -98,6 +100,7 @@ CompileController = MVC.Controller.extend('compilation',
 				this.Class.loading = true;
         if (now === 'init') {
             $('#editform, #toolbar').hide();
+						$('#mw-edit-longpagewarning').hide();
             this.loading = {};
             this.loading.message = 'Loading compiling data...';
             this.render({
@@ -157,6 +160,7 @@ CompileController = MVC.Controller.extend('compilation',
         if(parent !== 'compilation' && $('#'+parent).length !== 1) {
             this._render_section(Compilation.find_in_db(parent, 's'));
         }
+								if(window.console) { console.info('CompileController#_render_section: rendering '+this.section.id+' to '+parent); }
         this.render({
             bottom: parent,
             action: 'sections'
@@ -172,7 +176,7 @@ CompileController = MVC.Controller.extend('compilation',
     clean_up: function() {
         this._sort_sections();
         this._remove_empty_secs();
-				this._sort_quotes();
+								this._sort_quotes();
     },
     // Sort an individual section's children
     sort_section: function(section) {
@@ -196,14 +200,27 @@ CompileController = MVC.Controller.extend('compilation',
     // Remove empty sections that might have been rendered but dont have any children
     _remove_empty_secs: function() {
         var secs, id;
-        secs = new Array();
-        $('.section, .sub_section').each(function() {
-            id = $(this).attr('id');
-            $.inArray(id, secs) > -1 ? $(this).remove() : secs.push(id);
-            if ( $(this).children('div').length == 0 ) {
-                $(this).remove();
-            }
-        });
+        secs = [];
+        // Loop through subsection first and then sections
+								find_and_remove($('.sub_section'));
+								find_and_remove($('.section'));
+
+								function find_and_remove(elem) {
+												$(elem).each(function() {
+																id = $(this).attr('id');
+																// remove duplicate sections
+																$.inArray(id, secs) > -1 ? remove(this) : secs.push(id);
+																// if this sub_section has no quotes => remove it
+																if ( $(this).children('div').length === 0 ) {
+																				remove(this);
+																}
+												});
+								}
+								function remove(elem) {
+												if(window.console) { console.info('CompilationController#_remove_empty_secs: removing duplicate or empty section: '+$(elem).attr('id')); }
+												$(elem).remove();
+												Compilation.del_from_db($(elem).attr('id'), 's');
+								}
     },
 		// Sort quotes within their (sub_)section
     _sort_quotes: function() {
@@ -270,7 +287,7 @@ CompileController = MVC.Controller.extend('compilation',
             l = q.attr('link').replace(/_/, ' ');
             lt = $('.link a', q).text();
             $('.q_menu', q).empty().remove();
-            $('.link', q).html("<b>[[Vanisource:"+l+"|"+lt+"]]:</b> ");
+            $('.link', q).html("[[Vanisource:"+l+"|"+lt+"]]: ");
             $('.cited_link', q).each(function() {
                 $(this).replaceWith('[[Vanisource:'+$(this).text()+'|'+$(this).text()+']]');
             });
@@ -294,9 +311,10 @@ CompileController = MVC.Controller.extend('compilation',
         sections.each(insert_section);
 
         function insert_section() {
-            var s, h, id, text;
+            var s, l, h, id, text;
             s = $(this);
-            h = 'h'+s.attr('level');
+												l = s.hasClass('section') ? 2 : 3;
+            h = 'h'+l;
             id = s.attr('id');
             text = id.replace(/_/g, ' ');
             s.empty();

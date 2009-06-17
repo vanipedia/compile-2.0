@@ -173,3 +173,8 @@ padding: 2px;
  font-weight: bold;
  color: #603F9D;
 }
+
+.quote .bad_link {
+		background:url(images/red-alert.gif);
+		padding:2px 4px;
+}

@@ -1,4 +1,0 @@
-<div id="loading">
-  <div id="loading_text"><%= loading.message %><br/><img src="/images/loading.gif"></div>
-  <div id="loading_bak"></div>
-</div>

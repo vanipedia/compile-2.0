@@ -91,11 +91,13 @@ Compilation = MVC.Model.extend('compilation',
 
 	add_to_db: function(elem, ref, parent, type) {
 		var resp;
-		if( arguments.length !== 4 || !elem || !ref || !parent || !type ) {
-			if(window.console) { console.error('Compilation#add_to_db: Error adding to db with elem: '+elem+' and ref '+ref); }
+		/*if( arguments.length !== 4 || !elem || !ref || !parent || !type ) {
+			if(window.console) {
+								console.error('Compilation#add_to_db: Error adding to db ref '+ref+' element:');
+								console.dir(elem);
+				}
 			return;
-		}
-		//if (parent === 'undefined') parent = Section.find_attr(ref, 'sec_parent');
+		}*/
 		if (type === 's') {
 				if (parent === 'compilation') {
 						//if(window.console) { console.log('adding '+ref+' to db'); }
@@ -119,7 +121,7 @@ Compilation = MVC.Model.extend('compilation',
 					this.create_new_section(parent);
 				} else {
 					if(window.console) { console.error('Error in Compilation.add_to_db: creating new section for '+ref+', missing parent'); }
-					return;
+					//return;
 				}
 			}
 
@@ -262,7 +264,7 @@ Compilation = MVC.Model.extend('compilation',
 
 	del_from_db: function(id, type) {
 		this.db.del(id, type);
-		this.publish('deleted', {id: id});
+		if(type === 'q') { this.publish('deleted', {id: id}); }
 	},
 
 	/**
@@ -365,7 +367,7 @@ Compilation = MVC.Model.extend('compilation',
 		del: function(id, type) {
 				var where;
 				where = this._where(type);
-				this._backup(id, where);
+				if(type === 'q') { this._backup(id, where); }
 				// Set val of this quote to false
 				this[where][id] = false;
 

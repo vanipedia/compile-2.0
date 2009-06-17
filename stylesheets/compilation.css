@@ -13,10 +13,7 @@
     font-size: 0.8em;
     border: 2px solid #C3C9F2;
 }
-#compile_tools.compile_tools_fixed {
-position: static;
-z-index: 0;
-}
+
 #compile_tools_buttons {
 	position: relative;
 	float: right;
@@ -26,18 +23,9 @@ z-index: 0;
 	float: left;
 	cursor: pointer;
 }
-#compile_tools_buttons #compile_tools_float {
-  display: none;
-}
-#compile_tools.compile_tools_fixed #compile_tools_float {
-  display: block;
-}
-#compile_tools.compile_tools_fixed #compile_tools_fix {
- display: none;
-}
 
 #compile_tools_menu {
- width: 120px;
+ width: 100px;
  height: 70px;
  position: fixed;
  right: 0px;
@@ -57,7 +45,7 @@ z-index: 0;
 }
 #compile_tools_menu p {
     padding: 3px 0px;
-    width: 110px;
+    width: 90px;
     position: relative;
     margin: 10px auto;
     cursor: pointer;
@@ -68,7 +56,6 @@ z-index: 0;
  float: left;
  margin: 0px 4px;
  display: block;
- top: -2px;
 }
 
 #loading {

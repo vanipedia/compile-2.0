@@ -4,21 +4,15 @@ CompileFormController = MVC.Controller.extend('compile_form',
   last_quote_value: '',
   interID: '',
   temp_quote: ''
+
 },
 /* @Prototype */
 {
   load: function() {
-    // autocomplete for suggest box on quote not found
-    // jQuery.autocomplete was customized in order to display properly
-    // in our fixed compile_tools box
-    $('input#link').autocomplete("/php/get_vanisource_title.php", { 
-        extraParams: { type: 'title', suggest: true, minChars: 2}, 
-        resultsClass: 'suggest_results',
-        fixed: true
-    });
-    
+    // Set autocomplete on link box in form
+				CompileController.autocomplete($('input#link'), true);
   },
-  
+
   // Events to submit a new_quote for rendering and ref request
   // the event is triggered by onkeyup
   "textarea keyup": function(params) {
