@@ -24,7 +24,7 @@ CompileController = MVC.Controller.extend('compilation',
     // define hiding and show functions for compile_tools_menu
     hide_tools_menu: function() {
         $('#compile_tools_menu').animate({
-            right: "-90px"
+            right: "-72px"
         }, 'slow');
     },
     show_tools_menu: function() {
