@@ -311,10 +311,9 @@ CompileController = MVC.Controller.extend('compilation',
         sections.each(insert_section);
 
         function insert_section() {
-            var s, l, h, id, text;
+            var s, h, id, text;
             s = $(this);
-												l = s.hasClass('section') ? 2 : 3;
-            h = 'h'+l;
+            h = 'h'+s.attr('level');
             id = s.attr('id');
             text = id.replace(/_/g, ' ');
             s.empty();
