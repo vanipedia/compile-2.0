@@ -13941,6 +13941,7 @@ this.hide_compile_tools();
 var _7=_6.event.pageY-50;
 this.toggle_compile_tools(_7);
 },"#compile_tools_save click":function(_8){
+_8.event.kill();
 this.save();
 },"#compile_form .ui-state-default mouseover":function(_9){
 $(_9.element).addClass("ui-state-hover");
@@ -14066,6 +14067,11 @@ var _1d,_1e,_1f,_20,_21,_22;
 if($(".building_quote").length){
 this.publish("warning",{msg:"You must insert all quotes before saving!"});
 $.scrollTo(".building_quote","fast");
+return;
+}
+if($(".bad_link").length){
+this.publish("warning",{msg:"You must fix bad links in page before saving!"});
+$.scrollTo(".bad_link","fast",{offset:-50});
 return;
 }
 if(QuotesController.currently_editing){
