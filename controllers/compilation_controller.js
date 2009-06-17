@@ -86,6 +86,7 @@ CompileController = MVC.Controller.extend('compilation',
     //if(window.console) { console.log(pos); }
     },
     "#compile_tools_save click": function(params) {
+								params.event.kill();
         this.save();
     },
     "#compile_form .ui-state-default mouseover": function(params) {
@@ -263,7 +264,8 @@ CompileController = MVC.Controller.extend('compilation',
    */
     save: function() {
         var facts, sections, subs, quotes, new_compilation, final_html;
-        // check if a new quote has not been inserted yet
+        // Checks before saving
+								// check if a new quote has not been inserted yet
         if($('.building_quote').length) {
             this.publish('warning', {
                 msg: 'You must insert all quotes before saving!'
@@ -271,6 +273,13 @@ CompileController = MVC.Controller.extend('compilation',
             $.scrollTo('.building_quote', 'fast');
             return;
         }
+								if($('.bad_link').length) {
+												 this.publish('warning', {
+                msg: 'You must fix bad links in page before saving!'
+            });
+            $.scrollTo('.bad_link', 'fast', { offset: -50 });
+            return;
+								}
         if(QuotesController.currently_editing) $(".edit_quote #Cancel_quote").click();
 
         new_compilation = $('<div id="compilation"></div>');
