@@ -9,7 +9,7 @@ Section = MVC.Model.extend('section',
         },
 
         'Srimad-Bhagavatam': {
-            child: ['SB_Preface_and_Introduction', 'SB_Canto_1', 'SB_Canto_2', 'SB_Canto_3', 'SB_Canto_4', 'SB_Canto_5', 'SB_Canto_6', 'SB_Canto_7', 'SB_Canto_8', 'SB_Canto_9', 'SB_Canto_10.1_to_10.13', 'SB_Cantos_10.14_to_12 (Translations_Only)'],
+            child: ['SB_Preface_and_Introduction', 'SB_Canto_1', 'SB_Canto_2', 'SB_Canto_3', 'SB_Canto_4', 'SB_Canto_5', 'SB_Canto_6', 'SB_Canto_7', 'SB_Canto_8', 'SB_Canto_9', 'SB_Canto_10.1_to_10.13', 'SB_Cantos_10.14_to_12_(Translations_Only)'],
             name: 'SB'
         },
 
@@ -123,13 +123,14 @@ Section = MVC.Model.extend('section',
         }
         if (window.console) {
             console.log('Section.init: new section:');
-            console.dir(this);
+            //console.dir(this);
         }
         if (new_section) {
             this.publish('created', this);
         } else {
             if (window.console) {
                 console.error('Section.init: Error building section for ref ' + ref);
+																return;
             }
         }
     },
