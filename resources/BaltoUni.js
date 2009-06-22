@@ -11,7 +11,7 @@ function BaltoUni(obj) {
 
       obj = obj.replace (/ñ/g, "ṣ"); // s cedilla
       obj = obj.replace (/ï/g, "ñ"); // n tilde
-
+				  obj = obj.replace (/ṣ/g, "ñ"); // n tilde
       obj = obj.replace (/ö/g, "ṭ"); // t cedilla
       obj = obj.replace (/ò/g, "ḍ"); // d cedilla
       obj = obj.replace (/ë/g, "ṇ"); // n cedilla
@@ -31,6 +31,7 @@ function BaltoUni(obj) {
 
       obj = obj.replace (/Ñ/g, "Ṣ"); // s cedilla
       obj = obj.replace (/Ï/g, "Ñ"); // n tilde
+						obj = obj.replace (/Ṣ/g, "Ñ"); // n tilde
 
       obj = obj.replace (/Ö/g, "Ṭ"); // t cedilla
       obj = obj.replace (/Ò/g, "Ḍ"); // d cedilla
