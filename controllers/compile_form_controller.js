@@ -11,34 +11,59 @@ CompileFormController = MVC.Controller.extend('compile_form',
   load: function() {
     // Set autocomplete on link box in form
 				CompileController.autocomplete($('input#link'), true);
+				// Intialize Vanisource reference lookup table as a dialog and close it
+				$('#ref_lookup_table').dialog({
+								autoOpen: false,
+								title: 'Vanisource Reference lookup',
+								width: 532,
+								maxHeight: 700,
+								maxWidth: 800
+				}).children('table').each(function() {
+								$('tr:first', this).css({ background: '#603F9D', color: '#C3C9F2', 'font-weight': 'bold' });
+				});
   },
 
   // Events to submit a new_quote for rendering and ref request
   // the event is triggered by onkeyup
   "textarea keyup": function(params) {
     params.event.kill();
-    this.process_new_quote(params.element);
+    this.process_new_quote();
   },
   "textarea change": function(params) {
     params.event.kill();
-    this.process_new_quote(params.element);
+    this.process_new_quote();
   },
 
   "#submit_quote click": function(params) {
     params.event.kill();
-    if(this.check_uninserted_quotes()) this.process_new_quote($(params.element).parents('#compile_form').children('textarea')[0]);
+    if(this.check_uninserted_quotes()) this.process_new_quote();
   },
   "#clear_form click": function(params) {
     params.event.kill();
-    var p = $(params.element).parents('#compile_form');
-    p.children('textarea').val('');
-    if($('input#link').is(':visible')) p.children('input#link, #ref').val('').hide();
+    var p = $('#compile_form');
+    $('textarea', p).val('');
+    if($('#ref_lookup').is(':visible')) {
+								$('#ref_lookup').hide();
+								$('#ref_lookup #ref').html('');
+								$('#ref_lookup input#link').val('');
+				}
   },
-  process_new_quote: function(elem) {
-    var that;
+		"#ref_lookup_table_open click": function(params) {
+				if(window.console) { console.info('CompileformController#ref_lookup_table_open was clicked'); }
+				params.event.kill();
+				$('#ref_lookup_table').dialog('open');
+		},
+  process_new_quote: function() {
+    var that, elem, rl;
     that = this;
+				elem = $('#compile_tools > #compile_form > textarea')[0];
+				rl = $('#ref_lookup');
     attr = {};
-    if($(elem).siblings('input#link').not(':hidden')) attr['ref'] = $(elem).siblings('input#link').val();
+    if(rl.not(':hidden')) {
+								if(window.console) { console.log('CompileformController In process_new_quote!'); }
+								attr['ref'] = $('input#link', rl).val();
+								$('#clear_form').click();
+				}
     attr['text'] = elem.value;
     if(this.action_name !== '#submit_quote click' && !attr['ref'] && !this.check_text(elem.value)) return;
     this.submit_quote(attr);
@@ -89,10 +114,9 @@ CompileFormController = MVC.Controller.extend('compile_form',
     if($('#compile_form textarea').length) $('#compile_form textarea').val('');
   },
   "quote.not_found_reference subscribe": function(params) {
-        if($("#compile_tools input#link").is(':hidden')) {
-            $("#compile_tools #ref").html("Search for link for this quote and click submit.<br/>Orig ref. was: <b>"+params.ref+"</b>").show();
-            $("#compile_tools input#link").show()
-
+        if($("#compile_tools #ref_lookup").is(':hidden')) {
+            $("#compile_tools #ref_lookup #ref").html("Search for link for this quote and click submit.<br/>Orig ref. was: <b>"+params.ref+"</b>");
+            $("#compile_tools #ref_lookup").show()
         }
   },
   "quote.title_req_failed subscribe": function(resp) {
