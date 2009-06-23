@@ -9927,6 +9927,7 @@ _1=_1.replace(/å/g, "ṛ");
 _1=_1.replace(/è/g, "ṟ");
 _1=_1.replace(/ì/g, "ṅ");
 _1=_1.replace(/ñ/g, "ṣ");
+_1=_1.replace(/ṣ/g, "ñ");
 _1=_1.replace(/ï/g, "ñ");
 _1=_1.replace(/ö/g, "ṭ");
 _1=_1.replace(/ò/g, "ḍ");
@@ -9943,6 +9944,7 @@ _1=_1.replace(/Å/g, "Ṛ");
 _1=_1.replace(/È/g, "Ṟ");
 _1=_1.replace(/Ì/g, "Ṅ");
 _1=_1.replace(/Ñ/g, "Ṣ");
+_1=_1.replace(/Ṣ/g, "Ñ");
 _1=_1.replace(/Ï/g, "Ñ");
 _1=_1.replace(/Ö/g, "Ṭ");
 _1=_1.replace(/Ò/g, "Ḍ");
@@ -12789,6 +12791,9 @@ var _3;
 _3=this;
 if($("div.quote",_2).length>0){
 $("div.quote",_2).each(function(){
+if(!$(this).attr("link").length){
+return;
+}
 _3.new_quote(this);
 });
 }
@@ -12988,7 +12993,7 @@ this.publish("deleted",{id:id});
 },find_in_db:function(ref,_43){
 if(!ref||!_43){
 if(window.console){
-console.log("Missing parameters in find_in_db");
+console.error("Compilation#find_in_db: Missing parameters!");
 }
 return;
 }
@@ -13335,6 +13340,12 @@ $.each(_2d.Class.attr,function(i,a){
 _2d[a]=_2c[a]||false;
 });
 }
+if(!_35()){
+if(window.console){
+console.error("Quote.init#check_missing_attr: Error creating quote, missing link attribute which is vital to build a quote");
+}
+return;
+}
 if(this.type=="new"){
 this.text=this.Class.clean_new(this.text);
 }
@@ -13344,7 +13355,6 @@ this.link=this.link.replace(/[_\s]+/g," ");
 if(!this.link_text){
 this.link_text=this.link;
 }
-_35();
 Section.exists(this.parent)?this.parent=this.parent.replace(/\s+/,"_"):_36("parent");
 _2e=Compilation.db.quote_count[this.parent]?Compilation.db.quote_count[this.parent]:0;
 if(this.link){
@@ -13386,12 +13396,20 @@ _3c=true;
 function _35(){
 $.each(["link","parent","index"],function(i,_3e){
 if(!_2d[_3e]){
+if(_3e=="link"){
+if(window.console){
+console.error("Quote.init#check_missing_attr: Missing link!"+_3e);
+}
+return false;
+}else{
 if(window.console){
 console.warn("Quote.init#check_missing_attr: Missing "+_3e);
 }
 _36(_3e);
 }
+}
 });
+return true;
 };
 function _36(_3f){
 var _40;
@@ -13447,7 +13465,7 @@ _2d[t]=_2d[t].replace(/[”’]+(\s|$)/g,"\"$1");
 }});
 ;
 include.set_path('models');
-Section=MVC.Model.extend("section",{sections_tree:{"Bhagavad-gita_As_It_Is":{child:["BG_Preface_and_Introduction","BG_Chapters_1_-_6","BG_Chapters_7_-_12","BG_Chapters_13_-_18"],name:"BG"},"Srimad-Bhagavatam":{child:["SB_Preface_and_Introduction","SB_Canto_1","SB_Canto_2","SB_Canto_3","SB_Canto_4","SB_Canto_5","SB_Canto_6","SB_Canto_7","SB_Canto_8","SB_Canto_9","SB_Canto_10.1_to_10.13","SB_Cantos_10.14_to_12 (Translations_Only)"],name:"SB"},"Sri_Caitanya-caritamrta":{child:["CC_Preface_and_Introduction","CC_Adi-lila","CC_Madhya-lila","CC_Antya-lila"],name:"CC"},"Other_Books_by_Srila_Prabhupada":{child:["Teachings_of_Lord_Caitanya","Nectar_of_Devotion","Nectar_of_Instruction","Easy_Journey_to_Other_Planets","Krsna,_The_Supreme_Personality_of_Godhead","Renunciation_Through_Wisdom","Message_of_Godhead","Light_of_the_Bhagavata","Sri_Isopanisad","Mukunda-mala-stotra_(mantras_1_to_6_only)","Narada-bhakti-sutra_(sutras_1_to_8_only)"],name:"OB"},"Lectures":{child:["Bhagavad-gita_As_It_Is_Lectures","Srimad-Bhagavatam_Lectures","Nectar_of_Devotion_Lectures","Sri_Caitanya-caritamrta_Lectures","Sri_Isopanisad_Lectures","Sri_Brahma-samhita_Lectures","Festival_Lectures","Arrival_Addresses_and_Talks","Initiation_Lectures","Cornerstone_Ceremonies","Wedding_Ceremonies","General_Lectures","Departure_Talks","Philosophy_Discussions","Purports_to_Songs"],name:"Lec"},"Conversations_and_Morning_Walks":{child:["1967_Conversations_and_Morning_Walks","1968_Conversations_and_Morning_Walks","1969_Conversations_and_Morning_Walks","1970_Conversations_and_Morning_Walks","1971_Conversations_and_Morning_Walks","1972_Conversations_and_Morning_Walks","1973_Conversations_and_Morning_Walks","1974_Conversations_and_Morning_Walks","1975_Conversations_and_Morning_Walks","1976_Conversations_and_Morning_Walks","1977_Conversations_and_Morning_Walks"],name:"Con"},"Correspondence":{child:["1947_to_1965_Correspondence","1966_Correspondence","1967_Correspondence","1968_Correspondence","1969_Correspondence","1970_Correspondence","1971_Correspondence","1972_Correspondence","1973_Correspondence","1974_Correspondence","1975_Correspondence","1976_Correspondence","1977_Correspondence"],name:"Let"}},exists:function(_1){
+Section=MVC.Model.extend("section",{sections_tree:{"Bhagavad-gita_As_It_Is":{child:["BG_Preface_and_Introduction","BG_Chapters_1_-_6","BG_Chapters_7_-_12","BG_Chapters_13_-_18"],name:"BG"},"Srimad-Bhagavatam":{child:["SB_Preface_and_Introduction","SB_Canto_1","SB_Canto_2","SB_Canto_3","SB_Canto_4","SB_Canto_5","SB_Canto_6","SB_Canto_7","SB_Canto_8","SB_Canto_9","SB_Canto_10.1_to_10.13","SB_Cantos_10.14_to_12_(Translations_Only)"],name:"SB"},"Sri_Caitanya-caritamrta":{child:["CC_Preface_and_Introduction","CC_Adi-lila","CC_Madhya-lila","CC_Antya-lila"],name:"CC"},"Other_Books_by_Srila_Prabhupada":{child:["Teachings_of_Lord_Caitanya","Nectar_of_Devotion","Nectar_of_Instruction","Easy_Journey_to_Other_Planets","Krsna,_The_Supreme_Personality_of_Godhead","Renunciation_Through_Wisdom","Message_of_Godhead","Light_of_the_Bhagavata","Sri_Isopanisad","Mukunda-mala-stotra_(mantras_1_to_6_only)","Narada-bhakti-sutra_(sutras_1_to_8_only)"],name:"OB"},"Lectures":{child:["Bhagavad-gita_As_It_Is_Lectures","Srimad-Bhagavatam_Lectures","Nectar_of_Devotion_Lectures","Sri_Caitanya-caritamrta_Lectures","Sri_Isopanisad_Lectures","Sri_Brahma-samhita_Lectures","Festival_Lectures","Arrival_Addresses_and_Talks","Initiation_Lectures","Cornerstone_Ceremonies","Wedding_Ceremonies","General_Lectures","Departure_Talks","Philosophy_Discussions","Purports_to_Songs"],name:"Lec"},"Conversations_and_Morning_Walks":{child:["1967_Conversations_and_Morning_Walks","1968_Conversations_and_Morning_Walks","1969_Conversations_and_Morning_Walks","1970_Conversations_and_Morning_Walks","1971_Conversations_and_Morning_Walks","1972_Conversations_and_Morning_Walks","1973_Conversations_and_Morning_Walks","1974_Conversations_and_Morning_Walks","1975_Conversations_and_Morning_Walks","1976_Conversations_and_Morning_Walks","1977_Conversations_and_Morning_Walks"],name:"Con"},"Correspondence":{child:["1947_to_1965_Correspondence","1966_Correspondence","1967_Correspondence","1968_Correspondence","1969_Correspondence","1970_Correspondence","1971_Correspondence","1972_Correspondence","1973_Correspondence","1974_Correspondence","1975_Correspondence","1976_Correspondence","1977_Correspondence"],name:"Let"}},exists:function(_1){
 if(window.console){
 console.log("Section#exists: checking TOC "+_1);
 }
@@ -13456,7 +13474,6 @@ return this.find_attr(_1)?true:false;
 if(!_2||_2==="undefined"||_2===""){
 if(window.console){
 console.error("Error in Section#find_attr for ref: "+_2+" attr: "+_3);
-console.trace();
 }
 return;
 }
@@ -13494,6 +13511,7 @@ return _3!==undefined?_b[_3]:_b;
 return false;
 }
 }},{init:function(_f){
+var _10;
 if(_f===undefined||_f===""){
 if(window.console){
 console.log("Error in Section.init creating new section with ref: "+_f);
@@ -13501,14 +13519,24 @@ console.log("Error in Section.init creating new section with ref: "+_f);
 return;
 }
 if(typeof _f!=="string"){
-$(_f).attr("parent")&&$(_f).attr("class")&&$(_f).attr("sec_index")?this._set_attr_auto(_f):this._set_attr_man($(_f).attr("id"));
+_10=$(_f).attr("parent")&&$(_f).attr("class")&&$(_f).attr("sec_index")?this._set_attr_auto(_f):this._set_attr_man($(_f).attr("id"));
 }else{
-this._set_attr_man(_f);
+_10=this._set_attr_man(_f);
 }
+if(window.console){
+console.log("Section.init: new section:");
+}
+if(_10){
 this.publish("created",this);
+}else{
+if(window.console){
+console.error("Section.init: Error building section for ref "+_f);
+return;
+}
+}
 },_set_attr_auto:function(ref){
 if(window.console){
-console.log("Building section "+ref+" auto");
+console.log("Section.init#_set_attr_auto: Building section "+ref+" auto");
 }
 this.parent=$(ref).attr("parent");
 this.sec_class=$(ref).attr("class");
@@ -13516,24 +13544,32 @@ this.level=this.sec_class==="section"?2:3;
 this.sec_index=$(ref).attr("sec_index");
 this.id=$(ref).attr("id");
 this.text=this.id.replace(/_/g," ");
+return true;
 },_set_attr_man:function(ref){
 if(window.console){
-console.log("Building section "+ref+" manually");
+console.log("Section.init#_set_attr_man: Building section "+ref+" manually");
 }
 if(ref===undefined){
 if(window.console){
-console.error("Error in Section._set_attr_man with ref "+ref);
+console.error("Section.init#_set_attr_man: Missing ref "+ref);
 }
-return;
+return false;
 }
-var _12;
-_12=this.Class.find_attr(ref);
-this.parent=_12.sec_parent;
-this.sec_class=_12.sec_class;
-this.level=_12.sec_level;
-this.sec_index=_12.sec_index;
+var _13;
+_13=this.Class.find_attr(ref);
+if(!_13){
+if(window.console){
+console.log("Section.init#_set_attr_man: section/TOC item not found in Section#section_tree for ref "+ref);
+}
+return false;
+}
+this.parent=_13.sec_parent;
+this.sec_class=_13.sec_class;
+this.level=_13.sec_level;
+this.sec_index=_13.sec_index;
 this.id=ref;
 this.text=ref.replace(/_/g," ");
+return true;
 }});
 ;
 include.set_path('models');
@@ -13845,56 +13881,63 @@ this.db.total=_46;
 this.publish("totals_updated");
 }
 },save:function(){
-var _4d,_4e;
+var _4d,_4e,all;
 _4d=this;
+all=false;
 _4e="";
-$.each(_4d.db,function(f,_50){
+$.each(_4d.db,function(f,_51){
 if(f==="books"){
 return true;
 }
 if(f==="terms"){
-_4e+=_51(f,_52(_50));
+_4e+=_52(f,_53(_51));
 }
 if(f==="notes"||f==="goal"||f==="first"||f==="last"||f==="total"){
-_4e+=_51(f,_50);
+_4e+=_52(f,_51);
 }
 if(f==="compiler"||f==="complete"){
-_4e+=_51(f,_50.join("|"));
+_4e+=_52(f,_51.join("|"));
 }
 if(f==="totals_by_section"){
-_4e+=_51(f,_53(_50));
+_4e+=_52(f,_54(_51));
 }
 if(f==="toc"){
 _4e+="\n{{toc right}}";
 }
 if(f==="categories"){
-_4e+=_54(_50);
+_4e+=_55(_51);
 }
 });
 return _4e;
-function _51(_55,val){
-return "\n{{"+_55+"|"+val+"}}";
+function _52(_56,val){
+if(_56==="complete"&&val==="ALL"){
+all=true;
+}
+if(_56==="goal"&&all){
+return "";
+}
+return "\n{{"+_56+"|"+val+"}}";
 };
-function _52(_57){
+function _53(_58){
 var t;
-t=$.map(_57,function(_59){
-if(_59!==""){
-return "\""+_59+"\"";
+t=$.map(_58,function(_5a){
+if(_5a!==""){
+return "\""+_5a+"\"";
 }
 }).sort();
 return t.join("|");
 };
-function _53(_5a){
+function _54(_5b){
 var t;
 t=new Array();
-$.each(_5a,function(_5c,_5d){
-t.push(_5c+"="+_5d);
+$.each(_5b,function(_5d,_5e){
+t.push(_5d+"="+_5e);
 });
 return t.join("|");
 };
-function _54(_5e){
+function _55(_5f){
 var c="";
-$.each(_5e,function(i,cat){
+$.each(_5f,function(i,cat){
 if(cat===""){
 return true;
 }
@@ -14082,7 +14125,7 @@ _1d=Facts.save();
 $("<div id=\"facts\">"+_1d+"</div>").appendTo(_21);
 _20=$(".quote").not(".deleted_quote").clone();
 _20.each(function(){
-var q,p,_25;
+var q,p,l,lt,_27;
 q=$(this);
 p=q.attr("parent");
 l=q.attr("link").replace(/_/," ");
@@ -14100,27 +14143,27 @@ $(this).replaceWith($(this).text());
 });
 q.removeClass("ui-corner-all q_new q_updated");
 if(/inline/.test(q.attr("style"))){
-_25=true;
+_27=true;
 }
 q.removeAttr("style");
-if(_25){
+if(_27){
 q.css("display","inline");
 }
 });
 _20.appendTo(_21);
 _1e=$(".section").clone();
 _1f=$(".sub_section").clone();
-_1f.each(_26);
-_1e.each(_26);
-function _26(){
-var s,l,h,id,_2b;
+_1f.each(_28);
+_1e.each(_28);
+function _28(){
+var s,l,h,id,_2d;
 s=$(this);
 l=s.hasClass("section")?2:3;
 h="h"+l;
 id=s.attr("id");
-_2b=id.replace(/_/g," ");
+_2d=id.replace(/_/g," ");
 s.empty();
-$("<"+h+">"+_2b+"</"+h+"></div>").appendTo(s);
+$("<"+h+">"+_2d+"</"+h+"></div>").appendTo(s);
 $("div[parent=\""+id+"\"]:first",_21).before(s);
 };
 _22=_21.wrap("<div></div>").parent("div").html().replace(/^\s+/mg,"").replace(/<\/span>\n/g,"</span>").replace(/(<div[^>]+?class="(?:quote|section|sub_section)")/g,"\n$1");
@@ -14154,45 +14197,45 @@ $(this).unbind("click");
 },"compilation.built subscribe":function(){
 this.clean_up();
 this._loading("end");
-},"quote.found_reference subscribe":function(_2e){
+},"quote.found_reference subscribe":function(_30){
 if($("#compile_form input#link").is(":visible")){
 $("#compile_form input#link, #compile_form #ref").val("").hide();
 }
 if($("#compile_tools").is(":visible")){
 this.hide_compile_tools();
 }
-},"compilation.quote_inserted subscribe":function(_2f){
+},"compilation.quote_inserted subscribe":function(_31){
 this.show_compile_tools();
-},"section.created subscribe":function(_30){
-Compilation.add_to_db(_30,_30.id,_30.parent,"s");
-this._render_section(_30);
+},"section.created subscribe":function(_32){
+Compilation.add_to_db(_32,_32.id,_32.parent,"s");
+this._render_section(_32);
 },"hide_compile_tools subscribe":function(){
 this.hide_compile_tools();
-},"info subscribe":function(_31){
+},"info subscribe":function(_33){
 if(window.console){
-console.info("Info: "+_31.msg);
+console.info("Info: "+_33.msg);
 }
-this.info(_31.msg);
-},"warning subscribe":function(_32){
-if(window.console){
-console.log("Warning: "+_32.msg);
-}
-this.warning(_32.msg);
-},"quote.warning subscribe":function(_33){
-if(window.console){
-console.log("Warning: "+_33.msg);
-}
-this.warning(_33.msg);
-},"facts.warning subscribe":function(_34){
+this.info(_33.msg);
+},"warning subscribe":function(_34){
 if(window.console){
 console.log("Warning: "+_34.msg);
 }
 this.warning(_34.msg);
-},"compilation.warning subscribe":function(_35){
+},"quote.warning subscribe":function(_35){
 if(window.console){
 console.log("Warning: "+_35.msg);
 }
 this.warning(_35.msg);
+},"facts.warning subscribe":function(_36){
+if(window.console){
+console.log("Warning: "+_36.msg);
+}
+this.warning(_36.msg);
+},"compilation.warning subscribe":function(_37){
+if(window.console){
+console.log("Warning: "+_37.msg);
+}
+this.warning(_37.msg);
 }});
 ;
 include.set_path('controllers');
@@ -14365,7 +14408,14 @@ return;
 if(_23["view"]==="edit"){
 this.edit_class=this.quote.bad_link?"ui-state-error ui-corner-all":"ui-state-default ui-corner-all";
 }
+if($("#"+id).length){
 this.render({to:id,action:_26});
+}else{
+if(window.console){
+console.error("QuotesController#render_quote: Error rendering quote to non-existing id in dom => "+id);
+}
+return;
+}
 $("#"+id+".edit_quote").children("#heading, #trans, #purport, #text").autogrow();
 $("#"+id+" .tips[id^=\"set_\"]").not("#set_heading_tip").toggleClass("ui-state-error");
 if(_23["view"]==="edit"){
@@ -14549,7 +14599,12 @@ _54=this.quote.parent?this.quote.parent:"compilation";
 if(window.console){
 console.info("QuotesController#_append_quote: appending "+_53.id+" to "+_54);
 }
+if($("#"+_54).length){
 this.render({bottom:_54,action:"new_quote"});
+}else{
+console.error("QuotesController#_append_quote: error rendering "+_53.id+" to "+_54);
+return;
+}
 },hi_terms:function(_55){
 var _56;
 _56=Facts.db.terms;
@@ -14784,42 +14839,59 @@ q=new Quote(_9e);
 include.set_path('controllers');
 CompileFormController=MVC.Controller.extend("compile_form",{last_quote_value:"",interID:"",temp_quote:""},{load:function(){
 CompileController.autocomplete($("input#link"),true);
+$("#ref_lookup_table").dialog({autoOpen:false,title:"Vanisource Reference lookup",width:532,maxHeight:700,maxWidth:800}).children("table").each(function(){
+$("tr:first",this).css({background:"#603F9D",color:"#C3C9F2","font-weight":"bold"});
+});
 },"textarea keyup":function(_1){
 _1.event.kill();
-this.process_new_quote(_1.element);
+this.process_new_quote();
 },"textarea change":function(_2){
 _2.event.kill();
-this.process_new_quote(_2.element);
+this.process_new_quote();
 },"#submit_quote click":function(_3){
 _3.event.kill();
 if(this.check_uninserted_quotes()){
-this.process_new_quote($(_3.element).parents("#compile_form").children("textarea")[0]);
+this.process_new_quote();
 }
 },"#clear_form click":function(_4){
 _4.event.kill();
-var p=$(_4.element).parents("#compile_form");
-p.children("textarea").val("");
-if($("input#link").is(":visible")){
-p.children("input#link, #ref").val("").hide();
+var p=$("#compile_form");
+$("textarea",p).val("");
+if($("#ref_lookup").is(":visible")){
+$("#ref_lookup").hide();
+$("#ref_lookup #ref").html("");
+$("#ref_lookup input#link").val("");
 }
-},process_new_quote:function(_6){
-var _7;
+},"#ref_lookup_table_open click":function(_6){
+if(window.console){
+console.info("CompileformController#ref_lookup_table_open was clicked");
+}
+_6.event.kill();
+$("#ref_lookup_table").dialog("open");
+},process_new_quote:function(){
+var _7,_8,rl;
 _7=this;
+_8=$("#compile_tools > #compile_form > textarea")[0];
+rl=$("#ref_lookup");
 attr={};
-if($(_6).siblings("input#link").not(":hidden")){
-attr["ref"]=$(_6).siblings("input#link").val();
+if(rl.not(":hidden")){
+if(window.console){
+console.log("CompileformController In process_new_quote!");
 }
-attr["text"]=_6.value;
-if(this.action_name!=="#submit_quote click"&&!attr["ref"]&&!this.check_text(_6.value)){
+attr["ref"]=$("input#link",rl).val();
+$("#clear_form").click();
+}
+attr["text"]=_8.value;
+if(this.action_name!=="#submit_quote click"&&!attr["ref"]&&!this.check_text(_8.value)){
 return;
 }
 this.submit_quote(attr);
-},check_text:function(_8){
-_8=$.trim(_8);
-if(_8===""||_8===this.Class.last_quote_value||!this.check_uninserted_quotes()){
+},check_text:function(_a){
+_a=$.trim(_a);
+if(_a===""||_a===this.Class.last_quote_value||!this.check_uninserted_quotes()){
 return false;
 }
-this.Class.last_quote_value=_8;
+this.Class.last_quote_value=_a;
 return true;
 },check_uninserted_quotes:function(){
 if($("div.building_quote").length!==0){
@@ -14829,18 +14901,18 @@ $.scrollTo(".building_quote","slow",{easing:"easeOutExpo",offset:-50});
 return false;
 }
 return true;
-},submit_quote:function(_9){
-var re,_b,_c,_d,_e,_f;
+},submit_quote:function(_b){
+var re,_d,_e,_f,_10,_11;
 re=new RegExp(">>> Ref. VedaBase => (.+)");
-_b=_9["text"];
-if(re.test(_b)){
-_f={};
-_e=$.trim(_b.replace(re,""));
-_e=BaltoUni(_e);
-this.Class.temp_quote=_e;
-_f["ref"]=_9["ref"]?_9["ref"]:$.trim(re.exec(_b)[1]);
-_9["ref"]?_f["type"]="title":"";
-Quote.find_reference(_f);
+_d=_b["text"];
+if(re.test(_d)){
+_11={};
+_10=$.trim(_d.replace(re,""));
+_10=BaltoUni(_10);
+this.Class.temp_quote=_10;
+_11["ref"]=_b["ref"]?_b["ref"]:$.trim(re.exec(_d)[1]);
+_b["ref"]?_11["type"]="title":"";
+Quote.find_reference(_11);
 }else{
 this.publish("warning",{msg:"No Vedabase Reference in pasted quote!\nPerhaps you forgot to use the \"Copy with Reference\" button in Vedabase"});
 return;
@@ -14849,18 +14921,18 @@ return;
 if($("#compile_form textarea").length){
 $("#compile_form textarea").val("");
 }
-},"quote.not_found_reference subscribe":function(_10){
-if($("#compile_tools input#link").is(":hidden")){
-$("#compile_tools #ref").html("Search for link for this quote and click submit.<br/>Orig ref. was: <b>"+_10.ref+"</b>").show();
-$("#compile_tools input#link").show();
+},"quote.not_found_reference subscribe":function(_12){
+if($("#compile_tools #ref_lookup").is(":hidden")){
+$("#compile_tools #ref_lookup #ref").html("Search for link for this quote and click submit.<br/>Orig ref. was: <b>"+_12.ref+"</b>");
+$("#compile_tools #ref_lookup").show();
 }
-},"quote.title_req_failed subscribe":function(_11){
-this.publish("warning",{msg:_11.msg});
-},"quote.ajax subscribe":function(_12){
-if(_12.type==="start"){
+},"quote.title_req_failed subscribe":function(_13){
+this.publish("warning",{msg:_13.msg});
+},"quote.ajax subscribe":function(_14){
+if(_14.type==="start"){
 $("#ajax").show();
 }
-if(_12.type==="end"){
+if(_14.type==="end"){
 $("#ajax").hide();
 }
 }});

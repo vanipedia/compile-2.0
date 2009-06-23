@@ -5,22 +5,41 @@
   overflow:   hidden;
 }
 
-#compile_form  #copy_ref_button {
+#compile_form #ref_lookup {
+		display: none;
+		float: left;
+		width: 98%;
+}
+#compile_form #ref_lookup #ref {
+		width: 100%;
+}
+#compile_form #ref_lookup_input {
+		float: left;
+		width: 100%;
+		margin: 10px 0px;
+}
+
+#compile_form #ref_lookup #ref_lookup_input #link {
+    width: 89%;
+				float: left;
+}
+#compile_form #ref_lookup #ref_lookup_table_open {
+				float: left;
+				margin: 0px 10px;
+				cursor: pointer;
+}
+
+#compile_form #form_buttons {
+		float: left;
+		width: 100%;
+}
+#compile_form #form_buttons #copy_ref_button {
   background-image: url("images/copy_ref_button.png");
   background-repeat: no-repeat;
   width: 100%;
 }
-
-#compile_form  #ref {
-    display: none;
-}
-#compile_form  #link {
-    display: none;
-    width: 98%;
-    margin: 10px;
-}
-
 #compile_form textarea {
+		float: left;
   height: 170px;
   width:  99%;
   background-image:     url("images/vaniquotes-logo-bg.png");
@@ -60,8 +79,8 @@
 	background-color: white;
 	overflow: hidden;
 	z-index: 99999;
-    top: 124px;
-    left: 34px;
+		top: 124px;
+		left: 24px;
 
 }
 
@@ -91,4 +110,22 @@
 	*/
 	line-height: 16px;
 	overflow: hidden;
+}
+
+#ref_lookup_table {
+		display: none;
+  max-height: 400px;
+		padding: 6px;
+}
+#ref_lookup_table table {
+background: transparent;
+}
+#ref_lookup_table table tr {
+background: #C3C9F2;
+}
+#ref_lookup_table table tr td {
+ padding: 6px;
+}
+#ref_lookup_table table tr .ref_lookup_book {
+		font-weight: bold;
 }

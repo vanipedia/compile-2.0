@@ -324,7 +324,7 @@ Facts = MVC.Model.extend('facts',
       book_count[book] ? book_count[book]++: book_count[book] = 1;
       if(window.console) { console.log('Facts#check_totals: In quote: '+name+' count for '+book+' is: '+book_count[book]); }
     });
-		
+
     $.each(Facts.db.totals_by_section, function(book, val) {
       if(!book_count[book]) {
 				if(window.console) { console.warn('Facts#check_totals: No book_count for '+book+' => '+book_count[book]); }
@@ -347,8 +347,9 @@ Facts = MVC.Model.extend('facts',
    * Save will rebuild the Facts.db in wiki format {{field|value1|value2|valueN}}
    */
   save:function() {
-    var that, wiki;
+    var that, wiki, all;
     that = this;
+				all = false;
     wiki = '';
     $.each(that.db, function(f, values) {
       if(f === 'books')     return true;
@@ -363,6 +364,8 @@ Facts = MVC.Model.extend('facts',
     return wiki;
 
     function wiki_format(field, val) {
+				  if(field === 'complete' && val === 'ALL') { all = true; }
+				  if(field === 'goal' && all) { return ''; }
       return '\n{{'+field+'|'+val+'}}';
     }
     function format_terms(terms) {

@@ -19,7 +19,10 @@ Compilation = MVC.Model.extend('compilation',
 		that = this;
 		if ($('div.quote', data).length > 0) {
 			$('div.quote', data).each(function() {
-				that.new_quote(this);
+								// Skip quote if vital attr link is missing!
+								if(!$(this).attr('link').length) { return; }
+								// Create new quote
+								that.new_quote(this);
 			});
 		}
 		if(window.console) { console.dir(this.db); }
@@ -274,7 +277,7 @@ Compilation = MVC.Model.extend('compilation',
 	 */
 	find_in_db: function(ref, type) {
 		if(!ref || !type) {
-			if(window.console) { console.log('Missing parameters in find_in_db'); }
+			if(window.console) { console.error('Compilation#find_in_db: Missing parameters!'); }
 			return;
 		}
 		var resp;
