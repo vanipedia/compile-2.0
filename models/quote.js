@@ -327,8 +327,14 @@ Quote = MVC.Model.extend('quote',
                 //if(window.console) { console.log($(quote_obj).attr('link')+' => '+a+': '+that[a]); }
             });
             } else {
-            $.each(that.Class.attr, function(i, a) { that[a] = quote_obj[a] || false; });
+																$.each(that.Class.attr, function(i, a) { that[a] = quote_obj[a] || false; });
         }
+
+								// Check for missing (vital) attributes before building quote
+        if(!check_missing_attr()) {
+												if(window.console) { console.error('Quote.init#check_missing_attr: Error creating quote, missing link attribute which is vital to build a quote'); }
+												return;
+								}
 
         // Clean text
         if(this.type == 'new') { this.text = this.Class.clean_new(this.text); }
@@ -336,9 +342,6 @@ Quote = MVC.Model.extend('quote',
         // Remove underscores and extraspaces
         if(this.link) { this.link = this.link.replace(/[_\s]+/g, ' '); }
         if(!this.link_text) { this.link_text = this.link; }
-
-        // Check for missing (vital) attributes before building quote
-        check_missing_attr();
 
         // quote.parent is the section it belongs to. If missing request it as section as that is the attribute it returns
         Section.exists(this.parent) ? this.parent = this.parent.replace(/\s+/, '_') : find_attr('parent');
@@ -395,10 +398,16 @@ Quote = MVC.Model.extend('quote',
         function check_missing_attr() {
             $.each(['link', 'parent', 'index'], function(i, attr) {
                 if(!that[attr]) {
-                    if(window.console) { console.warn('Quote.init#check_missing_attr: Missing '+attr); }
-                    find_attr(attr);
+																				if(attr == 'link') {
+																								if(window.console) { console.error('Quote.init#check_missing_attr: Missing link!'+attr); }
+																								return false;
+																				} else {
+																								if(window.console) { console.warn('Quote.init#check_missing_attr: Missing '+attr); }
+																								find_attr(attr);
+																				}
                 }
             });
+												return true;
         }
         function find_attr(attr) {
             var resp;

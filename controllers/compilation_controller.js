@@ -290,7 +290,7 @@ CompileController = MVC.Controller.extend('compilation',
         // Process quotes
         quotes = $('.quote').not('.deleted_quote').clone();
         quotes.each(function() {
-            var q, p, inline;
+            var q, p, l, lt, inline;
             q = $(this);
             p = q.attr('parent');
             l = q.attr('link').replace(/_/, ' ');

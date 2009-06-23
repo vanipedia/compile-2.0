@@ -55,7 +55,6 @@ Section = MVC.Model.extend('section',
         if (!ref || ref === 'undefined' || ref === '') {
             if (window.console) {
                 console.error('Error in Section#find_attr for ref: ' + ref + ' attr: ' + what);
-                console.trace();
             }
             return;
         }

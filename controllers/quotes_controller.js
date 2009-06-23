@@ -243,7 +243,7 @@ QuotesController = MVC.Controller.extend('quotes',
             this.edit_class = this.quote.bad_link ? 'ui-state-error ui-corner-all': 'ui-state-default ui-corner-all';
         }
 								if($('#'+id).length) {
-												if(window.console) { console.info("In QuoteController#render_quote: rendering "+this.quote.id+" to "+id+" in template "+action); }
+												//if(window.console) { console.info("In QuoteController#render_quote: rendering "+quote.id+" to "+id+" in template "+action); }
 												this.render({
 																to: id,
 																action: action
