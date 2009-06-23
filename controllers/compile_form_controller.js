@@ -92,7 +92,7 @@ CompileFormController = MVC.Controller.extend('compile_form',
       // Remove Ref from VedaBase
       temp_quote = $.trim(text.replace(re, ''));
       // Convert Balaram to Unicode encoding and diacritics
-      temp_quote = BaltoUni(temp_quote);
+      //temp_quote = BaltoUni(temp_quote); *** deprecated since we are doing the conversion inside the Quote.init
       // Save quote text to Class variable temp_quote
       this.Class.temp_quote = temp_quote;
       // Extract the Vedabase reference.

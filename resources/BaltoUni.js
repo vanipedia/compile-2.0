@@ -9,9 +9,10 @@ function BaltoUni(obj) {
       obj = obj.replace (/è/g, "ṟ"); // long r cedilla
       obj = obj.replace (/ì/g, "ṅ"); // n dot over
 
+				  obj = obj.replace (/ṣ/g, "&#241;"); // n tilde** Must go before s cedilla otherwise we'll get double translation
       obj = obj.replace (/ñ/g, "ṣ"); // s cedilla
+				  obj = obj.replace (/&#241;/g, "ñ"); // hack to reset htmlentity to its Unicode otherwise verse creation will break
       obj = obj.replace (/ï/g, "ñ"); // n tilde
-				  obj = obj.replace (/ṣ/g, "ñ"); // n tilde
       obj = obj.replace (/ö/g, "ṭ"); // t cedilla
       obj = obj.replace (/ò/g, "ḍ"); // d cedilla
       obj = obj.replace (/ë/g, "ṇ"); // n cedilla
@@ -29,9 +30,10 @@ function BaltoUni(obj) {
       obj = obj.replace (/È/g, "Ṟ"); // long r cedilla
       obj = obj.replace (/Ì/g, "Ṅ"); // n dot over
 
+						obj = obj.replace (/Ṣ/g, "&#209;"); // n tilde** Must go before S cedilla otherwise we'll get double translation
       obj = obj.replace (/Ñ/g, "Ṣ"); // s cedilla
+						obj = obj.replace (/&#209;/g, "Ñ"); // hack to reset htmlentity to its Unicode otherwise verse creation will break
       obj = obj.replace (/Ï/g, "Ñ"); // n tilde
-						obj = obj.replace (/Ṣ/g, "Ñ"); // n tilde
 
       obj = obj.replace (/Ö/g, "Ṭ"); // t cedilla
       obj = obj.replace (/Ò/g, "Ḍ"); // d cedilla
