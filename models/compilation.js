@@ -50,7 +50,7 @@ Compilation = MVC.Model.extend('compilation',
 
 	create_new_section: function(ref) {
 		var resp, section, s;
-		section = typeof ref === 'string' ? 'ref' : $(ref).attr('id');
+		section = typeof ref === 'string' ? ref : $(ref).attr('id');
 		resp = this.find_in_db(section, 's');
 		if (!resp) {
 			s = new Section(ref);
