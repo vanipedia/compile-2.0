@@ -344,7 +344,7 @@ Quote = MVC.Model.extend('quote',
         if(!this.link_text) { this.link_text = this.link; }
 
         // quote.parent is the section it belongs to. If missing request it as section as that is the attribute it returns
-        Section.exists(this.parent) ? this.parent = this.parent.replace(/\s+/, '_') : find_attr('parent');
+        Section.exists(this.parent) ? this.parent = this.parent.replace(/\s+/g, '_') : find_attr('parent');
 
         // Set index/position within its section(parent) if existing else initialize it
         this_sec_index = Compilation.db.quote_count[this.parent] ?  Compilation.db.quote_count[this.parent] : 0;

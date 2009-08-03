@@ -142,7 +142,7 @@ Section = MVC.Model.extend('section',
         this.level = this.sec_class === "section" ? 2 : 3;
         this.sec_index = $(ref).attr('sec_index');
         this.id = $(ref).attr('id');
-        this.text = this.id.replace(/_/g, ' ');
+        this.text = $(ref).attr('text');
         return true;
     },
     _set_attr_man: function(ref) {
@@ -167,7 +167,7 @@ Section = MVC.Model.extend('section',
         this.sec_class = attr.sec_class;
         this.level = attr.sec_level;
         this.sec_index = attr.sec_index;
-        this.id = ref;
+        this.id = ref.replace(/[.,\(\)]/g, '');
         this.text = ref.replace(/_/g, ' ');
         return true;
     }

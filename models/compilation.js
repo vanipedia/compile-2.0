@@ -116,7 +116,7 @@ Compilation = MVC.Model.extend('compilation',
         }
         if (type === 'q') {
             var resp;
-            // Find parent of this quote in the db
+            // Find parent of this quote in the db.
             resp = this.find_in_db(parent, 's');
             // If not found, create it!
             if (!resp) {
@@ -280,6 +280,8 @@ Compilation = MVC.Model.extend('compilation',
             if(window.console) { console.error('Compilation#find_in_db: Missing parameters!'); }
             return;
         }
+        // Modify ref if it's a section/TOC search, since we have cleaned up the id
+        if (type === 's') { ref = ref.replace(/[.,\(\)]/g, ''); }
         var resp;
         resp = this.db.find(ref, type);
         return resp;
