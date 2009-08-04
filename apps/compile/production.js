@@ -12815,7 +12815,7 @@ _a.create_new_section(this);
 }
 },create_new_section:function(_b){
 var _c,_d,s;
-_d=typeof _b==="string"?"ref":$(_b).attr("id");
+_d=typeof _b==="string"?_b:$(_b).attr("text");
 _c=this.find_in_db(_d,"s");
 if(!_c){
 s=new Section(_b);
@@ -12998,6 +12998,9 @@ if(window.console){
 console.error("Compilation#find_in_db: Missing parameters!");
 }
 return;
+}
+if(_43==="s"){
+ref=ref.replace(/[.,\(\)]/g,"");
 }
 var _44;
 _44=this.db.find(ref,_43);
@@ -13357,7 +13360,7 @@ this.link=this.link.replace(/[_\s]+/g," ");
 if(!this.link_text){
 this.link_text=this.link;
 }
-Section.exists(this.parent)?this.parent=this.parent.replace(/\s+/,"_"):_36("parent");
+Section.exists(this.parent)?this.parent=this.parent.replace(/\s+/g,"_"):_36("parent");
 _2e=Compilation.db.quote_count[this.parent]?Compilation.db.quote_count[this.parent]:0;
 if(this.link){
 this.id=this.link.replace(/\W/g,"")+"_"+_2e;
@@ -13545,7 +13548,7 @@ this.sec_class=$(ref).attr("class");
 this.level=this.sec_class==="section"?2:3;
 this.sec_index=$(ref).attr("sec_index");
 this.id=$(ref).attr("id");
-this.text=this.id.replace(/_/g," ");
+this.text=$(ref).attr("text")||$(ref).attr("id").replace(/_/g," ");
 return true;
 },_set_attr_man:function(ref){
 if(window.console){
@@ -13569,7 +13572,7 @@ this.parent=_13.sec_parent;
 this.sec_class=_13.sec_class;
 this.level=_13.sec_level;
 this.sec_index=_13.sec_index;
-this.id=ref;
+this.id=ref.replace(/[.,\(\)]/g,"");
 this.text=ref.replace(/_/g," ");
 return true;
 }});
@@ -14130,7 +14133,7 @@ _20.each(function(){
 var q,p,l,lt,_27;
 q=$(this);
 p=q.attr("parent");
-l=q.attr("link").replace(/_/," ");
+l=q.attr("link").replace(/_/g," ");
 lt=$(".link a",q).text();
 $(".q_menu",q).empty().remove();
 $(".link",q).html("[[Vanisource:"+l+"|"+lt+"]]: ");
@@ -14162,8 +14165,8 @@ var s,l,h,id,_2d;
 s=$(this);
 l=s.hasClass("section")?2:3;
 h="h"+l;
-id=s.attr("id");
-_2d=id.replace(/_/g," ");
+_2d=s.attr("text");
+id=_2d.replace(/ /g,"_");
 s.empty();
 $("<"+h+">"+_2d+"</"+h+"></div>").appendTo(s);
 $("div[parent=\""+id+"\"]:first",_21).before(s);
@@ -14597,14 +14600,16 @@ $(this).unbind("keydown");
 },_append_quote:function(_53){
 var _54;
 this.quote=_53;
-_54=this.quote.parent?this.quote.parent:"compilation";
+_54=this.quote.parent?this.quote.parent.replace(/[.,\(\)]/g,""):"compilation";
 if(window.console){
 console.info("QuotesController#_append_quote: appending "+_53.id+" to "+_54);
 }
 if($("#"+_54).length){
 this.render({bottom:_54,action:"new_quote"});
 }else{
+if(window.console){
 console.error("QuotesController#_append_quote: error rendering "+_53.id+" to "+_54);
+}
 return;
 }
 },hi_terms:function(_55){

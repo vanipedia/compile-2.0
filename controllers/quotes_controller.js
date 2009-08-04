@@ -518,17 +518,19 @@ QuotesController = MVC.Controller.extend('quotes',
     _append_quote: function(quote) {
         var section;
         this.quote = quote;
-        section = this.quote.parent ? this.quote.parent: 'compilation';
+        section = this.quote.parent ? this.quote.parent.replace(/[.,\(\)]/g, '') : 'compilation';
         if (window.console) {
             console.info('QuotesController#_append_quote: appending ' + quote.id + ' to ' + section);
         }
-								if($('#'+section).length) {
+								if ($('#'+section).length) {
 												this.render({
 																bottom: section,
 																action: 'new_quote'
 												});
 								} else {
-												console.error('QuotesController#_append_quote: error rendering ' + quote.id + ' to ' + section);
+												if (window.console) {
+                console.error('QuotesController#_append_quote: error rendering ' + quote.id + ' to ' + section);
+            }
 												return;
 								}
     },

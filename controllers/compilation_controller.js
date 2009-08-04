@@ -293,7 +293,7 @@ CompileController = MVC.Controller.extend('compilation',
             var q, p, l, lt, inline;
             q = $(this);
             p = q.attr('parent');
-            l = q.attr('link').replace(/_/, ' ');
+            l = q.attr('link').replace(/_/g, ' ');
             lt = $('.link a', q).text();
             $('.q_menu', q).empty().remove();
             $('.link', q).html("[[Vanisource:"+l+"|"+lt+"]]: ");
@@ -324,8 +324,8 @@ CompileController = MVC.Controller.extend('compilation',
             s = $(this);
 												l = s.hasClass('section') ? 2 : 3;
             h = 'h'+l;
-            id = s.attr('id');
-            text = id.replace(/_/g, ' ');
+            text = s.attr('text');
+            id = text.replace(/ /g, '_');
             s.empty();
             $('<'+h+'>'+text+'</'+h+'></div>').appendTo(s);
             // Insert section before the first div with attr[parent] === this.id
