@@ -120,13 +120,21 @@ QuotesController = MVC.Controller.extend('quotes',
         this.tips_handler(elem);
     },
     ".alert_tip_heading_or_verse click": function(params) {
-        var quote;
+        var id, quote;
         params.event.kill();
+        id = params.element.id;
         quote = $(params.element).parents('div.quote');
-        params.element.id === 'heading_select' ? this.tip_alert({
-            elem: quote,
-            type: 'heading'
-        }) : this.process_verse($(quote).attr('id'));
+        if( id === 'heading_select') {
+            // Let's skip the next menu if the heading is empty because we know we want to set the heading with the highlighted text
+            if( quote.children('.heading').length ) {
+                this.tip_alert({elem: quote, type: 'heading' })
+            } else {
+                // Submit to _do_heading with a heading_set id
+                this._do_heading(quote, 'heading_set');
+            }
+        } else {
+            this.process_verse($(quote).attr('id'));
+        }
 
     },
     ".alert_tip_heading_set click": function(params) {
