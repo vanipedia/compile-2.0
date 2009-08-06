@@ -38,11 +38,11 @@ Compilation = MVC.Model.extend('compilation',
     },
 
     _build_sections: function(data) {
-        var $this, ref, parent, that;
+        var that;
         that = this;
         if ($('.section, .sub_section', data).length > 0) {
             $('.section, .sub_section', data).each(function() {
-                //if(window.console) { console.log('Creating '+id+' with element: '+$this); }
+                //if(window.console) { console.log('Creating section with element: '+this); }
                 that.create_new_section(this);
             });
         }
@@ -50,7 +50,7 @@ Compilation = MVC.Model.extend('compilation',
 
     create_new_section: function(ref) {
         var resp, section, s;
-        section = typeof ref === 'string' ? ref : $(ref).attr('text');
+        section = typeof ref === 'string' ? ref : $(ref).text();
         resp = this.find_in_db(section, 's');
         if (!resp) {
             s = new Section(ref);
@@ -281,7 +281,7 @@ Compilation = MVC.Model.extend('compilation',
     */
     find_in_db: function(ref, type) {
         if(!ref || !type) {
-            if(window.console) { console.error('Compilation#find_in_db: Missing parameters!'); }
+            if(window.console) { console.error('Compilation#find_in_db: Missing parameters! ref: '+ref+', type: '+type); }
             return;
         }
         // Modify ref if it's a section/TOC search, since we have cleaned up the id

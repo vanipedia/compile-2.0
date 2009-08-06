@@ -142,7 +142,7 @@ Section = MVC.Model.extend('section',
         this.level = this.sec_class === "section" ? 2 : 3;
         this.sec_index = $(ref).attr('sec_index');
         this.id = $(ref).attr('id');
-        this.text = $(ref).attr('text') || $(ref).attr('id').replace(/_/g, ' ');
+        this.text = $(ref).text();
         return true;
     },
     _set_attr_man: function(ref) {
@@ -167,8 +167,8 @@ Section = MVC.Model.extend('section',
         this.sec_class = attr.sec_class;
         this.level = attr.sec_level;
         this.sec_index = attr.sec_index;
-        this.id = ref.replace(/[.,\(\)]/g, '');
-        this.text = ref.replace(/_/g, ' ');
+        this.id = ref.replace(/[.,\(\)]/g, ''); // Clean name of section/TOC to assign to attr id in dom element
+        this.text = ref.replace(/_/g, ' '); // Section name generally comes from database that contains _ instead of spaces
         return true;
     }
 });
