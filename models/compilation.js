@@ -246,11 +246,18 @@ Compilation = MVC.Model.extend('compilation',
             // append existing heading to submitted heading. if there was no heading then simply set it.
             attr.heading = quote.heading ? quote.heading+' '+params.heading : params.heading;
         }
-        if(params.action === 'set') { attr.heading = params.heading.replace(/^([a-z])(.+)/, camel); }
+        if(params.action === 'set') {
+            attr.heading = params.heading;
+            attr.heading = attr.heading.replace(/^[a-z]/, camel);
+            attr.heading = attr.heading.replace(/[^.]$/, fullstop);
+        }
         if(params.action === 'new') { attr.heading = ' '; }
 
-        function camel(all, first, rest) {
-         return first.toUpperCase()+rest;
+        function camel(first) {
+            return first.toUpperCase();
+        }
+        function fullstop(last) {
+            return last+'.';
         }
         this.update_db(params.id, attr, 'q');
     },
