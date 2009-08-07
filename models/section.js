@@ -159,7 +159,7 @@ Section = MVC.Model.extend('section',
         attr = this.Class.find_attr(ref);
         if (!attr) {
             if (window.console) {
-                console.log('Section.init#_set_attr_man: section/TOC item not found in Section#section_tree for ref ' + ref);
+                console.error('Section.init#_set_attr_man: section/TOC item not found in Section#section_tree for ref ' + ref);
             }
             return false;
         }
