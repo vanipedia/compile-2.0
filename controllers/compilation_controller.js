@@ -387,7 +387,14 @@ CompileController = MVC.Controller.extend('compilation',
 
     },
     "quote.found_reference subscribe": function(params) {
-        if($('#compile_form input#link').is(':visible')) $('#compile_form input#link, #compile_form #ref').val('').hide();
+        //if($('#compile_form input#link').is(':visible')) $('#compile_form input#link, #compile_form #ref').val('').hide();
+        if($('#compile_form #ref_lookup').is(':visible')) {
+            $('#compile_form #ref_lookup').each(function() {
+                $(this).hide();
+                $('#ref', this).html('');
+                $('#ref_lookup_input > #link', this).val('');
+            });
+        }
         if($('#compile_tools').is(':visible')) this.hide_compile_tools();
     },
     "compilation.quote_inserted subscribe": function(params) {
