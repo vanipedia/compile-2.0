@@ -692,7 +692,7 @@ QuotesController = MVC.Controller.extend('quotes',
                 this_html = $(this).html();
                 this_html = this_html.replace(/^:(.+?)$/mg, '<dd>$1 </dd>');
                 // save each verse into a string and push it into verses array
-                verses = this_html.match(/(<dd>.+?<\/dd>\n)+/g);
+                verses = this_html.match(/(<dd>.+?<\/dd>\n?)+/g);
                 if (verses) {
                     $.each(verses, function(i, verse) {
                         this_html = this_html.replace(verse, '<dl class="verse_in_q">\n' + verse + '</dl>');
@@ -701,7 +701,7 @@ QuotesController = MVC.Controller.extend('quotes',
                 $(this).html(this_html);
             });
         }
-        
+
         function fix_links(elem) {
             $('.text', elem).each(function() {
                 if ($(this).html().indexOf('[[') > -1) {
