@@ -679,22 +679,11 @@ QuotesController = MVC.Controller.extend('quotes',
         that = this;
         if ($(elem).hasClass('deleted_quote')) return;
         reformat_verses(elem);
-        make_inline(elem);
         fix_links(elem);
         fix_spacing(elem);
+        make_inline(elem);
         // Hilite terms in this elem
         this.hi_terms($(elem).children('.text'));
-
-        // fix newlines by making them into <p> otherwise they will render badly in wiki
-        function fix_spacing(elem) {
-            $('.text', elem).each(function() {
-                var this_html;
-                this_html = $(this).html();
-                //this_html = JsAutoP(this_html);
-                this_html = this_html.replace(/([^>])\n+([^<])/g, '$1<br/>$2');
-                $(this).html(this_html);
-            });
-        }
 
         // Reformat cited verses (vers_in_quote)
         function reformat_verses(elem) {
@@ -703,7 +692,7 @@ QuotesController = MVC.Controller.extend('quotes',
                 this_html = $(this).html();
                 this_html = this_html.replace(/^:(.+?)$/mg, '<dd>$1 </dd>');
                 // save each verse into a string and push it into verses array
-                verses = this_html.match(/(<dd>.+?<\/dd>\n)+/g);
+                verses = this_html.match(/(<dd>.+?<\/dd>\n?)+/g);
                 if (verses) {
                     $.each(verses, function(i, verse) {
                         this_html = this_html.replace(verse, '<dl class="verse_in_q">\n' + verse + '</dl>');
@@ -713,7 +702,31 @@ QuotesController = MVC.Controller.extend('quotes',
             });
         }
 
+        function fix_links(elem) {
+            $('.text', elem).each(function() {
+                if ($(this).html().indexOf('[[') > -1) {
+                    var t;
+                    t = $(this).html();
+                    t = t.replace(/\[\[(?:Vanisource:)?.+?\|(.+?)\]\]/g, '<a class="cited_link" href="http://vanisource.org/wiki/$1"><b>$1</b></a>');
+                    $(this).html(t);
+                }
+            })
+        }
+        // fix newlines by making them into <p> otherwise they will render badly in wiki
+        function fix_spacing(elem) {
+            $('.text', elem).each(function() {
+                var this_html;
+                this_html = $(this).html();
+                //this_html = this_html.replace(/([^>])\n+([^<])/g, '$1<br/>$2');
+                this_html = this_html.replace(/^([^>]+?)$/mg, '<p>$1</p>'); // Spacing doesn't look so good, lets change to <p> as wiki does.
+                $(this).html(this_html);
+            });
+        }
+
+
+
         // Make first paragraph display: inline if
+        // and make all first <p> in each .text element inline too
         function make_inline(elem) {
             var book, inline, t, a, b, c;
             inline = false;
@@ -737,17 +750,11 @@ QuotesController = MVC.Controller.extend('quotes',
                     display: "inline"
                 });
                 inline = false;
+                // Make first <p> child inline
+                $(this).children('div.text').children(':first').each(function() {
+                    if($(this).is('p')) { $(this).css('display', 'inline'); }
+                });
             });
-        }
-        function fix_links(elem) {
-            $('.text', elem).each(function() {
-                if ($(this).html().indexOf('[[') > -1) {
-                    var t;
-                    t = $(this).html();
-                    t = t.replace(/\[\[(?:Vanisource:)?.+?\|(.+?)\]\]/g, '<a class="cited_link" href="http://vanisource.org/wiki/$1"><b>$1</b></a>');
-                    $(this).html(t);
-                }
-            })
         }
     },
     // End of rendered subscription

@@ -6705,7 +6705,7 @@ return _77&&_77.is(":visible");
 return this.visible()&&(_72.filter("."+_71.ACTIVE)[0]||_6d.selectFirst&&_72[0]);
 },show:function(){
 var _8e=$(_6e).offset();
-_77.css({width:typeof _6d.width=="string"||_6d.width>0?_6d.width:$(_6e).width(),top:!_6d.fixed?_8e.top+_6e.offsetHeight:"",left:!_6d.fixed?_8e.left:""}).show();
+_77.css({width:typeof _6d.width=="string"||_6d.width>0?_6d.width:$(_6e).width(),top:!_6d.fixed?_8e.top+_6e.offsetHeight:_8e.top-$("#compile_tools").offset().top+_6e.offsetHeight,left:!_6d.fixed?_8e.left:""}).show();
 if(_6d.scroll){
 _78.scrollTop(0);
 _78.css({maxHeight:_6d.scrollHeight,overflow:"auto"});
@@ -13469,6 +13469,7 @@ _45=true;
 }
 _2d[t]=_2d[t].replace(/\n+/g,"\n");
 _2d[t]=_2d[t].replace(/<br\/?>/g,"\n");
+_2d[t]=_2d[t].replace(/<p(?:.+?)?>(.+?)<\/p>/g,"$1\n");
 _2d[t]=_2d[t].replace(/'{2,}/g,"\"");
 _2d[t]=_2d[t].replace(/(^|\s)[“‘]+/g,"$1\"");
 _2d[t]=_2d[t].replace(/[”’]+(\s|$)/g,"\"$1");
@@ -14211,8 +14212,12 @@ $(this).unbind("click");
 this.clean_up();
 this._loading("end");
 },"quote.found_reference subscribe":function(_30){
-if($("#compile_form input#link").is(":visible")){
-$("#compile_form input#link, #compile_form #ref").val("").hide();
+if($("#compile_form #ref_lookup").is(":visible")){
+$("#compile_form #ref_lookup").each(function(){
+$(this).hide();
+$("#ref",this).html("");
+$("#ref_lookup_input > #link",this).val("");
+});
 }
 if($("#compile_tools").is(":visible")){
 this.hide_compile_tools();
@@ -14734,37 +14739,47 @@ _79(_76);
 _7a(_76);
 _7b(_76);
 this.hi_terms($(_76).children(".text"));
-function _7b(_7c){
+function _78(_7c){
 $(".text",_7c).each(function(){
-var _7d;
+var _7d,_7e;
 _7d=$(this).html();
-_7d=_7d.replace(/([^>])\n+([^<])/g,"$1<br/>$2");
+_7d=_7d.replace(/^:(.+?)$/mg,"<dd>$1 </dd>");
+_7e=_7d.match(/(<dd>.+?<\/dd>\n?)+/g);
+if(_7e){
+$.each(_7e,function(i,_80){
+_7d=_7d.replace(_80,"<dl class=\"verse_in_q\">\n"+_80+"</dl>");
+});
+}
 $(this).html(_7d);
 });
 };
-function _78(_7e){
-$(".text",_7e).each(function(){
-var _7f,_80;
-_7f=$(this).html();
-_7f=_7f.replace(/^:(.+?)$/mg,"<dd>$1 </dd>");
-_80=_7f.match(/(<dd>.+?<\/dd>\n)+/g);
-if(_80){
-$.each(_80,function(i,_82){
-_7f=_7f.replace(_82,"<dl class=\"verse_in_q\">\n"+_82+"</dl>");
-});
+function _79(_81){
+$(".text",_81).each(function(){
+if($(this).html().indexOf("[[")>-1){
+var t;
+t=$(this).html();
+t=t.replace(/\[\[(?:Vanisource:)?.+?\|(.+?)\]\]/g,"<a class=\"cited_link\" href=\"http://vanisource.org/wiki/$1\"><b>$1</b></a>");
+$(this).html(t);
 }
-$(this).html(_7f);
 });
 };
-function _79(_83){
-var _84,_85,t,a,b,c;
-_85=false;
-$(_83).each(function(){
-_84=$(this).attr("book");
-if(_84!=="Con"&&_84!=="Lec"){
-_85=true;
+function _7a(_83){
+$(".text",_83).each(function(){
+var _84;
+_84=$(this).html();
+_84=_84.replace(/^([^>]+?)$/mg,"<p>$1</p>");
+$(this).html(_84);
+});
+};
+function _7b(_85){
+var _86,_87,t,a,b,c;
+_87=false;
+$(_85).each(function(){
+_86=$(this).attr("book");
+if(_86!=="Con"&&_86!=="Lec"){
+_87=true;
 }else{
-_85=true;
+_87=true;
 t=$(this).children("div.text:first").html();
 if(/^.+?(?:<br|\n|$)/.test(t)){
 a=t.match(/^.+?(?:<br|\n|$)/)[0];
@@ -14776,23 +14791,18 @@ if(b){
 c=b.split(" ");
 }
 if(a&&b&&c&&c.length<4){
-_85=false;
+_87=false;
 }
 }
-if(_85){
+if(_87){
 $(this).children("div.text:first").css({display:"inline"});
 }
-_85=false;
-});
-};
-function _7a(_8a){
-$(".text",_8a).each(function(){
-if($(this).html().indexOf("[[")>-1){
-var t;
-t=$(this).html();
-t=t.replace(/\[\[(?:Vanisource:)?.+?\|(.+?)\]\]/g,"<a class=\"cited_link\" href=\"http://vanisource.org/wiki/$1\"><b>$1</b></a>");
-$(this).html(t);
+_87=false;
+$(this).children("div.text").children(":first").each(function(){
+if($(this).is("p")){
+$(this).css("display","inline");
 }
+});
 });
 };
 },"compilation.updated subscribe":function(_8c){
