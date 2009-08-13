@@ -50,7 +50,8 @@ Quote = MVC.Model.extend('quote',
         'EJ': "Easy Journey to Other Planets",
         'LOB': "Light of the Bhagavata",
         'MOG': "Message of Godhead",
-        'NBS': "Narada Bhakti Sutra "
+        'NBS': "Narada Bhakti Sutra",
+        'MM' : "Mukunda-mala-stotra mantra"
     },
     cache:{},
     /**
