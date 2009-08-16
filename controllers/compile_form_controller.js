@@ -99,6 +99,8 @@ CompileFormController = MVC.Controller.extend('compile_form',
       // Check first if we are coming from a not found ref and if so,
       // use the link provided in the form by the suggest link field
       submit['ref'] = attr['ref'] ? attr['ref'] : $.trim(re.exec(text)[1]);
+      // Clean the extra-spacing we have found in some of the refs from Vedabase
+      submit['ref'] = submit['ref'].replace(/\s+/g, ' ');
       // add type "title" to submission if this is a suggested reference
       attr['ref'] ? submit['type'] = 'title': '';
       // Submit the reference to the Quote.find_reference class method
