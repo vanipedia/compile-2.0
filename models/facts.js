@@ -95,7 +95,7 @@ Facts = MVC.Model.extend('facts',
       if(typeof facts[name] !== 'undefined') {
         process_fact(name, facts[name]);
       } else {
-        if(window.console) { console.log('In Facts.build: '+name+' was not found in extracted facts db'); }
+        if(window.console) { console.log('In Facts.build_with: '+name+' was not found in extracted facts db'); }
       }
     });
 

@@ -50,7 +50,8 @@ Quote = MVC.Model.extend('quote',
         'EJ': "Easy Journey to Other Planets",
         'LOB': "Light of the Bhagavata",
         'MOG': "Message of Godhead",
-        'NBS': "Narada Bhakti Sutra "
+        'NBS': "Narada Bhakti Sutra",
+        'MM' : "Mukunda-mala-stotra mantra"
     },
     cache:{},
     /**
@@ -136,7 +137,7 @@ Quote = MVC.Model.extend('quote',
             if(window.console) { console.error('ref argument missing in Quote.need_section'); }
             return;
         }
-        if(/^(SB \d+.\d+.\d+|BG \d+.\d+|CC (Adi|Madhya|Antya) \d+.\d+|NOI \d+)/.test(ref)) {
+        if(/^(SB \d+.\d+.\d+|BG \d+.\d+|CC (Adi|Madhya|Antya) \d+.\d+|NOI \d+|ISO \d+|MM \d+|NBS \d+|LOB \d+)$/.test(ref)) {
             if(window.console) { console.info('Quote#need_section: quote '+ref+' needs trans/purport section'); }
             return true;
             } else {
