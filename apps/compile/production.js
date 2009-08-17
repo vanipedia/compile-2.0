@@ -13184,7 +13184,7 @@ console.error("ref argument missing in Quote.need_section");
 }
 return;
 }
-if(/^(SB \d+.\d+.\d+|BG \d+.\d+|CC (Adi|Madhya|Antya) \d+.\d+|NOI \d+|ISO \d+|MM \d+|NBS \d+|LOB \d+)$/.test(_9)){
+if(/^(SB \d+.\d+.\d+(?:-\d+)|BG \d+.\d+(?:-\d+)|CC (Adi|Madhya|Antya) \d+.\d+(?:-\d+)|NOI \d+|ISO \d+|MM \d+|NBS \d+|LOB \d+)$/.test(_9)){
 if(window.console){
 console.info("Quote#need_section: quote "+_9+" needs trans/purport section");
 }
