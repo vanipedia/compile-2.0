@@ -9920,41 +9920,41 @@ f.dequeue();
 ;
 include.set_path('resources');
 function BaltoUni(_1){
-_1=_1.replace(/ä/g, "ā");
-_1=_1.replace(/é/g, "ī");
-_1=_1.replace(/ü/g, "ū");
-_1=_1.replace(/å/g, "ṛ");
-_1=_1.replace(/è/g, "ṟ");
-_1=_1.replace(/ì/g, "ṅ");
-_1=_1.replace(/ṣ/, "&#241;");
-_1=_1.replace(/ñ/g, "ṣ");
-_1=_1.replace(/&#241;/g, "ñ");
-_1=_1.replace(/ï/g, "ñ");
-_1=_1.replace(/ö/g, "ṭ");
-_1=_1.replace(/ò/g, "ḍ");
-_1=_1.replace(/ë/g, "ṇ");
-_1=_1.replace(/ç/g, "ś");
-_1=_1.replace(/à/g, "ṁ");
-_1=_1.replace(/ù/g, "ḥ");
-_1=_1.replace(/ÿ/g, "ḷ");
-_1=_1.replace(/û/g, "ḻ");
-_1=_1.replace(/Ä/g, "Ā");
-_1=_1.replace(/É/g, "Ī");
-_1=_1.replace(/Ü/g, "Ū");
-_1=_1.replace(/Å/g, "Ṛ");
-_1=_1.replace(/È/g, "Ṟ");
-_1=_1.replace(/Ì/g, "Ṅ");
-_1=_1.replace(/Ṣ/g, "&#209;");
-_1=_1.replace(/Ñ/g, "Ṣ");
-_1=_1.replace(/&#209;/g, "Ñ");
-_1=_1.replace(/Ï/g, "Ñ");
-_1=_1.replace(/Ö/g, "Ṭ");
-_1=_1.replace(/Ò/g, "Ḍ");
-_1=_1.replace(/Ë/g, "Ṇ");
-_1=_1.replace(/Ç/g, "Ś");
-_1=_1.replace(/À/g, "Ṁ");
-_1=_1.replace(/Ù/g, "Ḥ");
-_1=_1.replace(/ß/g, "Ḷ");
+_1=_1.replace(/ä/g,"\u0192\xc5");
+_1=_1.replace(/é/g,"\u0192\xb4");
+_1=_1.replace(/ü/g,"\u2248\xb4");
+_1=_1.replace(/å/g,"\xb7\u03c0\xf5");
+_1=_1.replace(/è/g,"\xb7\u03c0\xfc");
+_1=_1.replace(/ì/g,"\xb7\u03c0\xd6");
+_1=_1.replace(/ṣ/g,"&#241;");
+_1=_1.replace(/ñ/g,"\xb7\u03c0\xa3");
+_1=_1.replace(/&#241;/g,"\u221a\xb1");
+_1=_1.replace(/ï/g,"\u221a\xb1");
+_1=_1.replace(/ö/g,"\xb7\u03c0\u2260");
+_1=_1.replace(/ò/g,"\xb7\u220f\xe7");
+_1=_1.replace(/ë/g,"\xb7\u03c0\xe1");
+_1=_1.replace(/ç/g,"\u2248\xf5");
+_1=_1.replace(/à/g,"\xb7\u03c0\xc5");
+_1=_1.replace(/ù/g,"\xb7\u220f\u2022");
+_1=_1.replace(/ÿ/g,"\xb7\u220f\u2211");
+_1=_1.replace(/û/g,"\xb7\u220f\xaa");
+_1=_1.replace(/Ä/g,"\u0192\xc4");
+_1=_1.replace(/É/g,"\u0192\u2122");
+_1=_1.replace(/Ü/g,"\u2248\u2122");
+_1=_1.replace(/Å/g,"\xb7\u03c0\xf6");
+_1=_1.replace(/È/g,"\xb7\u03c0\xfb");
+_1=_1.replace(/Ì/g,"\xb7\u03c0\xd1");
+_1=_1.replace(/Ṣ/g,"&#209;");
+_1=_1.replace(/Ñ/g,"\xb7\u03c0\xa2");
+_1=_1.replace(/&#209;/g,"\u221a\xeb");
+_1=_1.replace(/Ï/g,"\u221a\xeb");
+_1=_1.replace(/Ö/g,"\xb7\u03c0\xa8");
+_1=_1.replace(/Ò/g,"\xb7\u220f\xe5");
+_1=_1.replace(/Ë/g,"\xb7\u03c0\xdc");
+_1=_1.replace(/Ç/g,"\u2248\xf6");
+_1=_1.replace(/À/g,"\xb7\u03c0\xc4");
+_1=_1.replace(/Ù/g,"\xb7\u220f\xa7");
+_1=_1.replace(/ß/g,"\xb7\u220f\u2202");
 return _1;
 };
 ;
@@ -12973,7 +12973,7 @@ _38.heading=_37.heading?_37.heading+" "+_36.heading:_36.heading;
 if(_36.action==="set"){
 _38.heading=_36.heading;
 _38.heading=_38.heading.replace(/^[a-z]/,_39);
-_38.heading=_38.heading.replace(/[^.]$/,_3a);
+_38.heading=_38.heading.replace(/[^.?!]$/,_3a);
 }
 if(_36.action==="new"){
 _38.heading=" ";
@@ -13792,13 +13792,13 @@ this.publish("added",{fact:_2d,index:this.db[_2d].length-1});
 return _30===undefined?this.db[_2f]:this.db[_2f][_30];
 },get_all_terms:function(){
 var _31;
-_31=this.db.terms.sort();
+_31=this.db.terms;
 _31=$.map(_31,function(t){
 if(t!==""){
 return "\""+t+"\"";
 }
 });
-return _31.join("|");
+return _31.sort().join("|");
 },check_user:function(){
 var _33,_34;
 _33=this;
@@ -15005,72 +15005,79 @@ var _8,_9;
 _8=$(_7.element).parents(".fact").attr("id");
 _9=$(_7.element).parent().children("input").val();
 $(_7.element).parent().children("input").val("");
-Facts.add(_8,_9);
-},update:function(_a,_b){
-var _c,_d;
-_c=$(_a).hasClass("fact")?_a.id:$(_a).parents(".fact").attr("id");
-_d=_a.id.match(/\d+/);
-return Facts.update(_c,_d,_b);
-},append:function(_e){
-var _f,_10;
-_10=_e.fact+"_list";
-this.id=_e.fact+"_"+_e.index;
-this.f_class=_e.fact;
-this.value=Facts.get(_e.fact,_e.index);
-if($("#"+_10).length===0){
+_8==="terms"&&/\|/.test(_9)?_a(_9):Facts.add(_8,_9);
+function _a(_b){
+var _c;
+_c=_b.replace(/"/g,"").split("|");
+$.each(_c,function(i,t){
+Facts.add("terms",t);
+});
+};
+},update:function(_f,_10){
+var _11,_12;
+_11=$(_f).hasClass("fact")?_f.id:$(_f).parents(".fact").attr("id");
+_12=_f.id.match(/\d+/);
+return Facts.update(_11,_12,_10);
+},append:function(_13){
+var css,_15;
+_15=_13.fact+"_list";
+this.id=_13.fact+"_"+_13.index;
+this.f_class=_13.fact;
+this.value=Facts.get(_13.fact,_13.index);
+if($("#"+_15).length===0){
 if(window.console){
-console.log("Error in FactsController.append: "+_10+" does not exist in dom");
+console.log("Error in FactsController.append: "+_15+" does not exist in dom");
 }
 return;
 }
-this.render({bottom:_10,action:"append"});
-_f=_e.index%2?{background:"#DEE2F9"}:{background:"#D4D9F9"};
-$("#"+this.id).css(_f);
+this.render({bottom:_15,action:"append"});
+css=_13.index%2?{background:"#DEE2F9"}:{background:"#D4D9F9"};
+$("#"+this.id).css(css);
 this.editable(this.id);
-if(_e.fact==="terms"){
+if(_13.fact==="terms"){
 this.hilite(this.value);
 }
-},hilite:function(_11){
-if(_11===""){
+},hilite:function(_16){
+if(_16===""){
 return;
 }
-$(".quote .text").highlight_sanskrit(_11);
-},un_hilite:function(_12){
-if(!_12){
+$(".quote .text").highlight_sanskrit(_16);
+},un_hilite:function(_17){
+if(!_17){
 if(window.console){
-console.log("term missing in FactsController.un_hilite "+_12);
+console.log("term missing in FactsController.un_hilite "+_17);
 }
 return;
 }
 var v,re;
-re=new RegExp("<span class=\"highlight_terms\">"+_12+"</span>","g");
+re=new RegExp("<span class=\"highlight_terms\">"+_17+"</span>","g");
 $(".quote .text").each(function(){
-v=$(this).html().replace(re,_12);
+v=$(this).html().replace(re,_17);
 $(this).html(v);
 });
 },editable:function(id){
-var _16,_17;
-_17=this;
-_16=id?"#"+id:".term, #goal, .category, #notes";
-$(_16).editable(function(_18,_19){
-return _17.update(this,_18);
-},{type:"text",style:"border: solid 0px indigo;"});
-},_render_facts:function(_1a){
 var _1b,_1c;
-_1b=this;
-this.facts=_1a;
-$("#facts").length?_1c={to:"facts",action:"facts"}:_1c={bottom:"compile_tools",action:"facts"};
-this.render(_1c);
+_1c=this;
+_1b=id?"#"+id:".term, #goal, .category, #notes";
+$(_1b).editable(function(_1d,_1e){
+return _1c.update(this,_1d);
+},{type:"text",style:"border: solid 0px indigo;"});
+},_render_facts:function(_1f){
+var _20,_21;
+_20=this;
+this.facts=_1f;
+$("#facts").length?_21={to:"facts",action:"facts"}:_21={bottom:"compile_tools",action:"facts"};
+this.render(_21);
 $(document).ready(function(){
-_1b.attach_events();
+_20.attach_events();
 });
 },"compilation.built subscribe":function(){
 this.run_checks();
 },run_checks:function(){
 Facts.check_totals();
 },attach_events:function(){
-var _1d;
-_1d=this;
+var _22;
+_22=this;
 $("#facts").accordion({autoHeight:false,active:false});
 $(".term, .category, .compiler, #complete > div, #totals_by_section > div").filter(":even").css({background:"#D4D9F9"}).end().filter(":odd").css({background:"#DEE2F9"});
 $.fn.check=function(){
@@ -15087,7 +15094,7 @@ $.each(Facts.db.complete,function(){
 $("#complete_"+this).check();
 });
 $(".complete_checks").click(function(){
-_1d.checkbox(this);
+_22.checkbox(this);
 if($(".complete_checks:checked").length===7){
 $("#complete_ALL").check().click().check();
 return;
@@ -15104,39 +15111,39 @@ if($("#complete_ALL").is(":checked")){
 $("#facts #goal").prev().hide();
 }
 this.editable();
-},checkbox:function(_1e){
-var _1f,_20;
-_1f=_1e.id.replace(/complete_/,"");
-_20=_1e.checked?"add":"del";
-Facts.complete(_1f,_20);
+},checkbox:function(_23){
+var _24,_25;
+_24=_23.id.replace(/complete_/,"");
+_25=_23.checked?"add":"del";
+Facts.complete(_24,_25);
 },update_t_b_sections_view:function(){
 this.totals=Facts.db.totals_by_section;
 this.render({to:"totals_by_section",action:"totals"});
 },update_totals_view:function(){
 this.total=Facts.db.total;
 this.render({to:"total",action:"total"});
-},"facts.created subscribe":function(_21){
-this._render_facts(_21.facts);
-},"facts.added subscribe":function(_22){
-this.append(_22);
-},"facts.deleted subscribe":function(_23){
-var _24;
-_24="#"+_23.fact+"_"+_23.index;
-if(_23.fact==="terms"){
-this.un_hilite(_23.old);
+},"facts.created subscribe":function(_26){
+this._render_facts(_26.facts);
+},"facts.added subscribe":function(_27){
+this.append(_27);
+},"facts.deleted subscribe":function(_28){
+var _29;
+_29="#"+_28.fact+"_"+_28.index;
+if(_28.fact==="terms"){
+this.un_hilite(_28.old);
 }
-$(_24).remove();
-},"facts.totals_updated subscribe":function(_25){
+$(_29).remove();
+},"facts.totals_updated subscribe":function(_2a){
 this.update_t_b_sections_view();
 this.update_totals_view();
-},"facts.updated_term subscribe":function(_26){
-this.hilite(_26.term);
-},"quote.created subscribe":function(_27){
-Facts.update_totals(_27);
-},"compilation.deleted subscribe":function(_28){
-Facts.update_totals(_28);
-},"compilation.undone subscribe":function(_29){
-Facts.update_totals(_29);
+},"facts.updated_term subscribe":function(_2b){
+this.hilite(_2b.term);
+},"quote.created subscribe":function(_2c){
+Facts.update_totals(_2c);
+},"compilation.deleted subscribe":function(_2d){
+Facts.update_totals(_2d);
+},"compilation.undone subscribe":function(_2e){
+Facts.update_totals(_2e);
 }});
 ;
 include.end_of_production();
