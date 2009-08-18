@@ -75,7 +75,7 @@ CompileFormController = MVC.Controller.extend('compile_form',
     return true
   },
   check_uninserted_quotes: function() {
-    if( $('div.building_quote').length !== 0) {
+    if( $('div.building_quote').not('.deleted_quote').length !== 0) {
       this.publish('hide_compile_tools');
       this.publish('warning', { msg: 'You must Insert the new quote to continue compiling!'});
       $.scrollTo('.building_quote', 'slow', { easing: 'easeOutExpo', offset: -50 });

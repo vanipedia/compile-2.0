@@ -785,7 +785,7 @@ QuotesController = MVC.Controller.extend('quotes',
                 elem: quote,
                 view: 'delete'
             });
-            $(this).removeClass('q_new building_quote').fadeIn('slow');
+            $(this).fadeIn('slow');
         });
     },
     "compilation.quote_inserted subscribe": function(params) {

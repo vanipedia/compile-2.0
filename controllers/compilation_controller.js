@@ -266,7 +266,7 @@ CompileController = MVC.Controller.extend('compilation',
         var facts, sections, subs, quotes, new_compilation, final_html;
         // Checks before saving
 								// check if a new quote has not been inserted yet
-        if($('.building_quote').length) {
+        if($('.building_quote').not('.deleted_quote').length) {
             this.publish('warning', {
                 msg: 'You must insert all quotes before saving!'
             });
