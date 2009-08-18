@@ -343,6 +343,8 @@ Quote = MVC.Model.extend('quote',
         // Remove underscores and extraspaces
         if(this.link) { this.link = this.link.replace(/[_\s]+/g, ' '); }
         if(!this.link_text) { this.link_text = this.link; }
+        // Eliminate (New 2003) from link_text quotes
+        this.link_text = this.link_text.replace('(New-2003)', '');
 
         // quote.parent is the section it belongs to. If missing request it as section as that is the attribute it returns
         Section.exists(this.parent) ? this.parent = this.parent.replace(/\s+/g, '_') : find_attr('parent');

@@ -155,7 +155,9 @@ background-image: url(/images/Vaniquotes-logo-small2.png);
 .q_new .status_text:after {
 	content: 'Inserted!';
 }
-
+.building_quote .status_text:after {
+  content: 'New!'
+}
 .q_bad_section .q_menu .tips {
  visibility: visible;
 }

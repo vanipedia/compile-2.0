@@ -229,7 +229,7 @@ FactsController = MVC.Controller.extend('facts',
   "facts.updated_term subscribe": function(params) {
     this.hilite(params.term);
   },
-  "compilation.quote_inserted subscribe": function(params) {
+  "quote.created subscribe": function(params) {
     Facts.update_totals(params);
   },
   "compilation.deleted subscribe": function(params) {

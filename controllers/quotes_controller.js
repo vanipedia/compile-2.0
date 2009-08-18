@@ -96,10 +96,10 @@ QuotesController = MVC.Controller.extend('quotes',
         quote = $(params.element).parents('div.quote');
         this.delete_quote(quote);
     },
-    ".deleted_quote_msg.undo_del_quote click": function(params) {
+    ".deleted_quote_msg .undo_del_quote click": function(params) {
         var quote;
         params.event.kill();
-        quote = params.element.parentNode;
+        quote = $(params.element).parents('div.quote');
         this.undo(quote);
     },
     ".text mouseup": function(params) {
@@ -275,7 +275,7 @@ QuotesController = MVC.Controller.extend('quotes',
             }
         }
 
-        this.publish('rendered', $('#' + id).not('.edit_quote'));
+        this.publish('rendered', $('#' + id));
 
     },
     // End of render_quote
@@ -369,11 +369,13 @@ QuotesController = MVC.Controller.extend('quotes',
         id = $(quote).attr('id');
         $(quote).slideUp('slow', function() {
             Compilation.undo(id, 'q');
+            // remove class before rendering otherwise formatting and clean-up will not proceed in rendered listener
+            $(this).removeClass('deleted_quote');
             that.render_quote({
                 elem: quote,
                 view: 'view'
             });
-            $(this).removeClass('deleted_quote q_`').show('slow');
+            $(this).show('slow');
         });
     },
     /**
@@ -785,7 +787,7 @@ QuotesController = MVC.Controller.extend('quotes',
                 elem: quote,
                 view: 'delete'
             });
-            $(this).removeClass('q_new building_quote').fadeIn('slow');
+            $(this).fadeIn('slow');
         });
     },
     "compilation.quote_inserted subscribe": function(params) {
