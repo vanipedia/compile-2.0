@@ -229,9 +229,9 @@ Facts = MVC.Model.extend('facts',
 
   get_all_terms: function() {
     var list;
-    list = this.db.terms.sort();
+    list = this.db.terms;
     list = $.map(list, function(t) { if(t !== '') return '"'+t+'"'; })
-    return list.join('|');
+    return list.sort().join('|');
   },
   /**
    * check_user checks if current user/compiler is logged-in
