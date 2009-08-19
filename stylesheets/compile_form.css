@@ -73,6 +73,12 @@
   padding: 1px;
 }
 
+#compile_form #version {
+  position: relative;
+  float: right;
+  font-size: 0.7em;
+}
+
 .suggest_results {
 	padding: 0px;
 	border: 1px solid black;
