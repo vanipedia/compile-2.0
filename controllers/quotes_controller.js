@@ -701,7 +701,7 @@ QuotesController = MVC.Controller.extend('quotes',
                 verses = this_html.match(/(<dd>.+?<\/dd>\n?)+/g);
                 if (verses) {
                     $.each(verses, function(i, verse) {
-                        this_html = this_html.replace(verse, '<dl class="verse_in_q">\n' + verse + '</dl>');
+                        this_html = this_html.replace(verse, '<dl class="verse_in_q">\n' + verse + '</dl>\n');
                     });
                 }
                 $(this).html(this_html);
@@ -723,8 +723,16 @@ QuotesController = MVC.Controller.extend('quotes',
             $('.text', elem).each(function() {
                 var this_html;
                 this_html = $(this).html();
-                //this_html = this_html.replace(/([^>])\n+([^<])/g, '$1<br/>$2');
-                this_html = this_html.replace(/^([^>]+?)$/mg, '<p>$1</p>'); // Spacing doesn't look so good, lets change to <p> as wiki does.
+                //this_html = this_html.replace(/^([^>]+?)$/mg, '<p>$1</p>'); // Spacing doesn't look so good, lets change to <p> as wiki does.
+                this_html = this_html.replace(/^.+$/mg, wrap_p); // Testing a better way to wrap paragraphs. This one will wrap also p adjacent to verses (verse_in_q)
+                function wrap_p(all) {
+                    //console.assert(/<\/?d(?:d|l)/g.test(text) || /^$/.test(all));
+                    if(/<\/?d(d|l)/.test(all)) {
+                        return all;
+                    } else {
+                        return '<p>'+all+'</p>';
+                    }
+                }
                 $(this).html(this_html);
             });
         }
