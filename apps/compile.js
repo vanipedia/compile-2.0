@@ -1,5 +1,5 @@
 include.resources(
-    'jquery-1.3.2',
+    'jquery',
     'ejs_fulljslint',
     'jquery.tinysort.packed', 'jquery.autogrow','jquery.easing', 'jquery.scrollTo',
     'jquery.jeditable', 'jquery.hoverIntent', 'jquery-autocomplete/jquery.autocomplete',
