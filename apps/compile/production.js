@@ -1,5 +1,5 @@
 include.set_path('apps');
-include.resources("jquery-1.3.2","ejs_fulljslint","jquery.tinysort.packed","jquery.autogrow","jquery.easing","jquery.scrollTo","jquery.jeditable","jquery.hoverIntent","jquery-autocomplete/jquery.autocomplete","jquery-ui-1.7.2.custom.min","BaltoUni","UnitoASCII","jquery.highlight_sanskrit","JsAutoP");
+include.resources("jquery","ejs_fulljslint","jquery.tinysort.packed","jquery.autogrow","jquery.easing","jquery.scrollTo","jquery.jeditable","jquery.hoverIntent","jquery-autocomplete/jquery.autocomplete","jquery-ui-1.7.2.custom.min","BaltoUni","UnitoASCII","jquery.highlight_sanskrit","JsAutoP");
 include.engines();
 include.plugins("controller","controller/hover","controller/view","view","view/helpers","model");
 include(function(){
@@ -13786,7 +13786,7 @@ console.log("Bad fact in Facts.add "+_2d+" val "+_2e);
 }
 return;
 }
-this.db[_2d].push($.trim(_2e));
+this.db[_2d].push($.trim(UniToASCII(BaltoUni(_2e))));
 this.publish("added",{fact:_2d,index:this.db[_2d].length-1});
 },get:function(_2f,_30){
 return _30===undefined?this.db[_2f]:this.db[_2f][_30];
@@ -14014,7 +14014,10 @@ $("#mw-edit-longpagewarning").hide();
 this.loading={};
 this.loading.message="Loading compiling data...";
 this.render({top:"bodyContent",action:"loading"});
-$("#p-logo").css("z-index",1);
+$("#p-cactions").children().each(function(){
+$("li#ca-edit",this).removeClass("selected");
+$("li#ca-compile",this).addClass("selected");
+});
 }
 if(_b==="end_gracefully"){
 if(window.console){
@@ -14026,6 +14029,7 @@ $("#editform, #toolbar").show();
 if(_b==="end"){
 $(document).ready(function(){
 _c.attach_events();
+$("#p-logo, #p-cactions").css("z-index","1");
 $("#loading").fadeOut("slow",function(){
 $("#compilation").fadeIn("slow").removeClass("hidden");
 });
@@ -14104,6 +14108,7 @@ $("#compile_tools").is(":hidden")?this.show_compile_tools(pos):this.hide_compile
 },show_compile_tools:function(pos){
 var _1b;
 _1b=this;
+$("#p-logo, #p-cactions").css("z-index","1");
 $("#compile_tools").css("opacity",1).fadeIn("fast",function(){
 if(pos){
 window.scrollTo(0,pos);
@@ -14115,6 +14120,7 @@ $("#transparent_background").show();
 var _1c;
 _1c=this;
 $("#transparent_background").hide();
+$("#p-logo, #p-cactions").css("z-index","");
 $("#compile_tools").css("opacity",0);
 $("#compile_tools").effect("transfer",{to:"#compile_tools_toggle",className:"compile_tools_transfer"},"medium");
 $("#compile_tools").hide("fast");
