@@ -108,8 +108,11 @@ CompileController = MVC.Controller.extend('compilation',
                 top: 'bodyContent',
                 action: 'loading'
             });
-            // fix logo z-index for overlays in compile tools
-            $('#p-logo').css('z-index', 1);
+
+            $('#p-cactions').children().each(function() {
+                $('li#ca-edit', this).removeClass('selected');
+                $('li#ca-compile', this).addClass('selected');
+            });
         }
 
         if (now === 'end_gracefully') {
@@ -122,8 +125,9 @@ CompileController = MVC.Controller.extend('compilation',
             $(document).ready(function() {
                 // Attach jQuery bindings to elements
                 that.attach_events();
-
-								$('#loading').fadeOut('slow', function() {
+                // fix logo z-index for overlays in compile tools
+                $('#p-logo, #p-cactions').css('z-index', '1');
+                $('#loading').fadeOut('slow', function() {
                     $('#compilation').fadeIn('slow').removeClass('hidden');
                 });
             });
@@ -233,6 +237,8 @@ CompileController = MVC.Controller.extend('compilation',
     show_compile_tools: function(pos) {
         var that;
         that = this;
+        // fix logo z-index for overlays in compile tools
+        $('#p-logo, #p-cactions').css('z-index', '1');
         $('#compile_tools').css('opacity', 1).fadeIn('fast', function() {
             if(pos) window.scrollTo(0, pos);
         });
@@ -246,7 +252,8 @@ CompileController = MVC.Controller.extend('compilation',
         that = this;
         // Make transparent background dissapear. This bg is used to enable click on anywhere but inside compie_tools element to hide it.
         $('#transparent_background').hide();
-
+        // fix logo z-index for overlays in compile tools
+        $('#p-logo, #p-cactions').css('z-index', '');
         // Blind first => transfer effect => hide
         $('#compile_tools').css('opacity', 0);
         $('#compile_tools').effect('transfer', {

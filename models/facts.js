@@ -218,7 +218,7 @@ Facts = MVC.Model.extend('facts',
       if(window.console) { console.log('Bad fact in Facts.add '+fact+' val '+value); }
       return;
     }
-    this.db[fact].push($.trim(value));
+    this.db[fact].push($.trim(UniToASCII(BaltoUni(value))));
     this.publish('added', {fact: fact, index: this.db[fact].length - 1 });
   },
 
