@@ -152,9 +152,6 @@
 #p-search {
 	z-index: 1;
 }
-#p-cactions li.selected a {
-	z-index: 1;
-}
 .compile_tools_transfer {
   border: 2px dotted gray;
   z-index: 200;
