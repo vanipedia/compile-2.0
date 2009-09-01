@@ -4,7 +4,7 @@ include.resources(
     'jquery.tinysort.packed', 'jquery.autogrow','jquery.easing', 'jquery.scrollTo',
     'jquery.jeditable', 'jquery.hoverIntent', 'jquery-autocomplete/jquery.autocomplete',
     'jquery-ui-1.7.2.custom.min',
-    'BaltoUni', 'UniToASCII', 'jquery.highlight_sanskrit', 'JsAutoP'
+    'BaltoUni', 'UniToASCII', 'jquery.highlight_sanskrit', 'JsAutoP', 'RegExp.escape'
     );
 include.engines();
 include.plugins(

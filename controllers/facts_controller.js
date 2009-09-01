@@ -103,12 +103,13 @@ FactsController = MVC.Controller.extend('facts',
   editable: function(id) {
    var edit, that;
    that = this;
-   edit = id ? '#'+id : '.term, #goal, .category, #notes';
+   edit = id ? '#'+id : '.term, #goal, .categories, #notes';
    $(edit).editable(function(value, settings) {
          return that.update(this, value);
       }, {
-         type: "text",
-         style: "border: solid 0px indigo;"
+        event: "dblclick",
+        type: "text",
+        style: "border: solid 0px indigo;"
     });
   },
 
@@ -135,15 +136,11 @@ FactsController = MVC.Controller.extend('facts',
 			modal: true
 		});*/
     $('#facts').accordion({
-			autoHeight: false,
-			//collapsible: true,
-            active: false
+        autoHeight: false,
+        //collapsible: true,
+        active: false
 		});
-    $('.term, .category, .compiler, #complete > div, #totals_by_section > div').filter(':even').css({
-     background: '#D4D9F9'
-    }).end().filter(':odd').css({
-     background: '#DEE2F9'
-    });
+    this.color_list($('.term, .categories, .compiler, #complete > div, #totals_by_section > div'));
 
     /**** Check and uncheck functions   ****/
     $.fn.check = function() {
@@ -178,6 +175,13 @@ FactsController = MVC.Controller.extend('facts',
     if($("#complete_ALL").is(':checked')) $('#facts #goal').prev().hide();
     this.editable();
   },
+    color_list: function(list) {
+        list.filter(':even').css({
+            background: '#D4D9F9'
+        }).end().filter(':odd').css({
+            background: '#DEE2F9'
+        });
+    },
   checkbox: function(elem) {
     var book, action;
     book = elem.id.replace(/complete_/, '');
@@ -204,7 +208,20 @@ FactsController = MVC.Controller.extend('facts',
    * Subscribe to facts.created to render the Page facts form
    */
    "facts.created subscribe": function(params) {
+    var that;
+    that = this;
     this._render_facts(params.facts);
+    // Make categories draggable
+    $('#categories_list').sortable({
+        placeholder: 'ui-state-highlight',
+        axis: 'y',
+        cursor: 'move',
+        forcePlaceholderSize: true,
+        items: 'li',
+        opacity: 0.7
+    });
+    $("#categories_list").disableSelection();
+
   },
   /**
    * facts.added will receive message from facts and add the element to the dom for display

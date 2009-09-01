@@ -1,5 +1,5 @@
 include.set_path('apps');
-include.resources("jquery","ejs_fulljslint","jquery.tinysort.packed","jquery.autogrow","jquery.easing","jquery.scrollTo","jquery.jeditable","jquery.hoverIntent","jquery-autocomplete/jquery.autocomplete","jquery-ui-1.7.2.custom.min","BaltoUni","UniToASCII","jquery.highlight_sanskrit","JsAutoP");
+include.resources("jquery","ejs_fulljslint","jquery.tinysort.packed","jquery.autogrow","jquery.easing","jquery.scrollTo","jquery.jeditable","jquery.hoverIntent","jquery-autocomplete/jquery.autocomplete","jquery-ui-1.7.2.custom.min","BaltoUni","UniToASCII","jquery.highlight_sanskrit","JsAutoP","RegExp.escape");
 include.engines();
 include.plugins("controller","controller/hover","controller/view","view","view/helpers","model");
 include(function(){
@@ -7491,6 +7491,202 @@ a(c.helper).css("zIndex",d._zIndex);
 }
 }});
 })(jQuery);
+(function(a){
+a.widget("ui.droppable",{_init:function(){
+var c=this.options,b=c.accept;
+this.isover=0;
+this.isout=1;
+this.options.accept=this.options.accept&&a.isFunction(this.options.accept)?this.options.accept:function(e){
+return e.is(b);
+};
+this.proportions={width:this.element[0].offsetWidth,height:this.element[0].offsetHeight};
+a.ui.ddmanager.droppables[this.options.scope]=a.ui.ddmanager.droppables[this.options.scope]||[];
+a.ui.ddmanager.droppables[this.options.scope].push(this);
+(this.options.addClasses&&this.element.addClass("ui-droppable"));
+},destroy:function(){
+var b=a.ui.ddmanager.droppables[this.options.scope];
+for(var c=0;c<b.length;c++){
+if(b[c]==this){
+b.splice(c,1);
+}
+}
+this.element.removeClass("ui-droppable ui-droppable-disabled").removeData("droppable").unbind(".droppable");
+},_setData:function(b,c){
+if(b=="accept"){
+this.options.accept=c&&a.isFunction(c)?c:function(e){
+return e.is(c);
+};
+}else{
+a.widget.prototype._setData.apply(this,arguments);
+}
+},_activate:function(c){
+var b=a.ui.ddmanager.current;
+if(this.options.activeClass){
+this.element.addClass(this.options.activeClass);
+}
+(b&&this._trigger("activate",c,this.ui(b)));
+},_deactivate:function(c){
+var b=a.ui.ddmanager.current;
+if(this.options.activeClass){
+this.element.removeClass(this.options.activeClass);
+}
+(b&&this._trigger("deactivate",c,this.ui(b)));
+},_over:function(c){
+var b=a.ui.ddmanager.current;
+if(!b||(b.currentItem||b.element)[0]==this.element[0]){
+return;
+}
+if(this.options.accept.call(this.element[0],(b.currentItem||b.element))){
+if(this.options.hoverClass){
+this.element.addClass(this.options.hoverClass);
+}
+this._trigger("over",c,this.ui(b));
+}
+},_out:function(c){
+var b=a.ui.ddmanager.current;
+if(!b||(b.currentItem||b.element)[0]==this.element[0]){
+return;
+}
+if(this.options.accept.call(this.element[0],(b.currentItem||b.element))){
+if(this.options.hoverClass){
+this.element.removeClass(this.options.hoverClass);
+}
+this._trigger("out",c,this.ui(b));
+}
+},_drop:function(c,d){
+var b=d||a.ui.ddmanager.current;
+if(!b||(b.currentItem||b.element)[0]==this.element[0]){
+return false;
+}
+var e=false;
+this.element.find(":data(droppable)").not(".ui-draggable-dragging").each(function(){
+var f=a.data(this,"droppable");
+if(f.options.greedy&&a.ui.intersect(b,a.extend(f,{offset:f.element.offset()}),f.options.tolerance)){
+e=true;
+return false;
+}
+});
+if(e){
+return false;
+}
+if(this.options.accept.call(this.element[0],(b.currentItem||b.element))){
+if(this.options.activeClass){
+this.element.removeClass(this.options.activeClass);
+}
+if(this.options.hoverClass){
+this.element.removeClass(this.options.hoverClass);
+}
+this._trigger("drop",c,this.ui(b));
+return this.element;
+}
+return false;
+},ui:function(b){
+return {draggable:(b.currentItem||b.element),helper:b.helper,position:b.position,absolutePosition:b.positionAbs,offset:b.positionAbs};
+}});
+a.extend(a.ui.droppable,{version:"1.7.2",eventPrefix:"drop",defaults:{accept:"*",activeClass:false,addClasses:true,greedy:false,hoverClass:false,scope:"default",tolerance:"intersect"}});
+a.ui.intersect=function(q,j,o){
+if(!j.offset){
+return false;
+}
+var e=(q.positionAbs||q.position.absolute).left,d=e+q.helperProportions.width,n=(q.positionAbs||q.position.absolute).top,m=n+q.helperProportions.height;
+var g=j.offset.left,c=g+j.proportions.width,p=j.offset.top,k=p+j.proportions.height;
+switch(o){
+case "fit":
+return (g<e&&d<c&&p<n&&m<k);
+break;
+case "intersect":
+return (g<e+(q.helperProportions.width/2)&&d-(q.helperProportions.width/2)<c&&p<n+(q.helperProportions.height/2)&&m-(q.helperProportions.height/2)<k);
+break;
+case "pointer":
+var h=((q.positionAbs||q.position.absolute).left+(q.clickOffset||q.offset.click).left),i=((q.positionAbs||q.position.absolute).top+(q.clickOffset||q.offset.click).top),f=a.ui.isOver(i,h,p,g,j.proportions.height,j.proportions.width);
+return f;
+break;
+case "touch":
+return ((n>=p&&n<=k)||(m>=p&&m<=k)||(n<p&&m>k))&&((e>=g&&e<=c)||(d>=g&&d<=c)||(e<g&&d>c));
+break;
+default:
+return false;
+break;
+}
+};
+a.ui.ddmanager={current:null,droppables:{"default":[]},prepareOffsets:function(e,g){
+var b=a.ui.ddmanager.droppables[e.options.scope];
+var f=g?g.type:null;
+var h=(e.currentItem||e.element).find(":data(droppable)").andSelf();
+droppablesLoop:
+for(var d=0;d<b.length;d++){
+if(b[d].options.disabled||(e&&!b[d].options.accept.call(b[d].element[0],(e.currentItem||e.element)))){
+continue;
+}
+for(var c=0;c<h.length;c++){
+if(h[c]==b[d].element[0]){
+b[d].proportions.height=0;
+continue droppablesLoop;
+}
+}
+b[d].visible=b[d].element.css("display")!="none";
+if(!b[d].visible){
+continue;
+}
+b[d].offset=b[d].element.offset();
+b[d].proportions={width:b[d].element[0].offsetWidth,height:b[d].element[0].offsetHeight};
+if(f=="mousedown"){
+b[d]._activate.call(b[d],g);
+}
+}
+},drop:function(b,c){
+var d=false;
+a.each(a.ui.ddmanager.droppables[b.options.scope],function(){
+if(!this.options){
+return;
+}
+if(!this.options.disabled&&this.visible&&a.ui.intersect(b,this,this.options.tolerance)){
+d=this._drop.call(this,c);
+}
+if(!this.options.disabled&&this.visible&&this.options.accept.call(this.element[0],(b.currentItem||b.element))){
+this.isout=1;
+this.isover=0;
+this._deactivate.call(this,c);
+}
+});
+return d;
+},drag:function(b,c){
+if(b.options.refreshPositions){
+a.ui.ddmanager.prepareOffsets(b,c);
+}
+a.each(a.ui.ddmanager.droppables[b.options.scope],function(){
+if(this.options.disabled||this.greedyChild||!this.visible){
+return;
+}
+var e=a.ui.intersect(b,this,this.options.tolerance);
+var g=!e&&this.isover==1?"isout":(e&&this.isover==0?"isover":null);
+if(!g){
+return;
+}
+var f;
+if(this.options.greedy){
+var d=this.element.parents(":data(droppable):eq(0)");
+if(d.length){
+f=a.data(d[0],"droppable");
+f.greedyChild=(g=="isover"?1:0);
+}
+}
+if(f&&g=="isover"){
+f.isover=0;
+f.isout=1;
+f._out.call(f,c);
+}
+this[g]=1;
+this[g=="isout"?"isover":"isout"]=0;
+this[g=="isover"?"_over":"_out"].call(this,c);
+if(f&&g=="isout"){
+f.isout=0;
+f.isover=1;
+f._over.call(f,c);
+}
+});
+}};
+})(jQuery);
 (function(c){
 c.widget("ui.resizable",c.extend({},c.ui.mouse,{_init:function(){
 var e=this,j=this.options;
@@ -7972,6 +8168,827 @@ return parseInt(d,10)||0;
 var a=function(d){
 return !isNaN(parseInt(d,10));
 };
+})(jQuery);
+(function(a){
+a.widget("ui.selectable",a.extend({},a.ui.mouse,{_init:function(){
+var b=this;
+this.element.addClass("ui-selectable");
+this.dragged=false;
+var c;
+this.refresh=function(){
+c=a(b.options.filter,b.element[0]);
+c.each(function(){
+var d=a(this);
+var e=d.offset();
+a.data(this,"selectable-item",{element:this,$element:d,left:e.left,top:e.top,right:e.left+d.outerWidth(),bottom:e.top+d.outerHeight(),startselected:false,selected:d.hasClass("ui-selected"),selecting:d.hasClass("ui-selecting"),unselecting:d.hasClass("ui-unselecting")});
+});
+};
+this.refresh();
+this.selectees=c.addClass("ui-selectee");
+this._mouseInit();
+this.helper=a(document.createElement("div")).css({border:"1px dotted black"}).addClass("ui-selectable-helper");
+},destroy:function(){
+this.element.removeClass("ui-selectable ui-selectable-disabled").removeData("selectable").unbind(".selectable");
+this._mouseDestroy();
+},_mouseStart:function(d){
+var b=this;
+this.opos=[d.pageX,d.pageY];
+if(this.options.disabled){
+return;
+}
+var c=this.options;
+this.selectees=a(c.filter,this.element[0]);
+this._trigger("start",d);
+a(c.appendTo).append(this.helper);
+this.helper.css({"z-index":100,position:"absolute",left:d.clientX,top:d.clientY,width:0,height:0});
+if(c.autoRefresh){
+this.refresh();
+}
+this.selectees.filter(".ui-selected").each(function(){
+var e=a.data(this,"selectable-item");
+e.startselected=true;
+if(!d.metaKey){
+e.$element.removeClass("ui-selected");
+e.selected=false;
+e.$element.addClass("ui-unselecting");
+e.unselecting=true;
+b._trigger("unselecting",d,{unselecting:e.element});
+}
+});
+a(d.target).parents().andSelf().each(function(){
+var e=a.data(this,"selectable-item");
+if(e){
+e.$element.removeClass("ui-unselecting").addClass("ui-selecting");
+e.unselecting=false;
+e.selecting=true;
+e.selected=true;
+b._trigger("selecting",d,{selecting:e.element});
+return false;
+}
+});
+},_mouseDrag:function(i){
+var c=this;
+this.dragged=true;
+if(this.options.disabled){
+return;
+}
+var e=this.options;
+var d=this.opos[0],h=this.opos[1],b=i.pageX,g=i.pageY;
+if(d>b){
+var f=b;
+b=d;
+d=f;
+}
+if(h>g){
+var f=g;
+g=h;
+h=f;
+}
+this.helper.css({left:d,top:h,width:b-d,height:g-h});
+this.selectees.each(function(){
+var j=a.data(this,"selectable-item");
+if(!j||j.element==c.element[0]){
+return;
+}
+var k=false;
+if(e.tolerance=="touch"){
+k=(!(j.left>b||j.right<d||j.top>g||j.bottom<h));
+}else{
+if(e.tolerance=="fit"){
+k=(j.left>d&&j.right<b&&j.top>h&&j.bottom<g);
+}
+}
+if(k){
+if(j.selected){
+j.$element.removeClass("ui-selected");
+j.selected=false;
+}
+if(j.unselecting){
+j.$element.removeClass("ui-unselecting");
+j.unselecting=false;
+}
+if(!j.selecting){
+j.$element.addClass("ui-selecting");
+j.selecting=true;
+c._trigger("selecting",i,{selecting:j.element});
+}
+}else{
+if(j.selecting){
+if(i.metaKey&&j.startselected){
+j.$element.removeClass("ui-selecting");
+j.selecting=false;
+j.$element.addClass("ui-selected");
+j.selected=true;
+}else{
+j.$element.removeClass("ui-selecting");
+j.selecting=false;
+if(j.startselected){
+j.$element.addClass("ui-unselecting");
+j.unselecting=true;
+}
+c._trigger("unselecting",i,{unselecting:j.element});
+}
+}
+if(j.selected){
+if(!i.metaKey&&!j.startselected){
+j.$element.removeClass("ui-selected");
+j.selected=false;
+j.$element.addClass("ui-unselecting");
+j.unselecting=true;
+c._trigger("unselecting",i,{unselecting:j.element});
+}
+}
+}
+});
+return false;
+},_mouseStop:function(d){
+var b=this;
+this.dragged=false;
+var c=this.options;
+a(".ui-unselecting",this.element[0]).each(function(){
+var e=a.data(this,"selectable-item");
+e.$element.removeClass("ui-unselecting");
+e.unselecting=false;
+e.startselected=false;
+b._trigger("unselected",d,{unselected:e.element});
+});
+a(".ui-selecting",this.element[0]).each(function(){
+var e=a.data(this,"selectable-item");
+e.$element.removeClass("ui-selecting").addClass("ui-selected");
+e.selecting=false;
+e.selected=true;
+e.startselected=true;
+b._trigger("selected",d,{selected:e.element});
+});
+this._trigger("stop",d);
+this.helper.remove();
+return false;
+}}));
+a.extend(a.ui.selectable,{version:"1.7.2",defaults:{appendTo:"body",autoRefresh:true,cancel:":input,option",delay:0,distance:0,filter:"*",tolerance:"touch"}});
+})(jQuery);
+(function(a){
+a.widget("ui.sortable",a.extend({},a.ui.mouse,{_init:function(){
+var b=this.options;
+this.containerCache={};
+this.element.addClass("ui-sortable");
+this.refresh();
+this.floating=this.items.length?(/left|right/).test(this.items[0].item.css("float")):false;
+this.offset=this.element.offset();
+this._mouseInit();
+},destroy:function(){
+this.element.removeClass("ui-sortable ui-sortable-disabled").removeData("sortable").unbind(".sortable");
+this._mouseDestroy();
+for(var b=this.items.length-1;b>=0;b--){
+this.items[b].item.removeData("sortable-item");
+}
+},_mouseCapture:function(e,f){
+if(this.reverting){
+return false;
+}
+if(this.options.disabled||this.options.type=="static"){
+return false;
+}
+this._refreshItems(e);
+var d=null,c=this,b=a(e.target).parents().each(function(){
+if(a.data(this,"sortable-item")==c){
+d=a(this);
+return false;
+}
+});
+if(a.data(e.target,"sortable-item")==c){
+d=a(e.target);
+}
+if(!d){
+return false;
+}
+if(this.options.handle&&!f){
+var g=false;
+a(this.options.handle,d).find("*").andSelf().each(function(){
+if(this==e.target){
+g=true;
+}
+});
+if(!g){
+return false;
+}
+}
+this.currentItem=d;
+this._removeCurrentsFromItems();
+return true;
+},_mouseStart:function(e,f,b){
+var g=this.options,c=this;
+this.currentContainer=this;
+this.refreshPositions();
+this.helper=this._createHelper(e);
+this._cacheHelperProportions();
+this._cacheMargins();
+this.scrollParent=this.helper.scrollParent();
+this.offset=this.currentItem.offset();
+this.offset={top:this.offset.top-this.margins.top,left:this.offset.left-this.margins.left};
+this.helper.css("position","absolute");
+this.cssPosition=this.helper.css("position");
+a.extend(this.offset,{click:{left:e.pageX-this.offset.left,top:e.pageY-this.offset.top},parent:this._getParentOffset(),relative:this._getRelativeOffset()});
+this.originalPosition=this._generatePosition(e);
+this.originalPageX=e.pageX;
+this.originalPageY=e.pageY;
+if(g.cursorAt){
+this._adjustOffsetFromHelper(g.cursorAt);
+}
+this.domPosition={prev:this.currentItem.prev()[0],parent:this.currentItem.parent()[0]};
+if(this.helper[0]!=this.currentItem[0]){
+this.currentItem.hide();
+}
+this._createPlaceholder();
+if(g.containment){
+this._setContainment();
+}
+if(g.cursor){
+if(a("body").css("cursor")){
+this._storedCursor=a("body").css("cursor");
+}
+a("body").css("cursor",g.cursor);
+}
+if(g.opacity){
+if(this.helper.css("opacity")){
+this._storedOpacity=this.helper.css("opacity");
+}
+this.helper.css("opacity",g.opacity);
+}
+if(g.zIndex){
+if(this.helper.css("zIndex")){
+this._storedZIndex=this.helper.css("zIndex");
+}
+this.helper.css("zIndex",g.zIndex);
+}
+if(this.scrollParent[0]!=document&&this.scrollParent[0].tagName!="HTML"){
+this.overflowOffset=this.scrollParent.offset();
+}
+this._trigger("start",e,this._uiHash());
+if(!this._preserveHelperProportions){
+this._cacheHelperProportions();
+}
+if(!b){
+for(var d=this.containers.length-1;d>=0;d--){
+this.containers[d]._trigger("activate",e,c._uiHash(this));
+}
+}
+if(a.ui.ddmanager){
+a.ui.ddmanager.current=this;
+}
+if(a.ui.ddmanager&&!g.dropBehaviour){
+a.ui.ddmanager.prepareOffsets(this,e);
+}
+this.dragging=true;
+this.helper.addClass("ui-sortable-helper");
+this._mouseDrag(e);
+return true;
+},_mouseDrag:function(f){
+this.position=this._generatePosition(f);
+this.positionAbs=this._convertPositionTo("absolute");
+if(!this.lastPositionAbs){
+this.lastPositionAbs=this.positionAbs;
+}
+if(this.options.scroll){
+var g=this.options,b=false;
+if(this.scrollParent[0]!=document&&this.scrollParent[0].tagName!="HTML"){
+if((this.overflowOffset.top+this.scrollParent[0].offsetHeight)-f.pageY<g.scrollSensitivity){
+this.scrollParent[0].scrollTop=b=this.scrollParent[0].scrollTop+g.scrollSpeed;
+}else{
+if(f.pageY-this.overflowOffset.top<g.scrollSensitivity){
+this.scrollParent[0].scrollTop=b=this.scrollParent[0].scrollTop-g.scrollSpeed;
+}
+}
+if((this.overflowOffset.left+this.scrollParent[0].offsetWidth)-f.pageX<g.scrollSensitivity){
+this.scrollParent[0].scrollLeft=b=this.scrollParent[0].scrollLeft+g.scrollSpeed;
+}else{
+if(f.pageX-this.overflowOffset.left<g.scrollSensitivity){
+this.scrollParent[0].scrollLeft=b=this.scrollParent[0].scrollLeft-g.scrollSpeed;
+}
+}
+}else{
+if(f.pageY-a(document).scrollTop()<g.scrollSensitivity){
+b=a(document).scrollTop(a(document).scrollTop()-g.scrollSpeed);
+}else{
+if(a(window).height()-(f.pageY-a(document).scrollTop())<g.scrollSensitivity){
+b=a(document).scrollTop(a(document).scrollTop()+g.scrollSpeed);
+}
+}
+if(f.pageX-a(document).scrollLeft()<g.scrollSensitivity){
+b=a(document).scrollLeft(a(document).scrollLeft()-g.scrollSpeed);
+}else{
+if(a(window).width()-(f.pageX-a(document).scrollLeft())<g.scrollSensitivity){
+b=a(document).scrollLeft(a(document).scrollLeft()+g.scrollSpeed);
+}
+}
+}
+if(b!==false&&a.ui.ddmanager&&!g.dropBehaviour){
+a.ui.ddmanager.prepareOffsets(this,f);
+}
+}
+this.positionAbs=this._convertPositionTo("absolute");
+if(!this.options.axis||this.options.axis!="y"){
+this.helper[0].style.left=this.position.left+"px";
+}
+if(!this.options.axis||this.options.axis!="x"){
+this.helper[0].style.top=this.position.top+"px";
+}
+for(var d=this.items.length-1;d>=0;d--){
+var e=this.items[d],c=e.item[0],h=this._intersectsWithPointer(e);
+if(!h){
+continue;
+}
+if(c!=this.currentItem[0]&&this.placeholder[h==1?"next":"prev"]()[0]!=c&&!a.ui.contains(this.placeholder[0],c)&&(this.options.type=="semi-dynamic"?!a.ui.contains(this.element[0],c):true)){
+this.direction=h==1?"down":"up";
+if(this.options.tolerance=="pointer"||this._intersectsWithSides(e)){
+this._rearrange(f,e);
+}else{
+break;
+}
+this._trigger("change",f,this._uiHash());
+break;
+}
+}
+this._contactContainers(f);
+if(a.ui.ddmanager){
+a.ui.ddmanager.drag(this,f);
+}
+this._trigger("sort",f,this._uiHash());
+this.lastPositionAbs=this.positionAbs;
+return false;
+},_mouseStop:function(c,d){
+if(!c){
+return;
+}
+if(a.ui.ddmanager&&!this.options.dropBehaviour){
+a.ui.ddmanager.drop(this,c);
+}
+if(this.options.revert){
+var b=this;
+var e=b.placeholder.offset();
+b.reverting=true;
+a(this.helper).animate({left:e.left-this.offset.parent.left-b.margins.left+(this.offsetParent[0]==document.body?0:this.offsetParent[0].scrollLeft),top:e.top-this.offset.parent.top-b.margins.top+(this.offsetParent[0]==document.body?0:this.offsetParent[0].scrollTop)},parseInt(this.options.revert,10)||500,function(){
+b._clear(c);
+});
+}else{
+this._clear(c,d);
+}
+return false;
+},cancel:function(){
+var b=this;
+if(this.dragging){
+this._mouseUp();
+if(this.options.helper=="original"){
+this.currentItem.css(this._storedCSS).removeClass("ui-sortable-helper");
+}else{
+this.currentItem.show();
+}
+for(var c=this.containers.length-1;c>=0;c--){
+this.containers[c]._trigger("deactivate",null,b._uiHash(this));
+if(this.containers[c].containerCache.over){
+this.containers[c]._trigger("out",null,b._uiHash(this));
+this.containers[c].containerCache.over=0;
+}
+}
+}
+if(this.placeholder[0].parentNode){
+this.placeholder[0].parentNode.removeChild(this.placeholder[0]);
+}
+if(this.options.helper!="original"&&this.helper&&this.helper[0].parentNode){
+this.helper.remove();
+}
+a.extend(this,{helper:null,dragging:false,reverting:false,_noFinalSort:null});
+if(this.domPosition.prev){
+a(this.domPosition.prev).after(this.currentItem);
+}else{
+a(this.domPosition.parent).prepend(this.currentItem);
+}
+return true;
+},serialize:function(d){
+var b=this._getItemsAsjQuery(d&&d.connected);
+var c=[];
+d=d||{};
+a(b).each(function(){
+var e=(a(d.item||this).attr(d.attribute||"id")||"").match(d.expression||(/(.+)[-=_](.+)/));
+if(e){
+c.push((d.key||e[1]+"[]")+"="+(d.key&&d.expression?e[1]:e[2]));
+}
+});
+return c.join("&");
+},toArray:function(d){
+var b=this._getItemsAsjQuery(d&&d.connected);
+var c=[];
+d=d||{};
+b.each(function(){
+c.push(a(d.item||this).attr(d.attribute||"id")||"");
+});
+return c;
+},_intersectsWith:function(m){
+var e=this.positionAbs.left,d=e+this.helperProportions.width,k=this.positionAbs.top,j=k+this.helperProportions.height;
+var f=m.left,c=f+m.width,n=m.top,i=n+m.height;
+var o=this.offset.click.top,h=this.offset.click.left;
+var g=(k+o)>n&&(k+o)<i&&(e+h)>f&&(e+h)<c;
+if(this.options.tolerance=="pointer"||this.options.forcePointerForContainers||(this.options.tolerance!="pointer"&&this.helperProportions[this.floating?"width":"height"]>m[this.floating?"width":"height"])){
+return g;
+}else{
+return (f<e+(this.helperProportions.width/2)&&d-(this.helperProportions.width/2)<c&&n<k+(this.helperProportions.height/2)&&j-(this.helperProportions.height/2)<i);
+}
+},_intersectsWithPointer:function(d){
+var e=a.ui.isOverAxis(this.positionAbs.top+this.offset.click.top,d.top,d.height),c=a.ui.isOverAxis(this.positionAbs.left+this.offset.click.left,d.left,d.width),g=e&&c,b=this._getDragVerticalDirection(),f=this._getDragHorizontalDirection();
+if(!g){
+return false;
+}
+return this.floating?(((f&&f=="right")||b=="down")?2:1):(b&&(b=="down"?2:1));
+},_intersectsWithSides:function(e){
+var c=a.ui.isOverAxis(this.positionAbs.top+this.offset.click.top,e.top+(e.height/2),e.height),d=a.ui.isOverAxis(this.positionAbs.left+this.offset.click.left,e.left+(e.width/2),e.width),b=this._getDragVerticalDirection(),f=this._getDragHorizontalDirection();
+if(this.floating&&f){
+return ((f=="right"&&d)||(f=="left"&&!d));
+}else{
+return b&&((b=="down"&&c)||(b=="up"&&!c));
+}
+},_getDragVerticalDirection:function(){
+var b=this.positionAbs.top-this.lastPositionAbs.top;
+return b!=0&&(b>0?"down":"up");
+},_getDragHorizontalDirection:function(){
+var b=this.positionAbs.left-this.lastPositionAbs.left;
+return b!=0&&(b>0?"right":"left");
+},refresh:function(b){
+this._refreshItems(b);
+this.refreshPositions();
+},_connectWith:function(){
+var b=this.options;
+return b.connectWith.constructor==String?[b.connectWith]:b.connectWith;
+},_getItemsAsjQuery:function(b){
+var l=this;
+var g=[];
+var e=[];
+var h=this._connectWith();
+if(h&&b){
+for(var d=h.length-1;d>=0;d--){
+var k=a(h[d]);
+for(var c=k.length-1;c>=0;c--){
+var f=a.data(k[c],"sortable");
+if(f&&f!=this&&!f.options.disabled){
+e.push([a.isFunction(f.options.items)?f.options.items.call(f.element):a(f.options.items,f.element).not(".ui-sortable-helper"),f]);
+}
+}
+}
+}
+e.push([a.isFunction(this.options.items)?this.options.items.call(this.element,null,{options:this.options,item:this.currentItem}):a(this.options.items,this.element).not(".ui-sortable-helper"),this]);
+for(var d=e.length-1;d>=0;d--){
+e[d][0].each(function(){
+g.push(this);
+});
+}
+return a(g);
+},_removeCurrentsFromItems:function(){
+var d=this.currentItem.find(":data(sortable-item)");
+for(var c=0;c<this.items.length;c++){
+for(var b=0;b<d.length;b++){
+if(d[b]==this.items[c].item[0]){
+this.items.splice(c,1);
+}
+}
+}
+},_refreshItems:function(b){
+this.items=[];
+this.containers=[this];
+var h=this.items;
+var p=this;
+var f=[[a.isFunction(this.options.items)?this.options.items.call(this.element[0],b,{item:this.currentItem}):a(this.options.items,this.element),this]];
+var l=this._connectWith();
+if(l){
+for(var e=l.length-1;e>=0;e--){
+var m=a(l[e]);
+for(var d=m.length-1;d>=0;d--){
+var g=a.data(m[d],"sortable");
+if(g&&g!=this&&!g.options.disabled){
+f.push([a.isFunction(g.options.items)?g.options.items.call(g.element[0],b,{item:this.currentItem}):a(g.options.items,g.element),g]);
+this.containers.push(g);
+}
+}
+}
+}
+for(var e=f.length-1;e>=0;e--){
+var k=f[e][1];
+var c=f[e][0];
+for(var d=0,n=c.length;d<n;d++){
+var o=a(c[d]);
+o.data("sortable-item",k);
+h.push({item:o,instance:k,width:0,height:0,left:0,top:0});
+}
+}
+},refreshPositions:function(b){
+if(this.offsetParent&&this.helper){
+this.offset.parent=this._getParentOffset();
+}
+for(var d=this.items.length-1;d>=0;d--){
+var e=this.items[d];
+if(e.instance!=this.currentContainer&&this.currentContainer&&e.item[0]!=this.currentItem[0]){
+continue;
+}
+var c=this.options.toleranceElement?a(this.options.toleranceElement,e.item):e.item;
+if(!b){
+e.width=c.outerWidth();
+e.height=c.outerHeight();
+}
+var f=c.offset();
+e.left=f.left;
+e.top=f.top;
+}
+if(this.options.custom&&this.options.custom.refreshContainers){
+this.options.custom.refreshContainers.call(this);
+}else{
+for(var d=this.containers.length-1;d>=0;d--){
+var f=this.containers[d].element.offset();
+this.containers[d].containerCache.left=f.left;
+this.containers[d].containerCache.top=f.top;
+this.containers[d].containerCache.width=this.containers[d].element.outerWidth();
+this.containers[d].containerCache.height=this.containers[d].element.outerHeight();
+}
+}
+},_createPlaceholder:function(d){
+var b=d||this,e=b.options;
+if(!e.placeholder||e.placeholder.constructor==String){
+var c=e.placeholder;
+e.placeholder={element:function(){
+var f=a(document.createElement(b.currentItem[0].nodeName)).addClass(c||b.currentItem[0].className+" ui-sortable-placeholder").removeClass("ui-sortable-helper")[0];
+if(!c){
+f.style.visibility="hidden";
+}
+return f;
+},update:function(f,g){
+if(c&&!e.forcePlaceholderSize){
+return;
+}
+if(!g.height()){
+g.height(b.currentItem.innerHeight()-parseInt(b.currentItem.css("paddingTop")||0,10)-parseInt(b.currentItem.css("paddingBottom")||0,10));
+}
+if(!g.width()){
+g.width(b.currentItem.innerWidth()-parseInt(b.currentItem.css("paddingLeft")||0,10)-parseInt(b.currentItem.css("paddingRight")||0,10));
+}
+}};
+}
+b.placeholder=a(e.placeholder.element.call(b.element,b.currentItem));
+b.currentItem.after(b.placeholder);
+e.placeholder.update(b,b.placeholder);
+},_contactContainers:function(d){
+for(var c=this.containers.length-1;c>=0;c--){
+if(this._intersectsWith(this.containers[c].containerCache)){
+if(!this.containers[c].containerCache.over){
+if(this.currentContainer!=this.containers[c]){
+var h=10000;
+var g=null;
+var e=this.positionAbs[this.containers[c].floating?"left":"top"];
+for(var b=this.items.length-1;b>=0;b--){
+if(!a.ui.contains(this.containers[c].element[0],this.items[b].item[0])){
+continue;
+}
+var f=this.items[b][this.containers[c].floating?"left":"top"];
+if(Math.abs(f-e)<h){
+h=Math.abs(f-e);
+g=this.items[b];
+}
+}
+if(!g&&!this.options.dropOnEmpty){
+continue;
+}
+this.currentContainer=this.containers[c];
+g?this._rearrange(d,g,null,true):this._rearrange(d,null,this.containers[c].element,true);
+this._trigger("change",d,this._uiHash());
+this.containers[c]._trigger("change",d,this._uiHash(this));
+this.options.placeholder.update(this.currentContainer,this.placeholder);
+}
+this.containers[c]._trigger("over",d,this._uiHash(this));
+this.containers[c].containerCache.over=1;
+}
+}else{
+if(this.containers[c].containerCache.over){
+this.containers[c]._trigger("out",d,this._uiHash(this));
+this.containers[c].containerCache.over=0;
+}
+}
+}
+},_createHelper:function(c){
+var d=this.options;
+var b=a.isFunction(d.helper)?a(d.helper.apply(this.element[0],[c,this.currentItem])):(d.helper=="clone"?this.currentItem.clone():this.currentItem);
+if(!b.parents("body").length){
+a(d.appendTo!="parent"?d.appendTo:this.currentItem[0].parentNode)[0].appendChild(b[0]);
+}
+if(b[0]==this.currentItem[0]){
+this._storedCSS={width:this.currentItem[0].style.width,height:this.currentItem[0].style.height,position:this.currentItem.css("position"),top:this.currentItem.css("top"),left:this.currentItem.css("left")};
+}
+if(b[0].style.width==""||d.forceHelperSize){
+b.width(this.currentItem.width());
+}
+if(b[0].style.height==""||d.forceHelperSize){
+b.height(this.currentItem.height());
+}
+return b;
+},_adjustOffsetFromHelper:function(b){
+if(b.left!=undefined){
+this.offset.click.left=b.left+this.margins.left;
+}
+if(b.right!=undefined){
+this.offset.click.left=this.helperProportions.width-b.right+this.margins.left;
+}
+if(b.top!=undefined){
+this.offset.click.top=b.top+this.margins.top;
+}
+if(b.bottom!=undefined){
+this.offset.click.top=this.helperProportions.height-b.bottom+this.margins.top;
+}
+},_getParentOffset:function(){
+this.offsetParent=this.helper.offsetParent();
+var b=this.offsetParent.offset();
+if(this.cssPosition=="absolute"&&this.scrollParent[0]!=document&&a.ui.contains(this.scrollParent[0],this.offsetParent[0])){
+b.left+=this.scrollParent.scrollLeft();
+b.top+=this.scrollParent.scrollTop();
+}
+if((this.offsetParent[0]==document.body)||(this.offsetParent[0].tagName&&this.offsetParent[0].tagName.toLowerCase()=="html"&&a.browser.msie)){
+b={top:0,left:0};
+}
+return {top:b.top+(parseInt(this.offsetParent.css("borderTopWidth"),10)||0),left:b.left+(parseInt(this.offsetParent.css("borderLeftWidth"),10)||0)};
+},_getRelativeOffset:function(){
+if(this.cssPosition=="relative"){
+var b=this.currentItem.position();
+return {top:b.top-(parseInt(this.helper.css("top"),10)||0)+this.scrollParent.scrollTop(),left:b.left-(parseInt(this.helper.css("left"),10)||0)+this.scrollParent.scrollLeft()};
+}else{
+return {top:0,left:0};
+}
+},_cacheMargins:function(){
+this.margins={left:(parseInt(this.currentItem.css("marginLeft"),10)||0),top:(parseInt(this.currentItem.css("marginTop"),10)||0)};
+},_cacheHelperProportions:function(){
+this.helperProportions={width:this.helper.outerWidth(),height:this.helper.outerHeight()};
+},_setContainment:function(){
+var e=this.options;
+if(e.containment=="parent"){
+e.containment=this.helper[0].parentNode;
+}
+if(e.containment=="document"||e.containment=="window"){
+this.containment=[0-this.offset.relative.left-this.offset.parent.left,0-this.offset.relative.top-this.offset.parent.top,a(e.containment=="document"?document:window).width()-this.helperProportions.width-this.margins.left,(a(e.containment=="document"?document:window).height()||document.body.parentNode.scrollHeight)-this.helperProportions.height-this.margins.top];
+}
+if(!(/^(document|window|parent)$/).test(e.containment)){
+var c=a(e.containment)[0];
+var d=a(e.containment).offset();
+var b=(a(c).css("overflow")!="hidden");
+this.containment=[d.left+(parseInt(a(c).css("borderLeftWidth"),10)||0)+(parseInt(a(c).css("paddingLeft"),10)||0)-this.margins.left,d.top+(parseInt(a(c).css("borderTopWidth"),10)||0)+(parseInt(a(c).css("paddingTop"),10)||0)-this.margins.top,d.left+(b?Math.max(c.scrollWidth,c.offsetWidth):c.offsetWidth)-(parseInt(a(c).css("borderLeftWidth"),10)||0)-(parseInt(a(c).css("paddingRight"),10)||0)-this.helperProportions.width-this.margins.left,d.top+(b?Math.max(c.scrollHeight,c.offsetHeight):c.offsetHeight)-(parseInt(a(c).css("borderTopWidth"),10)||0)-(parseInt(a(c).css("paddingBottom"),10)||0)-this.helperProportions.height-this.margins.top];
+}
+},_convertPositionTo:function(f,h){
+if(!h){
+h=this.position;
+}
+var c=f=="absolute"?1:-1;
+var e=this.options,b=this.cssPosition=="absolute"&&!(this.scrollParent[0]!=document&&a.ui.contains(this.scrollParent[0],this.offsetParent[0]))?this.offsetParent:this.scrollParent,g=(/(html|body)/i).test(b[0].tagName);
+return {top:(h.top+this.offset.relative.top*c+this.offset.parent.top*c-(a.browser.safari&&this.cssPosition=="fixed"?0:(this.cssPosition=="fixed"?-this.scrollParent.scrollTop():(g?0:b.scrollTop()))*c)),left:(h.left+this.offset.relative.left*c+this.offset.parent.left*c-(a.browser.safari&&this.cssPosition=="fixed"?0:(this.cssPosition=="fixed"?-this.scrollParent.scrollLeft():g?0:b.scrollLeft())*c))};
+},_generatePosition:function(e){
+var h=this.options,b=this.cssPosition=="absolute"&&!(this.scrollParent[0]!=document&&a.ui.contains(this.scrollParent[0],this.offsetParent[0]))?this.offsetParent:this.scrollParent,i=(/(html|body)/i).test(b[0].tagName);
+if(this.cssPosition=="relative"&&!(this.scrollParent[0]!=document&&this.scrollParent[0]!=this.offsetParent[0])){
+this.offset.relative=this._getRelativeOffset();
+}
+var d=e.pageX;
+var c=e.pageY;
+if(this.originalPosition){
+if(this.containment){
+if(e.pageX-this.offset.click.left<this.containment[0]){
+d=this.containment[0]+this.offset.click.left;
+}
+if(e.pageY-this.offset.click.top<this.containment[1]){
+c=this.containment[1]+this.offset.click.top;
+}
+if(e.pageX-this.offset.click.left>this.containment[2]){
+d=this.containment[2]+this.offset.click.left;
+}
+if(e.pageY-this.offset.click.top>this.containment[3]){
+c=this.containment[3]+this.offset.click.top;
+}
+}
+if(h.grid){
+var g=this.originalPageY+Math.round((c-this.originalPageY)/h.grid[1])*h.grid[1];
+c=this.containment?(!(g-this.offset.click.top<this.containment[1]||g-this.offset.click.top>this.containment[3])?g:(!(g-this.offset.click.top<this.containment[1])?g-h.grid[1]:g+h.grid[1])):g;
+var f=this.originalPageX+Math.round((d-this.originalPageX)/h.grid[0])*h.grid[0];
+d=this.containment?(!(f-this.offset.click.left<this.containment[0]||f-this.offset.click.left>this.containment[2])?f:(!(f-this.offset.click.left<this.containment[0])?f-h.grid[0]:f+h.grid[0])):f;
+}
+}
+return {top:(c-this.offset.click.top-this.offset.relative.top-this.offset.parent.top+(a.browser.safari&&this.cssPosition=="fixed"?0:(this.cssPosition=="fixed"?-this.scrollParent.scrollTop():(i?0:b.scrollTop())))),left:(d-this.offset.click.left-this.offset.relative.left-this.offset.parent.left+(a.browser.safari&&this.cssPosition=="fixed"?0:(this.cssPosition=="fixed"?-this.scrollParent.scrollLeft():i?0:b.scrollLeft())))};
+},_rearrange:function(g,f,c,e){
+c?c[0].appendChild(this.placeholder[0]):f.item[0].parentNode.insertBefore(this.placeholder[0],(this.direction=="down"?f.item[0]:f.item[0].nextSibling));
+this.counter=this.counter?++this.counter:1;
+var d=this,b=this.counter;
+window.setTimeout(function(){
+if(b==d.counter){
+d.refreshPositions(!e);
+}
+},0);
+},_clear:function(d,e){
+this.reverting=false;
+var f=[],b=this;
+if(!this._noFinalSort&&this.currentItem[0].parentNode){
+this.placeholder.before(this.currentItem);
+}
+this._noFinalSort=null;
+if(this.helper[0]==this.currentItem[0]){
+for(var c in this._storedCSS){
+if(this._storedCSS[c]=="auto"||this._storedCSS[c]=="static"){
+this._storedCSS[c]="";
+}
+}
+this.currentItem.css(this._storedCSS).removeClass("ui-sortable-helper");
+}else{
+this.currentItem.show();
+}
+if(this.fromOutside&&!e){
+f.push(function(g){
+this._trigger("receive",g,this._uiHash(this.fromOutside));
+});
+}
+if((this.fromOutside||this.domPosition.prev!=this.currentItem.prev().not(".ui-sortable-helper")[0]||this.domPosition.parent!=this.currentItem.parent()[0])&&!e){
+f.push(function(g){
+this._trigger("update",g,this._uiHash());
+});
+}
+if(!a.ui.contains(this.element[0],this.currentItem[0])){
+if(!e){
+f.push(function(g){
+this._trigger("remove",g,this._uiHash());
+});
+}
+for(var c=this.containers.length-1;c>=0;c--){
+if(a.ui.contains(this.containers[c].element[0],this.currentItem[0])&&!e){
+f.push((function(g){
+return function(h){
+g._trigger("receive",h,this._uiHash(this));
+};
+}).call(this,this.containers[c]));
+f.push((function(g){
+return function(h){
+g._trigger("update",h,this._uiHash(this));
+};
+}).call(this,this.containers[c]));
+}
+}
+}
+for(var c=this.containers.length-1;c>=0;c--){
+if(!e){
+f.push((function(g){
+return function(h){
+g._trigger("deactivate",h,this._uiHash(this));
+};
+}).call(this,this.containers[c]));
+}
+if(this.containers[c].containerCache.over){
+f.push((function(g){
+return function(h){
+g._trigger("out",h,this._uiHash(this));
+};
+}).call(this,this.containers[c]));
+this.containers[c].containerCache.over=0;
+}
+}
+if(this._storedCursor){
+a("body").css("cursor",this._storedCursor);
+}
+if(this._storedOpacity){
+this.helper.css("opacity",this._storedOpacity);
+}
+if(this._storedZIndex){
+this.helper.css("zIndex",this._storedZIndex=="auto"?"":this._storedZIndex);
+}
+this.dragging=false;
+if(this.cancelHelperRemoval){
+if(!e){
+this._trigger("beforeStop",d,this._uiHash());
+for(var c=0;c<f.length;c++){
+f[c].call(this,d);
+}
+this._trigger("stop",d,this._uiHash());
+}
+return false;
+}
+if(!e){
+this._trigger("beforeStop",d,this._uiHash());
+}
+this.placeholder[0].parentNode.removeChild(this.placeholder[0]);
+if(this.helper[0]!=this.currentItem[0]){
+this.helper.remove();
+}
+this.helper=null;
+if(!e){
+for(var c=0;c<f.length;c++){
+f[c].call(this,d);
+}
+this._trigger("stop",d,this._uiHash());
+}
+this.fromOutside=false;
+return true;
+},_trigger:function(){
+if(a.widget.prototype._trigger.apply(this,arguments)===false){
+this.cancel();
+}
+},_uiHash:function(c){
+var b=c||this;
+return {helper:b.helper,placeholder:b.placeholder||a([]),position:b.position,absolutePosition:b.positionAbs,offset:b.positionAbs,item:b.currentItem,sender:c?c.element:null};
+}}));
+a.extend(a.ui.sortable,{getter:"serialize toArray",version:"1.7.2",eventPrefix:"sort",defaults:{appendTo:"parent",axis:false,cancel:":input,option",connectWith:false,containment:false,cursor:"auto",cursorAt:false,delay:0,distance:1,dropOnEmpty:true,forcePlaceholderSize:false,forceHelperSize:false,grid:false,handle:false,helper:"original",items:"> *",opacity:false,placeholder:false,revert:false,scroll:true,scrollSensitivity:20,scrollSpeed:20,scope:"default",tolerance:"intersect",zIndex:1000}});
 })(jQuery);
 (function(a){
 a.widget("ui.accordion",{_init:function(){
@@ -8536,6 +9553,353 @@ c.ui.dialog.overlay.destroy(this.$el);
 }});
 })(jQuery);
 (function(a){
+a.widget("ui.slider",a.extend({},a.ui.mouse,{_init:function(){
+var b=this,c=this.options;
+this._keySliding=false;
+this._handleIndex=null;
+this._detectOrientation();
+this._mouseInit();
+this.element.addClass("ui-slider ui-slider-"+this.orientation+" ui-widget ui-widget-content ui-corner-all");
+this.range=a([]);
+if(c.range){
+if(c.range===true){
+this.range=a("<div></div>");
+if(!c.values){
+c.values=[this._valueMin(),this._valueMin()];
+}
+if(c.values.length&&c.values.length!=2){
+c.values=[c.values[0],c.values[0]];
+}
+}else{
+this.range=a("<div></div>");
+}
+this.range.appendTo(this.element).addClass("ui-slider-range");
+if(c.range=="min"||c.range=="max"){
+this.range.addClass("ui-slider-range-"+c.range);
+}
+this.range.addClass("ui-widget-header");
+}
+if(a(".ui-slider-handle",this.element).length==0){
+a("<a href=\"#\"></a>").appendTo(this.element).addClass("ui-slider-handle");
+}
+if(c.values&&c.values.length){
+while(a(".ui-slider-handle",this.element).length<c.values.length){
+a("<a href=\"#\"></a>").appendTo(this.element).addClass("ui-slider-handle");
+}
+}
+this.handles=a(".ui-slider-handle",this.element).addClass("ui-state-default ui-corner-all");
+this.handle=this.handles.eq(0);
+this.handles.add(this.range).filter("a").click(function(d){
+d.preventDefault();
+}).hover(function(){
+if(!c.disabled){
+a(this).addClass("ui-state-hover");
+}
+},function(){
+a(this).removeClass("ui-state-hover");
+}).focus(function(){
+if(!c.disabled){
+a(".ui-slider .ui-state-focus").removeClass("ui-state-focus");
+a(this).addClass("ui-state-focus");
+}else{
+a(this).blur();
+}
+}).blur(function(){
+a(this).removeClass("ui-state-focus");
+});
+this.handles.each(function(d){
+a(this).data("index.ui-slider-handle",d);
+});
+this.handles.keydown(function(i){
+var f=true;
+var e=a(this).data("index.ui-slider-handle");
+if(b.options.disabled){
+return;
+}
+switch(i.keyCode){
+case a.ui.keyCode.HOME:
+case a.ui.keyCode.END:
+case a.ui.keyCode.UP:
+case a.ui.keyCode.RIGHT:
+case a.ui.keyCode.DOWN:
+case a.ui.keyCode.LEFT:
+f=false;
+if(!b._keySliding){
+b._keySliding=true;
+a(this).addClass("ui-state-active");
+b._start(i,e);
+}
+break;
+}
+var g,d,h=b._step();
+if(b.options.values&&b.options.values.length){
+g=d=b.values(e);
+}else{
+g=d=b.value();
+}
+switch(i.keyCode){
+case a.ui.keyCode.HOME:
+d=b._valueMin();
+break;
+case a.ui.keyCode.END:
+d=b._valueMax();
+break;
+case a.ui.keyCode.UP:
+case a.ui.keyCode.RIGHT:
+if(g==b._valueMax()){
+return;
+}
+d=g+h;
+break;
+case a.ui.keyCode.DOWN:
+case a.ui.keyCode.LEFT:
+if(g==b._valueMin()){
+return;
+}
+d=g-h;
+break;
+}
+b._slide(i,e,d);
+return f;
+}).keyup(function(e){
+var d=a(this).data("index.ui-slider-handle");
+if(b._keySliding){
+b._stop(e,d);
+b._change(e,d);
+b._keySliding=false;
+a(this).removeClass("ui-state-active");
+}
+});
+this._refreshValue();
+},destroy:function(){
+this.handles.remove();
+this.range.remove();
+this.element.removeClass("ui-slider ui-slider-horizontal ui-slider-vertical ui-slider-disabled ui-widget ui-widget-content ui-corner-all").removeData("slider").unbind(".slider");
+this._mouseDestroy();
+},_mouseCapture:function(d){
+var e=this.options;
+if(e.disabled){
+return false;
+}
+this.elementSize={width:this.element.outerWidth(),height:this.element.outerHeight()};
+this.elementOffset=this.element.offset();
+var h={x:d.pageX,y:d.pageY};
+var j=this._normValueFromMouse(h);
+var c=this._valueMax()-this._valueMin()+1,f;
+var k=this,i;
+this.handles.each(function(l){
+var m=Math.abs(j-k.values(l));
+if(c>m){
+c=m;
+f=a(this);
+i=l;
+}
+});
+if(e.range==true&&this.values(1)==e.min){
+f=a(this.handles[++i]);
+}
+this._start(d,i);
+k._handleIndex=i;
+f.addClass("ui-state-active").focus();
+var g=f.offset();
+var b=!a(d.target).parents().andSelf().is(".ui-slider-handle");
+this._clickOffset=b?{left:0,top:0}:{left:d.pageX-g.left-(f.width()/2),top:d.pageY-g.top-(f.height()/2)-(parseInt(f.css("borderTopWidth"),10)||0)-(parseInt(f.css("borderBottomWidth"),10)||0)+(parseInt(f.css("marginTop"),10)||0)};
+j=this._normValueFromMouse(h);
+this._slide(d,i,j);
+return true;
+},_mouseStart:function(b){
+return true;
+},_mouseDrag:function(d){
+var b={x:d.pageX,y:d.pageY};
+var c=this._normValueFromMouse(b);
+this._slide(d,this._handleIndex,c);
+return false;
+},_mouseStop:function(b){
+this.handles.removeClass("ui-state-active");
+this._stop(b,this._handleIndex);
+this._change(b,this._handleIndex);
+this._handleIndex=null;
+this._clickOffset=null;
+return false;
+},_detectOrientation:function(){
+this.orientation=this.options.orientation=="vertical"?"vertical":"horizontal";
+},_normValueFromMouse:function(d){
+var c,h;
+if("horizontal"==this.orientation){
+c=this.elementSize.width;
+h=d.x-this.elementOffset.left-(this._clickOffset?this._clickOffset.left:0);
+}else{
+c=this.elementSize.height;
+h=d.y-this.elementOffset.top-(this._clickOffset?this._clickOffset.top:0);
+}
+var f=(h/c);
+if(f>1){
+f=1;
+}
+if(f<0){
+f=0;
+}
+if("vertical"==this.orientation){
+f=1-f;
+}
+var e=this._valueMax()-this._valueMin(),i=f*e,b=i%this.options.step,g=this._valueMin()+i-b;
+if(b>(this.options.step/2)){
+g+=this.options.step;
+}
+return parseFloat(g.toFixed(5));
+},_start:function(d,c){
+var b={handle:this.handles[c],value:this.value()};
+if(this.options.values&&this.options.values.length){
+b.value=this.values(c);
+b.values=this.values();
+}
+this._trigger("start",d,b);
+},_slide:function(f,e,d){
+var g=this.handles[e];
+if(this.options.values&&this.options.values.length){
+var b=this.values(e?0:1);
+if((this.options.values.length==2&&this.options.range===true)&&((e==0&&d>b)||(e==1&&d<b))){
+d=b;
+}
+if(d!=this.values(e)){
+var c=this.values();
+c[e]=d;
+var h=this._trigger("slide",f,{handle:this.handles[e],value:d,values:c});
+var b=this.values(e?0:1);
+if(h!==false){
+this.values(e,d,(f.type=="mousedown"&&this.options.animate),true);
+}
+}
+}else{
+if(d!=this.value()){
+var h=this._trigger("slide",f,{handle:this.handles[e],value:d});
+if(h!==false){
+this._setData("value",d,(f.type=="mousedown"&&this.options.animate));
+}
+}
+}
+},_stop:function(d,c){
+var b={handle:this.handles[c],value:this.value()};
+if(this.options.values&&this.options.values.length){
+b.value=this.values(c);
+b.values=this.values();
+}
+this._trigger("stop",d,b);
+},_change:function(d,c){
+var b={handle:this.handles[c],value:this.value()};
+if(this.options.values&&this.options.values.length){
+b.value=this.values(c);
+b.values=this.values();
+}
+this._trigger("change",d,b);
+},value:function(b){
+if(arguments.length){
+this._setData("value",b);
+this._change(null,0);
+}
+return this._value();
+},values:function(b,e,c,d){
+if(arguments.length>1){
+this.options.values[b]=e;
+this._refreshValue(c);
+if(!d){
+this._change(null,b);
+}
+}
+if(arguments.length){
+if(this.options.values&&this.options.values.length){
+return this._values(b);
+}else{
+return this.value();
+}
+}else{
+return this._values();
+}
+},_setData:function(b,d,c){
+a.widget.prototype._setData.apply(this,arguments);
+switch(b){
+case "disabled":
+if(d){
+this.handles.filter(".ui-state-focus").blur();
+this.handles.removeClass("ui-state-hover");
+this.handles.attr("disabled","disabled");
+}else{
+this.handles.removeAttr("disabled");
+}
+case "orientation":
+this._detectOrientation();
+this.element.removeClass("ui-slider-horizontal ui-slider-vertical").addClass("ui-slider-"+this.orientation);
+this._refreshValue(c);
+break;
+case "value":
+this._refreshValue(c);
+break;
+}
+},_step:function(){
+var b=this.options.step;
+return b;
+},_value:function(){
+var b=this.options.value;
+if(b<this._valueMin()){
+b=this._valueMin();
+}
+if(b>this._valueMax()){
+b=this._valueMax();
+}
+return b;
+},_values:function(b){
+if(arguments.length){
+var c=this.options.values[b];
+if(c<this._valueMin()){
+c=this._valueMin();
+}
+if(c>this._valueMax()){
+c=this._valueMax();
+}
+return c;
+}else{
+return this.options.values;
+}
+},_valueMin:function(){
+var b=this.options.min;
+return b;
+},_valueMax:function(){
+var b=this.options.max;
+return b;
+},_refreshValue:function(c){
+var f=this.options.range,d=this.options,l=this;
+if(this.options.values&&this.options.values.length){
+var i,h;
+this.handles.each(function(p,n){
+var o=(l.values(p)-l._valueMin())/(l._valueMax()-l._valueMin())*100;
+var m={};
+m[l.orientation=="horizontal"?"left":"bottom"]=o+"%";
+a(this).stop(1,1)[c?"animate":"css"](m,d.animate);
+if(l.options.range===true){
+if(l.orientation=="horizontal"){
+(p==0)&&l.range.stop(1,1)[c?"animate":"css"]({left:o+"%"},d.animate);
+(p==1)&&l.range[c?"animate":"css"]({width:(o-lastValPercent)+"%"},{queue:false,duration:d.animate});
+}else{
+(p==0)&&l.range.stop(1,1)[c?"animate":"css"]({bottom:(o)+"%"},d.animate);
+(p==1)&&l.range[c?"animate":"css"]({height:(o-lastValPercent)+"%"},{queue:false,duration:d.animate});
+}
+}
+lastValPercent=o;
+});
+}else{
+var j=this.value(),g=this._valueMin(),k=this._valueMax(),e=k!=g?(j-g)/(k-g)*100:0;
+var b={};
+b[l.orientation=="horizontal"?"left":"bottom"]=e+"%";
+this.handle.stop(1,1)[c?"animate":"css"](b,d.animate);
+(f=="min")&&(this.orientation=="horizontal")&&this.range.stop(1,1)[c?"animate":"css"]({width:e+"%"},d.animate);
+(f=="max")&&(this.orientation=="horizontal")&&this.range[c?"animate":"css"]({width:(100-e)+"%"},{queue:false,duration:d.animate});
+(f=="min")&&(this.orientation=="vertical")&&this.range.stop(1,1)[c?"animate":"css"]({height:e+"%"},d.animate);
+(f=="max")&&(this.orientation=="vertical")&&this.range[c?"animate":"css"]({height:(100-e)+"%"},{queue:false,duration:d.animate});
+}
+}}));
+a.extend(a.ui.slider,{getter:"value values",version:"1.7.2",eventPrefix:"slide",defaults:{animate:false,delay:0,distance:0,max:100,min:0,orientation:"horizontal",range:false,step:1,value:0,values:null}});
+})(jQuery);
+(function(a){
 a.widget("ui.tabs",{_init:function(){
 if(this.options.deselectable!==undefined){
 this.options.collapsible=this.options.deselectable;
@@ -8950,6 +10314,1251 @@ delete this._rotate;
 delete this._unrotate;
 }
 }});
+})(jQuery);
+(function($){
+$.extend($.ui,{datepicker:{version:"1.7.2"}});
+var _3fd="datepicker";
+function _3fe(){
+this.debug=false;
+this._curInst=null;
+this._keyEvent=false;
+this._disabledInputs=[];
+this._datepickerShowing=false;
+this._inDialog=false;
+this._mainDivId="ui-datepicker-div";
+this._inlineClass="ui-datepicker-inline";
+this._appendClass="ui-datepicker-append";
+this._triggerClass="ui-datepicker-trigger";
+this._dialogClass="ui-datepicker-dialog";
+this._disableClass="ui-datepicker-disabled";
+this._unselectableClass="ui-datepicker-unselectable";
+this._currentClass="ui-datepicker-current-day";
+this._dayOverClass="ui-datepicker-days-cell-over";
+this.regional=[];
+this.regional[""]={closeText:"Done",prevText:"Prev",nextText:"Next",currentText:"Today",monthNames:["January","February","March","April","May","June","July","August","September","October","November","December"],monthNamesShort:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],dayNames:["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],dayNamesShort:["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],dayNamesMin:["Su","Mo","Tu","We","Th","Fr","Sa"],dateFormat:"mm/dd/yy",firstDay:0,isRTL:false};
+this._defaults={showOn:"focus",showAnim:"show",showOptions:{},defaultDate:null,appendText:"",buttonText:"...",buttonImage:"",buttonImageOnly:false,hideIfNoPrevNext:false,navigationAsDateFormat:false,gotoCurrent:false,changeMonth:false,changeYear:false,showMonthAfterYear:false,yearRange:"-10:+10",showOtherMonths:false,calculateWeek:this.iso8601Week,shortYearCutoff:"+10",minDate:null,maxDate:null,duration:"normal",beforeShowDay:null,beforeShow:null,onSelect:null,onChangeMonthYear:null,onClose:null,numberOfMonths:1,showCurrentAtPos:0,stepMonths:1,stepBigMonths:12,altField:"",altFormat:"",constrainInput:true,showButtonPanel:false};
+$.extend(this._defaults,this.regional[""]);
+this.dpDiv=$("<div id=\""+this._mainDivId+"\" class=\"ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all ui-helper-hidden-accessible\"></div>");
+};
+$.extend(_3fe.prototype,{markerClassName:"hasDatepicker",log:function(){
+if(this.debug){
+console.log.apply("",arguments);
+}
+},setDefaults:function(_3ff){
+_400(this._defaults,_3ff||{});
+return this;
+},_attachDatepicker:function(_401,_402){
+var _403=null;
+for(var _404 in this._defaults){
+var _405=_401.getAttribute("date:"+_404);
+if(_405){
+_403=_403||{};
+try{
+_403[_404]=eval(_405);
+}
+catch(err){
+_403[_404]=_405;
+}
+}
+}
+var _406=_401.nodeName.toLowerCase();
+var _407=(_406=="div"||_406=="span");
+if(!_401.id){
+_401.id="dp"+(++this.uuid);
+}
+var inst=this._newInst($(_401),_407);
+inst.settings=$.extend({},_402||{},_403||{});
+if(_406=="input"){
+this._connectDatepicker(_401,inst);
+}else{
+if(_407){
+this._inlineDatepicker(_401,inst);
+}
+}
+},_newInst:function(_409,_40a){
+var id=_409[0].id.replace(/([:\[\]\.])/g,"\\\\$1");
+return {id:id,input:_409,selectedDay:0,selectedMonth:0,selectedYear:0,drawMonth:0,drawYear:0,inline:_40a,dpDiv:(!_40a?this.dpDiv:$("<div class=\""+this._inlineClass+" ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all\"></div>"))};
+},_connectDatepicker:function(_40c,inst){
+var _40e=$(_40c);
+inst.append=$([]);
+inst.trigger=$([]);
+if(_40e.hasClass(this.markerClassName)){
+return;
+}
+var _40f=this._get(inst,"appendText");
+var _410=this._get(inst,"isRTL");
+if(_40f){
+inst.append=$("<span class=\""+this._appendClass+"\">"+_40f+"</span>");
+_40e[_410?"before":"after"](inst.append);
+}
+var _411=this._get(inst,"showOn");
+if(_411=="focus"||_411=="both"){
+_40e.focus(this._showDatepicker);
+}
+if(_411=="button"||_411=="both"){
+var _412=this._get(inst,"buttonText");
+var _413=this._get(inst,"buttonImage");
+inst.trigger=$(this._get(inst,"buttonImageOnly")?$("<img/>").addClass(this._triggerClass).attr({src:_413,alt:_412,title:_412}):$("<button type=\"button\"></button>").addClass(this._triggerClass).html(_413==""?_412:$("<img/>").attr({src:_413,alt:_412,title:_412})));
+_40e[_410?"before":"after"](inst.trigger);
+inst.trigger.click(function(){
+if($.datepicker._datepickerShowing&&$.datepicker._lastInput==_40c){
+$.datepicker._hideDatepicker();
+}else{
+$.datepicker._showDatepicker(_40c);
+}
+return false;
+});
+}
+_40e.addClass(this.markerClassName).keydown(this._doKeyDown).keypress(this._doKeyPress).bind("setData.datepicker",function(_414,key,_416){
+inst.settings[key]=_416;
+}).bind("getData.datepicker",function(_417,key){
+return this._get(inst,key);
+});
+$.data(_40c,_3fd,inst);
+},_inlineDatepicker:function(_419,inst){
+var _41b=$(_419);
+if(_41b.hasClass(this.markerClassName)){
+return;
+}
+_41b.addClass(this.markerClassName).append(inst.dpDiv).bind("setData.datepicker",function(_41c,key,_41e){
+inst.settings[key]=_41e;
+}).bind("getData.datepicker",function(_41f,key){
+return this._get(inst,key);
+});
+$.data(_419,_3fd,inst);
+this._setDate(inst,this._getDefaultDate(inst));
+this._updateDatepicker(inst);
+this._updateAlternate(inst);
+},_dialogDatepicker:function(_421,_422,_423,_424,pos){
+var inst=this._dialogInst;
+if(!inst){
+var id="dp"+(++this.uuid);
+this._dialogInput=$("<input type=\"text\" id=\""+id+"\" size=\"1\" style=\"position: absolute; top: -100px;\"/>");
+this._dialogInput.keydown(this._doKeyDown);
+$("body").append(this._dialogInput);
+inst=this._dialogInst=this._newInst(this._dialogInput,false);
+inst.settings={};
+$.data(this._dialogInput[0],_3fd,inst);
+}
+_400(inst.settings,_424||{});
+this._dialogInput.val(_422);
+this._pos=(pos?(pos.length?pos:[pos.pageX,pos.pageY]):null);
+if(!this._pos){
+var _428=window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth;
+var _429=window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight;
+var _42a=document.documentElement.scrollLeft||document.body.scrollLeft;
+var _42b=document.documentElement.scrollTop||document.body.scrollTop;
+this._pos=[(_428/2)-100+_42a,(_429/2)-150+_42b];
+}
+this._dialogInput.css("left",this._pos[0]+"px").css("top",this._pos[1]+"px");
+inst.settings.onSelect=_423;
+this._inDialog=true;
+this.dpDiv.addClass(this._dialogClass);
+this._showDatepicker(this._dialogInput[0]);
+if($.blockUI){
+$.blockUI(this.dpDiv);
+}
+$.data(this._dialogInput[0],_3fd,inst);
+return this;
+},_destroyDatepicker:function(_42c){
+var _42d=$(_42c);
+var inst=$.data(_42c,_3fd);
+if(!_42d.hasClass(this.markerClassName)){
+return;
+}
+var _42f=_42c.nodeName.toLowerCase();
+$.removeData(_42c,_3fd);
+if(_42f=="input"){
+inst.append.remove();
+inst.trigger.remove();
+_42d.removeClass(this.markerClassName).unbind("focus",this._showDatepicker).unbind("keydown",this._doKeyDown).unbind("keypress",this._doKeyPress);
+}else{
+if(_42f=="div"||_42f=="span"){
+_42d.removeClass(this.markerClassName).empty();
+}
+}
+},_enableDatepicker:function(_430){
+var _431=$(_430);
+var inst=$.data(_430,_3fd);
+if(!_431.hasClass(this.markerClassName)){
+return;
+}
+var _433=_430.nodeName.toLowerCase();
+if(_433=="input"){
+_430.disabled=false;
+inst.trigger.filter("button").each(function(){
+this.disabled=false;
+}).end().filter("img").css({opacity:"1.0",cursor:""});
+}else{
+if(_433=="div"||_433=="span"){
+var _434=_431.children("."+this._inlineClass);
+_434.children().removeClass("ui-state-disabled");
+}
+}
+this._disabledInputs=$.map(this._disabledInputs,function(_435){
+return (_435==_430?null:_435);
+});
+},_disableDatepicker:function(_436){
+var _437=$(_436);
+var inst=$.data(_436,_3fd);
+if(!_437.hasClass(this.markerClassName)){
+return;
+}
+var _439=_436.nodeName.toLowerCase();
+if(_439=="input"){
+_436.disabled=true;
+inst.trigger.filter("button").each(function(){
+this.disabled=true;
+}).end().filter("img").css({opacity:"0.5",cursor:"default"});
+}else{
+if(_439=="div"||_439=="span"){
+var _43a=_437.children("."+this._inlineClass);
+_43a.children().addClass("ui-state-disabled");
+}
+}
+this._disabledInputs=$.map(this._disabledInputs,function(_43b){
+return (_43b==_436?null:_43b);
+});
+this._disabledInputs[this._disabledInputs.length]=_436;
+},_isDisabledDatepicker:function(_43c){
+if(!_43c){
+return false;
+}
+for(var i=0;i<this._disabledInputs.length;i++){
+if(this._disabledInputs[i]==_43c){
+return true;
+}
+}
+return false;
+},_getInst:function(_43e){
+try{
+return $.data(_43e,_3fd);
+}
+catch(err){
+throw "Missing instance data for this datepicker";
+}
+},_optionDatepicker:function(_43f,name,_441){
+var inst=this._getInst(_43f);
+if(arguments.length==2&&typeof name=="string"){
+return (name=="defaults"?$.extend({},$.datepicker._defaults):(inst?(name=="all"?$.extend({},inst.settings):this._get(inst,name)):null));
+}
+var _443=name||{};
+if(typeof name=="string"){
+_443={};
+_443[name]=_441;
+}
+if(inst){
+if(this._curInst==inst){
+this._hideDatepicker(null);
+}
+var date=this._getDateDatepicker(_43f);
+_400(inst.settings,_443);
+this._setDateDatepicker(_43f,date);
+this._updateDatepicker(inst);
+}
+},_changeDatepicker:function(_445,name,_447){
+this._optionDatepicker(_445,name,_447);
+},_refreshDatepicker:function(_448){
+var inst=this._getInst(_448);
+if(inst){
+this._updateDatepicker(inst);
+}
+},_setDateDatepicker:function(_44a,date,_44c){
+var inst=this._getInst(_44a);
+if(inst){
+this._setDate(inst,date,_44c);
+this._updateDatepicker(inst);
+this._updateAlternate(inst);
+}
+},_getDateDatepicker:function(_44e){
+var inst=this._getInst(_44e);
+if(inst&&!inst.inline){
+this._setDateFromField(inst);
+}
+return (inst?this._getDate(inst):null);
+},_doKeyDown:function(_450){
+var inst=$.datepicker._getInst(_450.target);
+var _452=true;
+var _453=inst.dpDiv.is(".ui-datepicker-rtl");
+inst._keyEvent=true;
+if($.datepicker._datepickerShowing){
+switch(_450.keyCode){
+case 9:
+$.datepicker._hideDatepicker(null,"");
+break;
+case 13:
+var sel=$("td."+$.datepicker._dayOverClass+", td."+$.datepicker._currentClass,inst.dpDiv);
+if(sel[0]){
+$.datepicker._selectDay(_450.target,inst.selectedMonth,inst.selectedYear,sel[0]);
+}else{
+$.datepicker._hideDatepicker(null,$.datepicker._get(inst,"duration"));
+}
+return false;
+break;
+case 27:
+$.datepicker._hideDatepicker(null,$.datepicker._get(inst,"duration"));
+break;
+case 33:
+$.datepicker._adjustDate(_450.target,(_450.ctrlKey?-$.datepicker._get(inst,"stepBigMonths"):-$.datepicker._get(inst,"stepMonths")),"M");
+break;
+case 34:
+$.datepicker._adjustDate(_450.target,(_450.ctrlKey?+$.datepicker._get(inst,"stepBigMonths"):+$.datepicker._get(inst,"stepMonths")),"M");
+break;
+case 35:
+if(_450.ctrlKey||_450.metaKey){
+$.datepicker._clearDate(_450.target);
+}
+_452=_450.ctrlKey||_450.metaKey;
+break;
+case 36:
+if(_450.ctrlKey||_450.metaKey){
+$.datepicker._gotoToday(_450.target);
+}
+_452=_450.ctrlKey||_450.metaKey;
+break;
+case 37:
+if(_450.ctrlKey||_450.metaKey){
+$.datepicker._adjustDate(_450.target,(_453?+1:-1),"D");
+}
+_452=_450.ctrlKey||_450.metaKey;
+if(_450.originalEvent.altKey){
+$.datepicker._adjustDate(_450.target,(_450.ctrlKey?-$.datepicker._get(inst,"stepBigMonths"):-$.datepicker._get(inst,"stepMonths")),"M");
+}
+break;
+case 38:
+if(_450.ctrlKey||_450.metaKey){
+$.datepicker._adjustDate(_450.target,-7,"D");
+}
+_452=_450.ctrlKey||_450.metaKey;
+break;
+case 39:
+if(_450.ctrlKey||_450.metaKey){
+$.datepicker._adjustDate(_450.target,(_453?-1:+1),"D");
+}
+_452=_450.ctrlKey||_450.metaKey;
+if(_450.originalEvent.altKey){
+$.datepicker._adjustDate(_450.target,(_450.ctrlKey?+$.datepicker._get(inst,"stepBigMonths"):+$.datepicker._get(inst,"stepMonths")),"M");
+}
+break;
+case 40:
+if(_450.ctrlKey||_450.metaKey){
+$.datepicker._adjustDate(_450.target,+7,"D");
+}
+_452=_450.ctrlKey||_450.metaKey;
+break;
+default:
+_452=false;
+}
+}else{
+if(_450.keyCode==36&&_450.ctrlKey){
+$.datepicker._showDatepicker(this);
+}else{
+_452=false;
+}
+}
+if(_452){
+_450.preventDefault();
+_450.stopPropagation();
+}
+},_doKeyPress:function(_455){
+var inst=$.datepicker._getInst(_455.target);
+if($.datepicker._get(inst,"constrainInput")){
+var _457=$.datepicker._possibleChars($.datepicker._get(inst,"dateFormat"));
+var chr=String.fromCharCode(_455.charCode==undefined?_455.keyCode:_455.charCode);
+return _455.ctrlKey||(chr<" "||!_457||_457.indexOf(chr)>-1);
+}
+},_showDatepicker:function(_459){
+_459=_459.target||_459;
+if(_459.nodeName.toLowerCase()!="input"){
+_459=$("input",_459.parentNode)[0];
+}
+if($.datepicker._isDisabledDatepicker(_459)||$.datepicker._lastInput==_459){
+return;
+}
+var inst=$.datepicker._getInst(_459);
+var _45b=$.datepicker._get(inst,"beforeShow");
+_400(inst.settings,(_45b?_45b.apply(_459,[_459,inst]):{}));
+$.datepicker._hideDatepicker(null,"");
+$.datepicker._lastInput=_459;
+$.datepicker._setDateFromField(inst);
+if($.datepicker._inDialog){
+_459.value="";
+}
+if(!$.datepicker._pos){
+$.datepicker._pos=$.datepicker._findPos(_459);
+$.datepicker._pos[1]+=_459.offsetHeight;
+}
+var _45c=false;
+$(_459).parents().each(function(){
+_45c|=$(this).css("position")=="fixed";
+return !_45c;
+});
+if(_45c&&$.browser.opera){
+$.datepicker._pos[0]-=document.documentElement.scrollLeft;
+$.datepicker._pos[1]-=document.documentElement.scrollTop;
+}
+var _45d={left:$.datepicker._pos[0],top:$.datepicker._pos[1]};
+$.datepicker._pos=null;
+inst.rangeStart=null;
+inst.dpDiv.css({position:"absolute",display:"block",top:"-1000px"});
+$.datepicker._updateDatepicker(inst);
+_45d=$.datepicker._checkOffset(inst,_45d,_45c);
+inst.dpDiv.css({position:($.datepicker._inDialog&&$.blockUI?"static":(_45c?"fixed":"absolute")),display:"none",left:_45d.left+"px",top:_45d.top+"px"});
+if(!inst.inline){
+var _45e=$.datepicker._get(inst,"showAnim")||"show";
+var _45f=$.datepicker._get(inst,"duration");
+var _460=function(){
+$.datepicker._datepickerShowing=true;
+if($.browser.msie&&parseInt($.browser.version,10)<7){
+$("iframe.ui-datepicker-cover").css({width:inst.dpDiv.width()+4,height:inst.dpDiv.height()+4});
+}
+};
+if($.effects&&$.effects[_45e]){
+inst.dpDiv.show(_45e,$.datepicker._get(inst,"showOptions"),_45f,_460);
+}else{
+inst.dpDiv[_45e](_45f,_460);
+}
+if(_45f==""){
+_460();
+}
+if(inst.input[0].type!="hidden"){
+inst.input[0].focus();
+}
+$.datepicker._curInst=inst;
+}
+},_updateDatepicker:function(inst){
+var dims={width:inst.dpDiv.width()+4,height:inst.dpDiv.height()+4};
+var self=this;
+inst.dpDiv.empty().append(this._generateHTML(inst)).find("iframe.ui-datepicker-cover").css({width:dims.width,height:dims.height}).end().find("button, .ui-datepicker-prev, .ui-datepicker-next, .ui-datepicker-calendar td a").bind("mouseout",function(){
+$(this).removeClass("ui-state-hover");
+if(this.className.indexOf("ui-datepicker-prev")!=-1){
+$(this).removeClass("ui-datepicker-prev-hover");
+}
+if(this.className.indexOf("ui-datepicker-next")!=-1){
+$(this).removeClass("ui-datepicker-next-hover");
+}
+}).bind("mouseover",function(){
+if(!self._isDisabledDatepicker(inst.inline?inst.dpDiv.parent()[0]:inst.input[0])){
+$(this).parents(".ui-datepicker-calendar").find("a").removeClass("ui-state-hover");
+$(this).addClass("ui-state-hover");
+if(this.className.indexOf("ui-datepicker-prev")!=-1){
+$(this).addClass("ui-datepicker-prev-hover");
+}
+if(this.className.indexOf("ui-datepicker-next")!=-1){
+$(this).addClass("ui-datepicker-next-hover");
+}
+}
+}).end().find("."+this._dayOverClass+" a").trigger("mouseover").end();
+var _464=this._getNumberOfMonths(inst);
+var cols=_464[1];
+var _466=17;
+if(cols>1){
+inst.dpDiv.addClass("ui-datepicker-multi-"+cols).css("width",(_466*cols)+"em");
+}else{
+inst.dpDiv.removeClass("ui-datepicker-multi-2 ui-datepicker-multi-3 ui-datepicker-multi-4").width("");
+}
+inst.dpDiv[(_464[0]!=1||_464[1]!=1?"add":"remove")+"Class"]("ui-datepicker-multi");
+inst.dpDiv[(this._get(inst,"isRTL")?"add":"remove")+"Class"]("ui-datepicker-rtl");
+if(inst.input&&inst.input[0].type!="hidden"&&inst==$.datepicker._curInst){
+$(inst.input[0]).focus();
+}
+},_checkOffset:function(inst,_468,_469){
+var _46a=inst.dpDiv.outerWidth();
+var _46b=inst.dpDiv.outerHeight();
+var _46c=inst.input?inst.input.outerWidth():0;
+var _46d=inst.input?inst.input.outerHeight():0;
+var _46e=(window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth)+$(document).scrollLeft();
+var _46f=(window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight)+$(document).scrollTop();
+_468.left-=(this._get(inst,"isRTL")?(_46a-_46c):0);
+_468.left-=(_469&&_468.left==inst.input.offset().left)?$(document).scrollLeft():0;
+_468.top-=(_469&&_468.top==(inst.input.offset().top+_46d))?$(document).scrollTop():0;
+_468.left-=(_468.left+_46a>_46e&&_46e>_46a)?Math.abs(_468.left+_46a-_46e):0;
+_468.top-=(_468.top+_46b>_46f&&_46f>_46b)?Math.abs(_468.top+_46b+_46d*2-_46f):0;
+return _468;
+},_findPos:function(obj){
+while(obj&&(obj.type=="hidden"||obj.nodeType!=1)){
+obj=obj.nextSibling;
+}
+var _471=$(obj).offset();
+return [_471.left,_471.top];
+},_hideDatepicker:function(_472,_473){
+var inst=this._curInst;
+if(!inst||(_472&&inst!=$.data(_472,_3fd))){
+return;
+}
+if(inst.stayOpen){
+this._selectDate("#"+inst.id,this._formatDate(inst,inst.currentDay,inst.currentMonth,inst.currentYear));
+}
+inst.stayOpen=false;
+if(this._datepickerShowing){
+_473=(_473!=null?_473:this._get(inst,"duration"));
+var _475=this._get(inst,"showAnim");
+var _476=function(){
+$.datepicker._tidyDialog(inst);
+};
+if(_473!=""&&$.effects&&$.effects[_475]){
+inst.dpDiv.hide(_475,$.datepicker._get(inst,"showOptions"),_473,_476);
+}else{
+inst.dpDiv[(_473==""?"hide":(_475=="slideDown"?"slideUp":(_475=="fadeIn"?"fadeOut":"hide")))](_473,_476);
+}
+if(_473==""){
+this._tidyDialog(inst);
+}
+var _477=this._get(inst,"onClose");
+if(_477){
+_477.apply((inst.input?inst.input[0]:null),[(inst.input?inst.input.val():""),inst]);
+}
+this._datepickerShowing=false;
+this._lastInput=null;
+if(this._inDialog){
+this._dialogInput.css({position:"absolute",left:"0",top:"-100px"});
+if($.blockUI){
+$.unblockUI();
+$("body").append(this.dpDiv);
+}
+}
+this._inDialog=false;
+}
+this._curInst=null;
+},_tidyDialog:function(inst){
+inst.dpDiv.removeClass(this._dialogClass).unbind(".ui-datepicker-calendar");
+},_checkExternalClick:function(_479){
+if(!$.datepicker._curInst){
+return;
+}
+var _47a=$(_479.target);
+if((_47a.parents("#"+$.datepicker._mainDivId).length==0)&&!_47a.hasClass($.datepicker.markerClassName)&&!_47a.hasClass($.datepicker._triggerClass)&&$.datepicker._datepickerShowing&&!($.datepicker._inDialog&&$.blockUI)){
+$.datepicker._hideDatepicker(null,"");
+}
+},_adjustDate:function(id,_47c,_47d){
+var _47e=$(id);
+var inst=this._getInst(_47e[0]);
+if(this._isDisabledDatepicker(_47e[0])){
+return;
+}
+this._adjustInstDate(inst,_47c+(_47d=="M"?this._get(inst,"showCurrentAtPos"):0),_47d);
+this._updateDatepicker(inst);
+},_gotoToday:function(id){
+var _481=$(id);
+var inst=this._getInst(_481[0]);
+if(this._get(inst,"gotoCurrent")&&inst.currentDay){
+inst.selectedDay=inst.currentDay;
+inst.drawMonth=inst.selectedMonth=inst.currentMonth;
+inst.drawYear=inst.selectedYear=inst.currentYear;
+}else{
+var date=new Date();
+inst.selectedDay=date.getDate();
+inst.drawMonth=inst.selectedMonth=date.getMonth();
+inst.drawYear=inst.selectedYear=date.getFullYear();
+}
+this._notifyChange(inst);
+this._adjustDate(_481);
+},_selectMonthYear:function(id,_485,_486){
+var _487=$(id);
+var inst=this._getInst(_487[0]);
+inst._selectingMonthYear=false;
+inst["selected"+(_486=="M"?"Month":"Year")]=inst["draw"+(_486=="M"?"Month":"Year")]=parseInt(_485.options[_485.selectedIndex].value,10);
+this._notifyChange(inst);
+this._adjustDate(_487);
+},_clickMonthYear:function(id){
+var _48a=$(id);
+var inst=this._getInst(_48a[0]);
+if(inst.input&&inst._selectingMonthYear&&!$.browser.msie){
+inst.input[0].focus();
+}
+inst._selectingMonthYear=!inst._selectingMonthYear;
+},_selectDay:function(id,_48d,year,td){
+var _490=$(id);
+if($(td).hasClass(this._unselectableClass)||this._isDisabledDatepicker(_490[0])){
+return;
+}
+var inst=this._getInst(_490[0]);
+inst.selectedDay=inst.currentDay=$("a",td).html();
+inst.selectedMonth=inst.currentMonth=_48d;
+inst.selectedYear=inst.currentYear=year;
+if(inst.stayOpen){
+inst.endDay=inst.endMonth=inst.endYear=null;
+}
+this._selectDate(id,this._formatDate(inst,inst.currentDay,inst.currentMonth,inst.currentYear));
+if(inst.stayOpen){
+inst.rangeStart=this._daylightSavingAdjust(new Date(inst.currentYear,inst.currentMonth,inst.currentDay));
+this._updateDatepicker(inst);
+}
+},_clearDate:function(id){
+var _493=$(id);
+var inst=this._getInst(_493[0]);
+inst.stayOpen=false;
+inst.endDay=inst.endMonth=inst.endYear=inst.rangeStart=null;
+this._selectDate(_493,"");
+},_selectDate:function(id,_496){
+var _497=$(id);
+var inst=this._getInst(_497[0]);
+_496=(_496!=null?_496:this._formatDate(inst));
+if(inst.input){
+inst.input.val(_496);
+}
+this._updateAlternate(inst);
+var _499=this._get(inst,"onSelect");
+if(_499){
+_499.apply((inst.input?inst.input[0]:null),[_496,inst]);
+}else{
+if(inst.input){
+inst.input.trigger("change");
+}
+}
+if(inst.inline){
+this._updateDatepicker(inst);
+}else{
+if(!inst.stayOpen){
+this._hideDatepicker(null,this._get(inst,"duration"));
+this._lastInput=inst.input[0];
+if(typeof (inst.input[0])!="object"){
+inst.input[0].focus();
+}
+this._lastInput=null;
+}
+}
+},_updateAlternate:function(inst){
+var _49b=this._get(inst,"altField");
+if(_49b){
+var _49c=this._get(inst,"altFormat")||this._get(inst,"dateFormat");
+var date=this._getDate(inst);
+dateStr=this.formatDate(_49c,date,this._getFormatConfig(inst));
+$(_49b).each(function(){
+$(this).val(dateStr);
+});
+}
+},noWeekends:function(date){
+var day=date.getDay();
+return [(day>0&&day<6),""];
+},iso8601Week:function(date){
+var _4a1=new Date(date.getFullYear(),date.getMonth(),date.getDate());
+var _4a2=new Date(_4a1.getFullYear(),1-1,4);
+var _4a3=_4a2.getDay()||7;
+_4a2.setDate(_4a2.getDate()+1-_4a3);
+if(_4a3<4&&_4a1<_4a2){
+_4a1.setDate(_4a1.getDate()-3);
+return $.datepicker.iso8601Week(_4a1);
+}else{
+if(_4a1>new Date(_4a1.getFullYear(),12-1,28)){
+_4a3=new Date(_4a1.getFullYear()+1,1-1,4).getDay()||7;
+if(_4a3>4&&(_4a1.getDay()||7)<_4a3-3){
+return 1;
+}
+}
+}
+return Math.floor(((_4a1-_4a2)/86400000)/7)+1;
+},parseDate:function(_4a4,_4a5,_4a6){
+if(_4a4==null||_4a5==null){
+throw "Invalid arguments";
+}
+_4a5=(typeof _4a5=="object"?_4a5.toString():_4a5+"");
+if(_4a5==""){
+return null;
+}
+var _4a7=(_4a6?_4a6.shortYearCutoff:null)||this._defaults.shortYearCutoff;
+var _4a8=(_4a6?_4a6.dayNamesShort:null)||this._defaults.dayNamesShort;
+var _4a9=(_4a6?_4a6.dayNames:null)||this._defaults.dayNames;
+var _4aa=(_4a6?_4a6.monthNamesShort:null)||this._defaults.monthNamesShort;
+var _4ab=(_4a6?_4a6.monthNames:null)||this._defaults.monthNames;
+var year=-1;
+var _4ad=-1;
+var day=-1;
+var doy=-1;
+var _4b0=false;
+var _4b1=function(_4b2){
+var _4b3=(_4b4+1<_4a4.length&&_4a4.charAt(_4b4+1)==_4b2);
+if(_4b3){
+_4b4++;
+}
+return _4b3;
+};
+var _4b5=function(_4b6){
+_4b1(_4b6);
+var _4b7=(_4b6=="@"?14:(_4b6=="y"?4:(_4b6=="o"?3:2)));
+var size=_4b7;
+var num=0;
+while(size>0&&_4ba<_4a5.length&&_4a5.charAt(_4ba)>="0"&&_4a5.charAt(_4ba)<="9"){
+num=num*10+parseInt(_4a5.charAt(_4ba++),10);
+size--;
+}
+if(size==_4b7){
+throw "Missing number at position "+_4ba;
+}
+return num;
+};
+var _4bb=function(_4bc,_4bd,_4be){
+var _4bf=(_4b1(_4bc)?_4be:_4bd);
+var size=0;
+for(var j=0;j<_4bf.length;j++){
+size=Math.max(size,_4bf[j].length);
+}
+var name="";
+var _4c3=_4ba;
+while(size>0&&_4ba<_4a5.length){
+name+=_4a5.charAt(_4ba++);
+for(var i=0;i<_4bf.length;i++){
+if(name==_4bf[i]){
+return i+1;
+}
+}
+size--;
+}
+throw "Unknown name at position "+_4c3;
+};
+var _4c5=function(){
+if(_4a5.charAt(_4ba)!=_4a4.charAt(_4b4)){
+throw "Unexpected literal at position "+_4ba;
+}
+_4ba++;
+};
+var _4ba=0;
+for(var _4b4=0;_4b4<_4a4.length;_4b4++){
+if(_4b0){
+if(_4a4.charAt(_4b4)=="'"&&!_4b1("'")){
+_4b0=false;
+}else{
+_4c5();
+}
+}else{
+switch(_4a4.charAt(_4b4)){
+case "d":
+day=_4b5("d");
+break;
+case "D":
+_4bb("D",_4a8,_4a9);
+break;
+case "o":
+doy=_4b5("o");
+break;
+case "m":
+_4ad=_4b5("m");
+break;
+case "M":
+_4ad=_4bb("M",_4aa,_4ab);
+break;
+case "y":
+year=_4b5("y");
+break;
+case "@":
+var date=new Date(_4b5("@"));
+year=date.getFullYear();
+_4ad=date.getMonth()+1;
+day=date.getDate();
+break;
+case "'":
+if(_4b1("'")){
+_4c5();
+}else{
+_4b0=true;
+}
+break;
+default:
+_4c5();
+}
+}
+}
+if(year==-1){
+year=new Date().getFullYear();
+}else{
+if(year<100){
+year+=new Date().getFullYear()-new Date().getFullYear()%100+(year<=_4a7?0:-100);
+}
+}
+if(doy>-1){
+_4ad=1;
+day=doy;
+do{
+var dim=this._getDaysInMonth(year,_4ad-1);
+if(day<=dim){
+break;
+}
+_4ad++;
+day-=dim;
+}while(true);
+}
+var date=this._daylightSavingAdjust(new Date(year,_4ad-1,day));
+if(date.getFullYear()!=year||date.getMonth()+1!=_4ad||date.getDate()!=day){
+throw "Invalid date";
+}
+return date;
+},ATOM:"yy-mm-dd",COOKIE:"D, dd M yy",ISO_8601:"yy-mm-dd",RFC_822:"D, d M y",RFC_850:"DD, dd-M-y",RFC_1036:"D, d M y",RFC_1123:"D, d M yy",RFC_2822:"D, d M yy",RSS:"D, d M y",TIMESTAMP:"@",W3C:"yy-mm-dd",formatDate:function(_4c8,date,_4ca){
+if(!date){
+return "";
+}
+var _4cb=(_4ca?_4ca.dayNamesShort:null)||this._defaults.dayNamesShort;
+var _4cc=(_4ca?_4ca.dayNames:null)||this._defaults.dayNames;
+var _4cd=(_4ca?_4ca.monthNamesShort:null)||this._defaults.monthNamesShort;
+var _4ce=(_4ca?_4ca.monthNames:null)||this._defaults.monthNames;
+var _4cf=function(_4d0){
+var _4d1=(_4d2+1<_4c8.length&&_4c8.charAt(_4d2+1)==_4d0);
+if(_4d1){
+_4d2++;
+}
+return _4d1;
+};
+var _4d3=function(_4d4,_4d5,len){
+var num=""+_4d5;
+if(_4cf(_4d4)){
+while(num.length<len){
+num="0"+num;
+}
+}
+return num;
+};
+var _4d8=function(_4d9,_4da,_4db,_4dc){
+return (_4cf(_4d9)?_4dc[_4da]:_4db[_4da]);
+};
+var _4dd="";
+var _4de=false;
+if(date){
+for(var _4d2=0;_4d2<_4c8.length;_4d2++){
+if(_4de){
+if(_4c8.charAt(_4d2)=="'"&&!_4cf("'")){
+_4de=false;
+}else{
+_4dd+=_4c8.charAt(_4d2);
+}
+}else{
+switch(_4c8.charAt(_4d2)){
+case "d":
+_4dd+=_4d3("d",date.getDate(),2);
+break;
+case "D":
+_4dd+=_4d8("D",date.getDay(),_4cb,_4cc);
+break;
+case "o":
+var doy=date.getDate();
+for(var m=date.getMonth()-1;m>=0;m--){
+doy+=this._getDaysInMonth(date.getFullYear(),m);
+}
+_4dd+=_4d3("o",doy,3);
+break;
+case "m":
+_4dd+=_4d3("m",date.getMonth()+1,2);
+break;
+case "M":
+_4dd+=_4d8("M",date.getMonth(),_4cd,_4ce);
+break;
+case "y":
+_4dd+=(_4cf("y")?date.getFullYear():(date.getYear()%100<10?"0":"")+date.getYear()%100);
+break;
+case "@":
+_4dd+=date.getTime();
+break;
+case "'":
+if(_4cf("'")){
+_4dd+="'";
+}else{
+_4de=true;
+}
+break;
+default:
+_4dd+=_4c8.charAt(_4d2);
+}
+}
+}
+}
+return _4dd;
+},_possibleChars:function(_4e1){
+var _4e2="";
+var _4e3=false;
+for(var _4e4=0;_4e4<_4e1.length;_4e4++){
+if(_4e3){
+if(_4e1.charAt(_4e4)=="'"&&!lookAhead("'")){
+_4e3=false;
+}else{
+_4e2+=_4e1.charAt(_4e4);
+}
+}else{
+switch(_4e1.charAt(_4e4)){
+case "d":
+case "m":
+case "y":
+case "@":
+_4e2+="0123456789";
+break;
+case "D":
+case "M":
+return null;
+case "'":
+if(lookAhead("'")){
+_4e2+="'";
+}else{
+_4e3=true;
+}
+break;
+default:
+_4e2+=_4e1.charAt(_4e4);
+}
+}
+}
+return _4e2;
+},_get:function(inst,name){
+return inst.settings[name]!==undefined?inst.settings[name]:this._defaults[name];
+},_setDateFromField:function(inst){
+var _4e8=this._get(inst,"dateFormat");
+var _4e9=inst.input?inst.input.val():null;
+inst.endDay=inst.endMonth=inst.endYear=null;
+var date=defaultDate=this._getDefaultDate(inst);
+var _4eb=this._getFormatConfig(inst);
+try{
+date=this.parseDate(_4e8,_4e9,_4eb)||defaultDate;
+}
+catch(event){
+this.log(event);
+date=defaultDate;
+}
+inst.selectedDay=date.getDate();
+inst.drawMonth=inst.selectedMonth=date.getMonth();
+inst.drawYear=inst.selectedYear=date.getFullYear();
+inst.currentDay=(_4e9?date.getDate():0);
+inst.currentMonth=(_4e9?date.getMonth():0);
+inst.currentYear=(_4e9?date.getFullYear():0);
+this._adjustInstDate(inst);
+},_getDefaultDate:function(inst){
+var date=this._determineDate(this._get(inst,"defaultDate"),new Date());
+var _4ee=this._getMinMaxDate(inst,"min",true);
+var _4ef=this._getMinMaxDate(inst,"max");
+date=(_4ee&&date<_4ee?_4ee:date);
+date=(_4ef&&date>_4ef?_4ef:date);
+return date;
+},_determineDate:function(date,_4f1){
+var _4f2=function(_4f3){
+var date=new Date();
+date.setDate(date.getDate()+_4f3);
+return date;
+};
+var _4f5=function(_4f6,_4f7){
+var date=new Date();
+var year=date.getFullYear();
+var _4fa=date.getMonth();
+var day=date.getDate();
+var _4fc=/([+-]?[0-9]+)\s*(d|D|w|W|m|M|y|Y)?/g;
+var _4fd=_4fc.exec(_4f6);
+while(_4fd){
+switch(_4fd[2]||"d"){
+case "d":
+case "D":
+day+=parseInt(_4fd[1],10);
+break;
+case "w":
+case "W":
+day+=parseInt(_4fd[1],10)*7;
+break;
+case "m":
+case "M":
+_4fa+=parseInt(_4fd[1],10);
+day=Math.min(day,_4f7(year,_4fa));
+break;
+case "y":
+case "Y":
+year+=parseInt(_4fd[1],10);
+day=Math.min(day,_4f7(year,_4fa));
+break;
+}
+_4fd=_4fc.exec(_4f6);
+}
+return new Date(year,_4fa,day);
+};
+date=(date==null?_4f1:(typeof date=="string"?_4f5(date,this._getDaysInMonth):(typeof date=="number"?(isNaN(date)?_4f1:_4f2(date)):date)));
+date=(date&&date.toString()=="Invalid Date"?_4f1:date);
+if(date){
+date.setHours(0);
+date.setMinutes(0);
+date.setSeconds(0);
+date.setMilliseconds(0);
+}
+return this._daylightSavingAdjust(date);
+},_daylightSavingAdjust:function(date){
+if(!date){
+return null;
+}
+date.setHours(date.getHours()>12?date.getHours()+2:0);
+return date;
+},_setDate:function(inst,date,_501){
+var _502=!(date);
+var _503=inst.selectedMonth;
+var _504=inst.selectedYear;
+date=this._determineDate(date,new Date());
+inst.selectedDay=inst.currentDay=date.getDate();
+inst.drawMonth=inst.selectedMonth=inst.currentMonth=date.getMonth();
+inst.drawYear=inst.selectedYear=inst.currentYear=date.getFullYear();
+if(_503!=inst.selectedMonth||_504!=inst.selectedYear){
+this._notifyChange(inst);
+}
+this._adjustInstDate(inst);
+if(inst.input){
+inst.input.val(_502?"":this._formatDate(inst));
+}
+},_getDate:function(inst){
+var _506=(!inst.currentYear||(inst.input&&inst.input.val()=="")?null:this._daylightSavingAdjust(new Date(inst.currentYear,inst.currentMonth,inst.currentDay)));
+return _506;
+},_generateHTML:function(inst){
+var _508=new Date();
+_508=this._daylightSavingAdjust(new Date(_508.getFullYear(),_508.getMonth(),_508.getDate()));
+var _509=this._get(inst,"isRTL");
+var _50a=this._get(inst,"showButtonPanel");
+var _50b=this._get(inst,"hideIfNoPrevNext");
+var _50c=this._get(inst,"navigationAsDateFormat");
+var _50d=this._getNumberOfMonths(inst);
+var _50e=this._get(inst,"showCurrentAtPos");
+var _50f=this._get(inst,"stepMonths");
+var _510=this._get(inst,"stepBigMonths");
+var _511=(_50d[0]!=1||_50d[1]!=1);
+var _512=this._daylightSavingAdjust((!inst.currentDay?new Date(9999,9,9):new Date(inst.currentYear,inst.currentMonth,inst.currentDay)));
+var _513=this._getMinMaxDate(inst,"min",true);
+var _514=this._getMinMaxDate(inst,"max");
+var _515=inst.drawMonth-_50e;
+var _516=inst.drawYear;
+if(_515<0){
+_515+=12;
+_516--;
+}
+if(_514){
+var _517=this._daylightSavingAdjust(new Date(_514.getFullYear(),_514.getMonth()-_50d[1]+1,_514.getDate()));
+_517=(_513&&_517<_513?_513:_517);
+while(this._daylightSavingAdjust(new Date(_516,_515,1))>_517){
+_515--;
+if(_515<0){
+_515=11;
+_516--;
+}
+}
+}
+inst.drawMonth=_515;
+inst.drawYear=_516;
+var _518=this._get(inst,"prevText");
+_518=(!_50c?_518:this.formatDate(_518,this._daylightSavingAdjust(new Date(_516,_515-_50f,1)),this._getFormatConfig(inst)));
+var prev=(this._canAdjustMonth(inst,-1,_516,_515)?"<a class=\"ui-datepicker-prev ui-corner-all\" onclick=\"DP_jQuery.datepicker._adjustDate('#"+inst.id+"', -"+_50f+", 'M');\" title=\""+_518+"\"><span class=\"ui-icon ui-icon-circle-triangle-"+(_509?"e":"w")+"\">"+_518+"</span></a>":(_50b?"":"<a class=\"ui-datepicker-prev ui-corner-all ui-state-disabled\" title=\""+_518+"\"><span class=\"ui-icon ui-icon-circle-triangle-"+(_509?"e":"w")+"\">"+_518+"</span></a>"));
+var _51a=this._get(inst,"nextText");
+_51a=(!_50c?_51a:this.formatDate(_51a,this._daylightSavingAdjust(new Date(_516,_515+_50f,1)),this._getFormatConfig(inst)));
+var next=(this._canAdjustMonth(inst,+1,_516,_515)?"<a class=\"ui-datepicker-next ui-corner-all\" onclick=\"DP_jQuery.datepicker._adjustDate('#"+inst.id+"', +"+_50f+", 'M');\" title=\""+_51a+"\"><span class=\"ui-icon ui-icon-circle-triangle-"+(_509?"w":"e")+"\">"+_51a+"</span></a>":(_50b?"":"<a class=\"ui-datepicker-next ui-corner-all ui-state-disabled\" title=\""+_51a+"\"><span class=\"ui-icon ui-icon-circle-triangle-"+(_509?"w":"e")+"\">"+_51a+"</span></a>"));
+var _51c=this._get(inst,"currentText");
+var _51d=(this._get(inst,"gotoCurrent")&&inst.currentDay?_512:_508);
+_51c=(!_50c?_51c:this.formatDate(_51c,_51d,this._getFormatConfig(inst)));
+var _51e=(!inst.inline?"<button type=\"button\" class=\"ui-datepicker-close ui-state-default ui-priority-primary ui-corner-all\" onclick=\"DP_jQuery.datepicker._hideDatepicker();\">"+this._get(inst,"closeText")+"</button>":"");
+var _51f=(_50a)?"<div class=\"ui-datepicker-buttonpane ui-widget-content\">"+(_509?_51e:"")+(this._isInRange(inst,_51d)?"<button type=\"button\" class=\"ui-datepicker-current ui-state-default ui-priority-secondary ui-corner-all\" onclick=\"DP_jQuery.datepicker._gotoToday('#"+inst.id+"');\">"+_51c+"</button>":"")+(_509?"":_51e)+"</div>":"";
+var _520=parseInt(this._get(inst,"firstDay"),10);
+_520=(isNaN(_520)?0:_520);
+var _521=this._get(inst,"dayNames");
+var _522=this._get(inst,"dayNamesShort");
+var _523=this._get(inst,"dayNamesMin");
+var _524=this._get(inst,"monthNames");
+var _525=this._get(inst,"monthNamesShort");
+var _526=this._get(inst,"beforeShowDay");
+var _527=this._get(inst,"showOtherMonths");
+var _528=this._get(inst,"calculateWeek")||this.iso8601Week;
+var _529=inst.endDay?this._daylightSavingAdjust(new Date(inst.endYear,inst.endMonth,inst.endDay)):_512;
+var _52a=this._getDefaultDate(inst);
+var html="";
+for(var row=0;row<_50d[0];row++){
+var _52d="";
+for(var col=0;col<_50d[1];col++){
+var _52f=this._daylightSavingAdjust(new Date(_516,_515,inst.selectedDay));
+var _530=" ui-corner-all";
+var _531="";
+if(_511){
+_531+="<div class=\"ui-datepicker-group ui-datepicker-group-";
+switch(col){
+case 0:
+_531+="first";
+_530=" ui-corner-"+(_509?"right":"left");
+break;
+case _50d[1]-1:
+_531+="last";
+_530=" ui-corner-"+(_509?"left":"right");
+break;
+default:
+_531+="middle";
+_530="";
+break;
+}
+_531+="\">";
+}
+_531+="<div class=\"ui-datepicker-header ui-widget-header ui-helper-clearfix"+_530+"\">"+(/all|left/.test(_530)&&row==0?(_509?next:prev):"")+(/all|right/.test(_530)&&row==0?(_509?prev:next):"")+this._generateMonthYearHeader(inst,_515,_516,_513,_514,_52f,row>0||col>0,_524,_525)+"</div><table class=\"ui-datepicker-calendar\"><thead><tr>";
+var _532="";
+for(var dow=0;dow<7;dow++){
+var day=(dow+_520)%7;
+_532+="<th"+((dow+_520+6)%7>=5?" class=\"ui-datepicker-week-end\"":"")+"><span title=\""+_521[day]+"\">"+_523[day]+"</span></th>";
+}
+_531+=_532+"</tr></thead><tbody>";
+var _535=this._getDaysInMonth(_516,_515);
+if(_516==inst.selectedYear&&_515==inst.selectedMonth){
+inst.selectedDay=Math.min(inst.selectedDay,_535);
+}
+var _536=(this._getFirstDayOfMonth(_516,_515)-_520+7)%7;
+var _537=(_511?6:Math.ceil((_536+_535)/7));
+var _538=this._daylightSavingAdjust(new Date(_516,_515,1-_536));
+for(var dRow=0;dRow<_537;dRow++){
+_531+="<tr>";
+var _53a="";
+for(var dow=0;dow<7;dow++){
+var _53b=(_526?_526.apply((inst.input?inst.input[0]:null),[_538]):[true,""]);
+var _53c=(_538.getMonth()!=_515);
+var _53d=_53c||!_53b[0]||(_513&&_538<_513)||(_514&&_538>_514);
+_53a+="<td class=\""+((dow+_520+6)%7>=5?" ui-datepicker-week-end":"")+(_53c?" ui-datepicker-other-month":"")+((_538.getTime()==_52f.getTime()&&_515==inst.selectedMonth&&inst._keyEvent)||(_52a.getTime()==_538.getTime()&&_52a.getTime()==_52f.getTime())?" "+this._dayOverClass:"")+(_53d?" "+this._unselectableClass+" ui-state-disabled":"")+(_53c&&!_527?"":" "+_53b[1]+(_538.getTime()>=_512.getTime()&&_538.getTime()<=_529.getTime()?" "+this._currentClass:"")+(_538.getTime()==_508.getTime()?" ui-datepicker-today":""))+"\""+((!_53c||_527)&&_53b[2]?" title=\""+_53b[2]+"\"":"")+(_53d?"":" onclick=\"DP_jQuery.datepicker._selectDay('#"+inst.id+"',"+_515+","+_516+", this);return false;\"")+">"+(_53c?(_527?_538.getDate():"&#xa0;"):(_53d?"<span class=\"ui-state-default\">"+_538.getDate()+"</span>":"<a class=\"ui-state-default"+(_538.getTime()==_508.getTime()?" ui-state-highlight":"")+(_538.getTime()>=_512.getTime()&&_538.getTime()<=_529.getTime()?" ui-state-active":"")+"\" href=\"#\">"+_538.getDate()+"</a>"))+"</td>";
+_538.setDate(_538.getDate()+1);
+_538=this._daylightSavingAdjust(_538);
+}
+_531+=_53a+"</tr>";
+}
+_515++;
+if(_515>11){
+_515=0;
+_516++;
+}
+_531+="</tbody></table>"+(_511?"</div>"+((_50d[0]>0&&col==_50d[1]-1)?"<div class=\"ui-datepicker-row-break\"></div>":""):"");
+_52d+=_531;
+}
+html+=_52d;
+}
+html+=_51f+($.browser.msie&&parseInt($.browser.version,10)<7&&!inst.inline?"<iframe src=\"javascript:false;\" class=\"ui-datepicker-cover\" frameborder=\"0\"></iframe>":"");
+inst._keyEvent=false;
+return html;
+},_generateMonthYearHeader:function(inst,_53f,_540,_541,_542,_543,_544,_545,_546){
+_541=(inst.rangeStart&&_541&&_543<_541?_543:_541);
+var _547=this._get(inst,"changeMonth");
+var _548=this._get(inst,"changeYear");
+var _549=this._get(inst,"showMonthAfterYear");
+var html="<div class=\"ui-datepicker-title\">";
+var _54b="";
+if(_544||!_547){
+_54b+="<span class=\"ui-datepicker-month\">"+_545[_53f]+"</span> ";
+}else{
+var _54c=(_541&&_541.getFullYear()==_540);
+var _54d=(_542&&_542.getFullYear()==_540);
+_54b+="<select class=\"ui-datepicker-month\" onchange=\"DP_jQuery.datepicker._selectMonthYear('#"+inst.id+"', this, 'M');\" onclick=\"DP_jQuery.datepicker._clickMonthYear('#"+inst.id+"');\">";
+for(var _54e=0;_54e<12;_54e++){
+if((!_54c||_54e>=_541.getMonth())&&(!_54d||_54e<=_542.getMonth())){
+_54b+="<option value=\""+_54e+"\""+(_54e==_53f?" selected=\"selected\"":"")+">"+_546[_54e]+"</option>";
+}
+}
+_54b+="</select>";
+}
+if(!_549){
+html+=_54b+((_544||_547||_548)&&(!(_547&&_548))?"&#xa0;":"");
+}
+if(_544||!_548){
+html+="<span class=\"ui-datepicker-year\">"+_540+"</span>";
+}else{
+var _54f=this._get(inst,"yearRange").split(":");
+var year=0;
+var _551=0;
+if(_54f.length!=2){
+year=_540-10;
+_551=_540+10;
+}else{
+if(_54f[0].charAt(0)=="+"||_54f[0].charAt(0)=="-"){
+year=_540+parseInt(_54f[0],10);
+_551=_540+parseInt(_54f[1],10);
+}else{
+year=parseInt(_54f[0],10);
+_551=parseInt(_54f[1],10);
+}
+}
+year=(_541?Math.max(year,_541.getFullYear()):year);
+_551=(_542?Math.min(_551,_542.getFullYear()):_551);
+html+="<select class=\"ui-datepicker-year\" onchange=\"DP_jQuery.datepicker._selectMonthYear('#"+inst.id+"', this, 'Y');\" onclick=\"DP_jQuery.datepicker._clickMonthYear('#"+inst.id+"');\">";
+for(;year<=_551;year++){
+html+="<option value=\""+year+"\""+(year==_540?" selected=\"selected\"":"")+">"+year+"</option>";
+}
+html+="</select>";
+}
+if(_549){
+html+=(_544||_547||_548?"&#xa0;":"")+_54b;
+}
+html+="</div>";
+return html;
+},_adjustInstDate:function(inst,_553,_554){
+var year=inst.drawYear+(_554=="Y"?_553:0);
+var _556=inst.drawMonth+(_554=="M"?_553:0);
+var day=Math.min(inst.selectedDay,this._getDaysInMonth(year,_556))+(_554=="D"?_553:0);
+var date=this._daylightSavingAdjust(new Date(year,_556,day));
+var _559=this._getMinMaxDate(inst,"min",true);
+var _55a=this._getMinMaxDate(inst,"max");
+date=(_559&&date<_559?_559:date);
+date=(_55a&&date>_55a?_55a:date);
+inst.selectedDay=date.getDate();
+inst.drawMonth=inst.selectedMonth=date.getMonth();
+inst.drawYear=inst.selectedYear=date.getFullYear();
+if(_554=="M"||_554=="Y"){
+this._notifyChange(inst);
+}
+},_notifyChange:function(inst){
+var _55c=this._get(inst,"onChangeMonthYear");
+if(_55c){
+_55c.apply((inst.input?inst.input[0]:null),[inst.selectedYear,inst.selectedMonth+1,inst]);
+}
+},_getNumberOfMonths:function(inst){
+var _55e=this._get(inst,"numberOfMonths");
+return (_55e==null?[1,1]:(typeof _55e=="number"?[1,_55e]:_55e));
+},_getMinMaxDate:function(inst,_560,_561){
+var date=this._determineDate(this._get(inst,_560+"Date"),null);
+return (!_561||!inst.rangeStart?date:(!date||inst.rangeStart>date?inst.rangeStart:date));
+},_getDaysInMonth:function(year,_564){
+return 32-new Date(year,_564,32).getDate();
+},_getFirstDayOfMonth:function(year,_566){
+return new Date(year,_566,1).getDay();
+},_canAdjustMonth:function(inst,_568,_569,_56a){
+var _56b=this._getNumberOfMonths(inst);
+var date=this._daylightSavingAdjust(new Date(_569,_56a+(_568<0?_568:_56b[1]),1));
+if(_568<0){
+date.setDate(this._getDaysInMonth(date.getFullYear(),date.getMonth()));
+}
+return this._isInRange(inst,date);
+},_isInRange:function(inst,date){
+var _56f=(!inst.rangeStart?null:this._daylightSavingAdjust(new Date(inst.selectedYear,inst.selectedMonth,inst.selectedDay)));
+_56f=(_56f&&inst.rangeStart<_56f?inst.rangeStart:_56f);
+var _570=_56f||this._getMinMaxDate(inst,"min");
+var _571=this._getMinMaxDate(inst,"max");
+return ((!_570||date>=_570)&&(!_571||date<=_571));
+},_getFormatConfig:function(inst){
+var _573=this._get(inst,"shortYearCutoff");
+_573=(typeof _573!="string"?_573:new Date().getFullYear()%100+parseInt(_573,10));
+return {shortYearCutoff:_573,dayNamesShort:this._get(inst,"dayNamesShort"),dayNames:this._get(inst,"dayNames"),monthNamesShort:this._get(inst,"monthNamesShort"),monthNames:this._get(inst,"monthNames")};
+},_formatDate:function(inst,day,_576,year){
+if(!day){
+inst.currentDay=inst.selectedDay;
+inst.currentMonth=inst.selectedMonth;
+inst.currentYear=inst.selectedYear;
+}
+var date=(day?(typeof day=="object"?day:this._daylightSavingAdjust(new Date(year,_576,day))):this._daylightSavingAdjust(new Date(inst.currentYear,inst.currentMonth,inst.currentDay)));
+return this.formatDate(this._get(inst,"dateFormat"),date,this._getFormatConfig(inst));
+}});
+function _400(_579,_57a){
+$.extend(_579,_57a);
+for(var name in _57a){
+if(_57a[name]==null||_57a[name]==undefined){
+_579[name]=_57a[name];
+}
+}
+return _579;
+};
+function _57c(a){
+return (a&&(($.browser.safari&&typeof a=="object"&&a.length)||(a.constructor&&a.constructor.toString().match(/\Array\(\)/))));
+};
+$.fn.datepicker=function(_57e){
+if(!$.datepicker.initialized){
+$(document).mousedown($.datepicker._checkExternalClick).find("body").append($.datepicker.dpDiv);
+$.datepicker.initialized=true;
+}
+var _57f=Array.prototype.slice.call(arguments,1);
+if(typeof _57e=="string"&&(_57e=="isDisabled"||_57e=="getDate")){
+return $.datepicker["_"+_57e+"Datepicker"].apply($.datepicker,[this[0]].concat(_57f));
+}
+if(_57e=="option"&&arguments.length==2&&typeof arguments[1]=="string"){
+return $.datepicker["_"+_57e+"Datepicker"].apply($.datepicker,[this[0]].concat(_57f));
+}
+return this.each(function(){
+typeof _57e=="string"?$.datepicker["_"+_57e+"Datepicker"].apply($.datepicker,[this].concat(_57f)):$.datepicker._attachDatepicker(this,_57e);
+});
+};
+$.datepicker=new _3fe();
+$.datepicker.initialized=false;
+$.datepicker.uuid=new Date().getTime();
+$.datepicker.version="1.7.2";
+window.DP_jQuery=$;
 })(jQuery);
 (function(a){
 a.widget("ui.progressbar",{_init:function(){
@@ -10018,32 +12627,28 @@ var _a="</"+_4.type+">";
 var _b="";
 _4.global?_b+="g":"";
 _4.i?_b+="i":"";
-_2=_c(_2);
-_4.strict?re1=new RegExp("\\b"+_2+"\\b",_b):re1=new RegExp(_2,_b);
-var _d=_6.match(re1);
-if(_d){
-var _e=0;
-var _f=new Array(_d.length);
-for(var m=0;m<_d.length;m++){
-_e=_6.substring(0,_e).length;
-_f[m]=_e+_6.substring(_e).search(re1);
-var _11=_9+_5.substr(_f[m],_2.length)+_a;
-var _12=_9+_d[m]+_a;
-var len=_d[m].length;
-var a1=_5.substring(0,_f[m]);
-var a2=_6.substring(0,_f[m]);
+_4.strict?re1=new RegExp("\\b"+RegExp.escape(_2)+"\\b",_b):re1=new RegExp(_2,_b);
+var _c=_6.match(re1);
+if(_c){
+var _d=0;
+var _e=new Array(_c.length);
+for(var m=0;m<_c.length;m++){
+_d=_6.substring(0,_d).length;
+_e[m]=_d+_6.substring(_d).search(re1);
+var _10=_9+_5.substr(_e[m],_2.length)+_a;
+var _11=_9+_c[m]+_a;
+var len=_c[m].length;
+var a1=_5.substring(0,_e[m]);
+var a2=_6.substring(0,_e[m]);
 var b1=_5.substring(a1.length+len);
 var b2=_6.substring(a2.length+len);
-_5=a1+_11+b1;
-_6=a2+_12+b2;
-_e=_f[m]+_12.length;
+_5=a1+_10+b1;
+_6=a2+_11+b2;
+_d=_e[m]+_11.length;
 $(this).html(_5);
 }
 }
 });
-};
-function _c(_18){
-return _18.replace(/([\(\)])/g,"\\$1");
 };
 })(jQuery);
 ;
@@ -10089,6 +12694,15 @@ return $1.replace(/\\([\'\"\\])/g,"$1")+$3.replace(/<p>/g,"\n").replace(/<\/p>|<
 }
 _1=_1.replace(/\n<\/p>$/g,"</p>");
 return _1;
+};
+;
+include.set_path('resources');
+RegExp.escape=function(_1){
+if(!arguments.callee.sRE){
+var _2=["/",".","*","+","?","|","(",")","[","]","{","}","\\"];
+arguments.callee.sRE=new RegExp("(\\"+_2.join("|\\")+")","g");
+}
+return _1.replace(arguments.callee.sRE,"\\$1");
 };
 ;
 include.set_path('jmvc/plugins/controller');
@@ -13951,8 +16565,14 @@ t.push(_5d+"="+_5e);
 return t.join("|");
 };
 function _55(_5f){
-var c="";
-$.each(_5f,function(i,cat){
+var c,_61,_62;
+_61=$("#categories_list").sortable("toArray");
+_62=$.map(_61,function(val,i){
+var n=/\d+/.exec(val);
+return _5f[n];
+});
+c="";
+$.each(_62,function(i,cat){
 if(cat===""){
 return true;
 }
@@ -15071,10 +17691,10 @@ $(this).html(v);
 },editable:function(id){
 var _1b,_1c;
 _1c=this;
-_1b=id?"#"+id:".term, #goal, .category, #notes";
+_1b=id?"#"+id:".term, #goal, .categories, #notes";
 $(_1b).editable(function(_1d,_1e){
 return _1c.update(this,_1d);
-},{type:"text",style:"border: solid 0px indigo;"});
+},{event:"dblclick",type:"text",style:"border: solid 0px indigo;"});
 },_render_facts:function(_1f){
 var _20,_21;
 _20=this;
@@ -15092,7 +17712,7 @@ Facts.check_totals();
 var _22;
 _22=this;
 $("#facts").accordion({autoHeight:false,active:false});
-$(".term, .category, .compiler, #complete > div, #totals_by_section > div").filter(":even").css({background:"#D4D9F9"}).end().filter(":odd").css({background:"#DEE2F9"});
+this.color_list($(".term, .categories, .compiler, #complete > div, #totals_by_section > div"));
 $.fn.check=function(){
 return this.each(function(){
 this.checked=true;
@@ -15124,39 +17744,45 @@ if($("#complete_ALL").is(":checked")){
 $("#facts #goal").prev().hide();
 }
 this.editable();
-},checkbox:function(_23){
-var _24,_25;
-_24=_23.id.replace(/complete_/,"");
-_25=_23.checked?"add":"del";
-Facts.complete(_24,_25);
+},color_list:function(_23){
+_23.filter(":even").css({background:"#D4D9F9"}).end().filter(":odd").css({background:"#DEE2F9"});
+},checkbox:function(_24){
+var _25,_26;
+_25=_24.id.replace(/complete_/,"");
+_26=_24.checked?"add":"del";
+Facts.complete(_25,_26);
 },update_t_b_sections_view:function(){
 this.totals=Facts.db.totals_by_section;
 this.render({to:"totals_by_section",action:"totals"});
 },update_totals_view:function(){
 this.total=Facts.db.total;
 this.render({to:"total",action:"total"});
-},"facts.created subscribe":function(_26){
-this._render_facts(_26.facts);
-},"facts.added subscribe":function(_27){
-this.append(_27);
-},"facts.deleted subscribe":function(_28){
-var _29;
-_29="#"+_28.fact+"_"+_28.index;
-if(_28.fact==="terms"){
-this.un_hilite(_28.old);
+},"facts.created subscribe":function(_27){
+var _28;
+_28=this;
+this._render_facts(_27.facts);
+$("#categories_list").sortable({placeholder:"ui-state-highlight",axis:"y",cursor:"move",forcePlaceholderSize:true,items:"li",opacity:0.7});
+$("#categories_list").disableSelection();
+},"facts.added subscribe":function(_29){
+this.append(_29);
+},"facts.deleted subscribe":function(_2a){
+var _2b;
+_2b="#"+_2a.fact+"_"+_2a.index;
+if(_2a.fact==="terms"){
+this.un_hilite(_2a.old);
 }
-$(_29).remove();
-},"facts.totals_updated subscribe":function(_2a){
+$(_2b).remove();
+},"facts.totals_updated subscribe":function(_2c){
 this.update_t_b_sections_view();
 this.update_totals_view();
-},"facts.updated_term subscribe":function(_2b){
-this.hilite(_2b.term);
-},"quote.created subscribe":function(_2c){
-Facts.update_totals(_2c);
-},"compilation.deleted subscribe":function(_2d){
-Facts.update_totals(_2d);
-},"compilation.undone subscribe":function(_2e){
+},"facts.updated_term subscribe":function(_2d){
+this.hilite(_2d.term);
+},"quote.created subscribe":function(_2e){
 Facts.update_totals(_2e);
+},"compilation.deleted subscribe":function(_2f){
+Facts.update_totals(_2f);
+},"compilation.undone subscribe":function(_30){
+Facts.update_totals(_30);
 }});
 ;
 include.end_of_production();
