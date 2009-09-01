@@ -32,8 +32,7 @@
       var tag       = '<'+opts.type+' class="'+hi_class+'">';
       var tag_close = '</'+opts.type+'>';
       var set_flags = ''; opts.global ? set_flags += 'g':'';  opts.i ? set_flags += 'i':'';
-      key           = quotemeta(key);
-      opts.strict ? re1 = new RegExp('\\b'+key+'\\b', set_flags) : re1 = new RegExp(key, set_flags);
+      opts.strict ? re1 = new RegExp('\\b'+RegExp.escape(key)+'\\b', set_flags) : re1 = new RegExp(key, set_flags);
       var matches=html_2.match(re1);
       if(matches) {
         var found=0;
@@ -54,13 +53,9 @@
           $(this).html(html_1);
         }
       }
-    })
+    });
   }
 /* Hack derived from imatch.js
   Thanks to imatch.js in http://www.fullposter.com/?1
 */
-  function quotemeta (string) {
-      return string.replace(/([\(\)])/g, "\\$1");
-  }
-
 })(jQuery);
