@@ -17154,7 +17154,7 @@ _3d=_3a.replace("heading_","");
 Compilation.update_heading({id:id,heading:_3b,action:_3d});
 },process_verse:function(_3e){
 var _3f;
-_3f=$.trim(window.getSelection().toString()).split("\n");
+_3f=$.trim(window.getSelection().toString()).split(/\r?\n/);
 _3f=$.map(_3f,function(_40,i){
 if(_40!==""){
 return _40;

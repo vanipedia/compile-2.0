@@ -406,7 +406,7 @@ QuotesController = MVC.Controller.extend('quotes',
 		 */
     process_verse: function(quote) {
         var verse;
-        verse = $.trim(window.getSelection().toString()).split('\n');
+        verse = $.trim(window.getSelection().toString()).split(/\r?\n/);
         // Eliminate empty lines for highlighted cases (introduced after changed in quotes spacing to <p>)
         verse = $.map(verse, function(line, i) {
                 if(line !== '') { return line; }
