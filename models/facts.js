@@ -385,8 +385,16 @@ Facts = MVC.Model.extend('facts',
       return t.join('|');
     }
     function format_cats(categories) {
-      var c = '';
-      $.each(categories, function(i, cat) {
+        var c, latest_order, cats_sorted;
+        // first update the db with the current order in the UI
+        latest_order = $('#categories_list').sortable('toArray');
+        cats_sorted = $.map(latest_order, function(val, i) {
+           // extract the index
+           var n = /\d+/.exec(val);
+           return categories[n];
+        });
+        c = '';
+      $.each(cats_sorted, function(i, cat) {
         if(cat === '') return true;
         c += '\n[[Category:'+cat+']]';
       });
