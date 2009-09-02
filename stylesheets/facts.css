@@ -7,14 +7,14 @@ overflow-y:visible;
 color:#603F9D;
 }
 #facts > div > div {
-padding:2px 0;
+padding: 4px 2px;
 }
 #facts > div li {
 list-style-image:none;
 list-style-position:outside;
 list-style-type:none;
 margin:0 0 0 -20px;
-padding:2px 8px;
+padding: 4px 8px;
 }
 #complete .check_div, #totals_by_section > div {
 float:left;
@@ -45,4 +45,7 @@ margin: 2px 0px;
 }
 #facts #terms_tools #copy_terms_man {
     display: none;
+}
+#facts #categories .facts_sortable_placeholder {
+  border: dashed 3px;
 }
