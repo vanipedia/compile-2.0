@@ -237,8 +237,7 @@ CompileController = MVC.Controller.extend('compilation',
     show_compile_tools: function(pos) {
         var that;
         that = this;
-        // fix logo z-index for overlays in compile tools
-        $('#p-logo, #p-cactions').css('z-index', '1');
+        this.fix_z_indexes(true);
         $('#compile_tools').css('opacity', 1).fadeIn('fast', function() {
             if(pos) window.scrollTo(0, pos);
         });
@@ -252,8 +251,7 @@ CompileController = MVC.Controller.extend('compilation',
         that = this;
         // Make transparent background dissapear. This bg is used to enable click on anywhere but inside compie_tools element to hide it.
         $('#transparent_background').hide();
-        // fix logo z-index for overlays in compile tools
-        $('#p-logo, #p-cactions').css('z-index', '');
+        this.fix_z_indexes(false);
         // Blind first => transfer effect => hide
         $('#compile_tools').css('opacity', 0);
         $('#compile_tools').effect('transfer', {
@@ -264,6 +262,10 @@ CompileController = MVC.Controller.extend('compilation',
 
         $('#compile_tools_toggle > #compile_tools_toggle_text').text('Show Tools');
         setTimeout( that.Class.hide_tools_menu, 5000);
+    },
+    fix_z_indexes: function(fix) {
+        // fix logo z-index for overlays in compile tools when passed true it will set it to 1 when false is reset to original
+        $('#p-logo, #p-cactions').css('z-index', fix ? 1 : '');
     },
 
     /**
@@ -376,14 +378,20 @@ CompileController = MVC.Controller.extend('compilation',
    * @param {string} msg Message to be displayed
    */
     warning: function(msg) {
+        var that, compile_tools;
+        that = this;
+        // set compile_tools to its visibility. If it's present we dont need to take care of z-indexes
+        // since is being done already by show_compile_tools and hide_compile_tools
+        compile_tools = $("#compile_tools").is(':visible');
         this.warning = msg;
+        this.fix_z_indexes(true);
         this.render({
             to: 'warning',
             action: 'warning'
         });
         $('#warning:hidden, #darken:hidden').fadeIn();
         $(window).click(function() {
-            $('#warning, #darken').fadeOut();
+            $('#warning, #darken').fadeOut(function() { if(!compile_tools) { that.fix_z_indexes(false); } });
             $(this).unbind('click');
         });
     },
