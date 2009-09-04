@@ -143,7 +143,7 @@ CompileController = MVC.Controller.extend('compilation',
         var that;
         that = this;
         // jQuery Event attachments
-        $('#compile_tools').tabs().draggable();
+        $('#compile_tools').tabs().draggable({ handle: '> ul' });
         $('#compile_tools_menu').hoverIntent(that.Class.compile_tools_menu_hover_options);
         // SetTimeout to hide the tools_menu
         setTimeout( that.Class.hide_tools_menu, 5000);
