@@ -130,11 +130,6 @@ FactsController = MVC.Controller.extend('facts',
   attach_events: function() {
     var that;
     that = this;
-    /*$('#compile_tools').dialog({
-      width:  "65%",
-			maxHeight: 400,
-			modal: true
-		});*/
     $('#facts').accordion({
         autoHeight: false,
         //collapsible: true,
@@ -213,12 +208,13 @@ FactsController = MVC.Controller.extend('facts',
     this._render_facts(params.facts);
     // Make categories draggable
     $('#categories_list').sortable({
-        placeholder: 'ui-state-highlight',
+        placeholder: 'facts_sortable_placeholder',
         axis: 'y',
         cursor: 'move',
         forcePlaceholderSize: true,
         items: 'li',
-        opacity: 0.7
+        opacity: 0.7,
+        update: function() { that.color_list($('.categories')) }
     });
     $("#categories_list").disableSelection();
 
