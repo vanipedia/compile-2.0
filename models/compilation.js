@@ -249,7 +249,7 @@ Compilation = MVC.Model.extend('compilation',
         if(params.action === 'set') {
             attr.heading = params.heading;
             attr.heading = attr.heading.replace(/^[a-z]/, camel);
-            attr.heading = attr.heading.replace(/[^.?!]$/, fullstop);
+            attr.heading = attr.heading.replace(/[^.?!"]$/, fullstop);
         }
         if(params.action === 'new') { attr.heading = ' '; }
 
