@@ -12,6 +12,8 @@ CompileController = MVC.Controller.extend('compilation',
 
     loading: false,
 
+    saving: false,
+
     compile_tools_menu_hover_options: {
         sensitivity: 2, // number = sensitivity threshold (must be 1 or higher)
         interval: 300, // number = milliseconds for onMouseOver polling interval
@@ -81,6 +83,7 @@ CompileController = MVC.Controller.extend('compilation',
         that.update_progressbar(10);
         Compilation.build(data);
     },
+
     "#compile_tools_hide click": function(params) {
         this.hide_compile_tools();
     },
@@ -157,7 +160,13 @@ CompileController = MVC.Controller.extend('compilation',
         }).bind('mouseleave', function() {
             $(this).removeClass('ui-state-hover');
         });
-				return;
+
+        // Safeguard for accidental navigation away from compilation
+        window.onbeforeunload = function() {
+            if(!that.Class.saving) {
+                return "";
+            }
+        }
     },
     // Function to render sections
     _render_section: function(section) {
@@ -297,7 +306,7 @@ CompileController = MVC.Controller.extend('compilation',
                 },
                 error : function( XMLHttpRequest, textStatus, errorThrown ){
                     //TODO : add error handling here
-                    if( typeof console != 'undefined' ){
+                    if(window.console) {
                         console.log( 'Error in AjaxLogin.js!' );
                     }
                     return false;
@@ -398,7 +407,7 @@ CompileController = MVC.Controller.extend('compilation',
             if(request.status != 200) {
                 that.publish('connection_error', { ajax: request, msg: 'Vaniquotes server is unreachable, please wait a minute and try to save again.' });
             } else {
-                console.log("Success: "+request.responseText);
+                if(window.console) { console.log("Success: "+request.responseText); }
             }
 
             if(request.responseText === 'no') {
@@ -433,6 +442,7 @@ CompileController = MVC.Controller.extend('compilation',
     _do_save: function() {
         var that, facts, sections, subs, quotes, new_compilation, final_html, upb, progress;
         that = this;
+        this.Class.saving = true;
         upb = that.update_progressbar;
         new_compilation = $('<div id="compilation"></div>');
         that.update_progressbar();

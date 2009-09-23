@@ -13914,7 +13914,7 @@ return c;
 },db:{terms:new Array(),notes:new String(),compiler:new Array(),complete:new Array(),goal:new Number(0),first:new String(),last:new String(),totals_by_section:{"BG":0,"SB":0,"CC":0,"OB":0,"Lec":0,"Con":0,"Let":0},total:new Number(0),toc:new String("right"),categories:new Array(),books:new Array("BG","SB","CC","OB","Lec","Con","Let")},terms:new Array()},{});
 ;
 include.set_path('controllers');
-CompileController=MVC.Controller.extend("compilation",{progress_val:0,loading:false,compile_tools_menu_hover_options:{sensitivity:2,interval:300,over:function(){
+CompileController=MVC.Controller.extend("compilation",{progress_val:0,loading:false,saving:false,compile_tools_menu_hover_options:{sensitivity:2,interval:300,over:function(){
 CompileController.show_tools_menu();
 },timeout:500,out:function(){
 CompileController.hide_tools_menu();
@@ -14005,7 +14005,11 @@ $(this).addClass("ui-state-hover");
 }).bind("mouseleave",function(){
 $(this).removeClass("ui-state-hover");
 });
-return;
+window.onbeforeunload=function(){
+if(!_e.Class.saving){
+return "";
+}
+};
 },_render_section:function(_f){
 var _10;
 this.section=_f;
@@ -14099,7 +14103,7 @@ console.dir(_24);
 }
 _1f.save();
 },error:function(_25,_26,_27){
-if(typeof console!="undefined"){
+if(window.console){
 console.log("Error in AjaxLogin.js!");
 }
 return false;
@@ -14179,7 +14183,9 @@ _33=true;
 if(_35.status!=200){
 _32.publish("connection_error",{ajax:_35,msg:"Vaniquotes server is unreachable, please wait a minute and try to save again."});
 }else{
+if(window.console){
 console.log("Success: "+_35.responseText);
+}
 }
 if(_35.responseText==="no"){
 _32.relogin();
@@ -14208,6 +14214,7 @@ _36._do_save();
 },_do_save:function(){
 var _37,_38,_39,_3a,_3b,_3c,_3d,upb,_3f;
 _37=this;
+this.Class.saving=true;
 upb=_37.update_progressbar;
 _3c=$("<div id=\"compilation\"></div>");
 _37.update_progressbar();
