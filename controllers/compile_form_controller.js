@@ -60,7 +60,7 @@ CompileFormController = MVC.Controller.extend('compile_form',
 				$('#ref_lookup_table').dialog('open');
 		},
   process_new_quote: function() {
-    var that, elem, rl;
+    var that, elem, rl, attr;
     that = this;
 				elem = $('#compile_tools > #compile_form > textarea')[0];
 				rl = $('#ref_lookup');

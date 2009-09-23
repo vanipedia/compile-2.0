@@ -12725,6 +12725,7 @@ if(!$(this).attr("link").length){
 return;
 }
 _3.new_quote(this);
+_3.publish("progressbar_update",{val:1});
 });
 }
 if(window.console){
@@ -12739,6 +12740,7 @@ _7=this;
 if($(".section, .sub_section",_6).length>0){
 $(".section, .sub_section",_6).each(function(){
 _7.create_new_section(this);
+_7.publish("progressbar_update",{val:1});
 });
 }
 },create_new_section:function(_8){
@@ -12901,7 +12903,8 @@ _38.heading=_37.heading?_37.heading+" "+_36.heading:_36.heading;
 if(_36.action==="set"){
 _38.heading=_36.heading;
 _38.heading=_38.heading.replace(/^[a-z]/,_39);
-_38.heading=_38.heading.replace(/[^.?!]$/,_3a);
+_38.heading=_38.heading.replace(/,$/,".");
+_38.heading=_38.heading.replace(/[^.?!"]$/,_3a);
 }
 if(_36.action==="new"){
 _38.heading=" ";
@@ -13067,9 +13070,9 @@ _4=true;
 if(_4){
 _5=false;
 }
-$.ajax({type:"GET",url:"/php/get_vanisource_title.php",dataType:"json",async:_5,data:_3,success:function(_6){
-if(_6.result!=="Found"){
-result=_6.result;
+$.ajax({type:"GET",url:"/php/get_vanisource_title.php",dataType:"json",async:_5,data:_3,error:_6,success:function(_7){
+if(_7.result!=="Found"){
+result=_7.result;
 if(window.console){
 console.error("Quote#find_reference: Ref not found in database");
 }
@@ -13080,7 +13083,7 @@ _2.publish("not_found_reference",{ref:_1.ref});
 _1.quote.bad_link=true;
 }
 }else{
-new_quote={link:_6.title,link_text:_6.title,parent:_6.parent.replace(/\s+/g,"_"),index:_6.index,};
+new_quote={link:_7.title,link_text:_7.title,parent:_7.parent.replace(/\s+/g,"_"),index:_7.index,};
 new_quote.type=_4?false:"new";
 _2.cache[_1.ref]=new_quote;
 if(window.console){
@@ -13091,170 +13094,181 @@ if(_4){
 if(window.console){
 console.info("Quote#find_reference: updating "+_1.attr+" => "+_2.cache[_1.ref][_1.attr]);
 }
-$.each(_2.cache[_1.ref],function(_7,_8){
-_1.quote[_7]=_8;
+$.each(_2.cache[_1.ref],function(_8,_9){
+_1.quote[_8]=_9;
 });
 }else{
 _2.publish("found_reference",new_quote);
 }
 }
 }});
+function _6(_a,_b,_c){
+var _d;
+_d={};
+_d.text=_b;
+_d.error=_c;
+if(navigator.platform=="MacIntel"){
+_2.publish("check_internet_connection");
+}else{
+_2.publish("connection_error",{ajax:_d,msg:"Vaniquotes server is unreachable, please wait a minute and submit your quote again."});
+}
+};
 $(document).ajaxStart(function(){
 _2.publish("ajax",{type:"start",msg:"Quote being processed..."});
 });
 $(document).ajaxStop(function(){
 _2.publish("ajax",{type:"end",msg:"Quote request done"});
 });
-},need_section:function(_9){
-if(!_9){
+},need_section:function(_e){
+if(!_e){
 if(window.console){
 console.error("ref argument missing in Quote.need_section");
 }
 return;
 }
-if(/^(SB \d+.\d+.\d+(?:-\d+)?|BG \d+.\d+(?:-\d+)?|CC (Adi|Madhya|Antya) \d+.\d+(?:-\d+)?|NOI \d+|ISO \d+|MM \d+|NBS \d+|LOB \d+)$/.test(_9)){
+if(/^(SB \d+.\d+.\d+(?:-\d+)?|BG \d+.\d+(?:-\d+)?|CC (Adi|Madhya|Antya) \d+.\d+(?:-\d+)?|NOI \d+|ISO \d+|MM \d+|NBS \d+|LOB \d+)$/.test(_e)){
 if(window.console){
-console.info("Quote#need_section: quote "+_9+" needs trans/purport section");
+console.info("Quote#need_section: quote "+_e+" needs trans/purport section");
 }
 return true;
 }else{
 return false;
 }
-},update_tips:function(_a){
-var _b,_c,_d;
-_b=this;
-_c=[];
-if(this.need_section(_a.link)){
-if(!_a.section){
-_c.push(this.tips_db.section);
+},update_tips:function(_f){
+var _10,_11,_12;
+_10=this;
+_11=[];
+if(this.need_section(_f.link)){
+if(!_f.section){
+_11.push(this.tips_db.section);
 }else{
-_c.push(this.tips_db.edit_section);
+_11.push(this.tips_db.edit_section);
 }
 }
-!_a.heading||_a.heading===""?_c.push(this.tips_db.heading):_c.push(this.tips_db.edit_heading);
-_c.push(this.tips_db.edit_quote);
-if(_a.type==="new"){
-_c.push(this.tips_db.insert_new);
+!_f.heading||_f.heading===""?_11.push(this.tips_db.heading):_11.push(this.tips_db.edit_heading);
+_11.push(this.tips_db.edit_quote);
+if(_f.type==="new"){
+_11.push(this.tips_db.insert_new);
 }
-_a.tips=_c;
-},update_section:function(_e){
+_f.tips=_11;
+},update_section:function(_13){
 var m;
-if(this.need_section(_e.link)){
+if(this.need_section(_13.link)){
 if(window.console){
-console.info("Quote#update_section: finding section(s) for "+_e.link);
+console.info("Quote#update_section: finding section(s) for "+_13.link);
 }
-if(!_e.trans&&!_e.purport){
+if(!_13.trans&&!_13.purport){
 if(window.console){
 console.log("Quote#update_section: no current trans/purport");
 }
-if(_e.type==="new"){
-if(_e.text.indexOf("PURPORT")>-1){
-_10("PURPORT");
+if(_13.type==="new"){
+if(_13.text.indexOf("PURPORT")>-1){
+_15("PURPORT");
 }
 }else{
-m=_e.text.match(/'''/g);
+m=_13.text.match(/'''/g);
 if(m!==null&&window.console){
 console.log("Quote#update_section: found "+m.length+" apostrophies");
 }
 if(m!==null&&m.length%2===1){
-_10("'''");
+_15("'''");
 }
 if(m===null){
-_e.purport=_e.text;
+_13.purport=_13.text;
 }
 }
 }
-if(_e.trans&&_e.purport){
-_e.section="Translation and Purport";
+if(_13.trans&&_13.purport){
+_13.section="Translation and Purport";
 }else{
-if(_e.trans){
-_e.section="Translation";
+if(_13.trans){
+_13.section="Translation";
 }else{
-if(_e.purport){
-_e.section="Purport";
+if(_13.purport){
+_13.section="Purport";
 }else{
-if(_e.type!=="new"){
+if(_13.type!=="new"){
 if(window.console){
-console.warn("This quote "+_e.link+" does not contain a proper section");
+console.warn("This quote "+_13.link+" does not contain a proper section");
 }
 }
 }
 }
 }
-if(_e.trans||_e.purport){
-_e.text=false;
+if(_13.trans||_13.purport){
+_13.text=false;
 }
 }
-function _10(_11){
-_e.trans=$.trim(_e.text.substring(0,_e.text.indexOf(_11)));
-_e.purport=$.trim(_e.text.substr(_e.text.indexOf(_11)+_11.length));
-if(_e.purport===""){
-_e.purport=false;
+function _15(_16){
+_13.trans=$.trim(_13.text.substring(0,_13.text.indexOf(_16)));
+_13.purport=$.trim(_13.text.substr(_13.text.indexOf(_16)+_16.length));
+if(_13.purport===""){
+_13.purport=false;
 }
 };
-},check_verses:function(_12){
-var _13,_14,_15,_16,_17,_18,_19,i,len,_1c;
-if(_12.type==="new"&&(_12.text||_12.purport)){
-_13=this;
-_14=_12.text||_12.purport;
-_15=_14.split("\n");
-_16=[];
-_17=0;
-_19=false;
+},check_verses:function(_17){
+var _18,_19,_1a,_1b,_1c,_1d,_1e,i,len,_21;
+if(_17.type==="new"&&(_17.text||_17.purport)){
+_18=this;
+_19=_17.text||_17.purport;
+_1a=_19.split("\n");
+_1b=[];
+_1c=0;
+_1e=false;
 last=false;
-for(i=0,len=_15.length;i<len;i++){
-_1c=_15[i].length;
-if(_1c>_17){
-_17=_15[i].length;
+for(i=0,len=_1a.length;i<len;i++){
+_21=_1a[i].length;
+if(_21>_1c){
+_1c=_1a[i].length;
 }
-if(_1c<89&&!/[:,"\?]/.test(_15[i])&&!/^\s*$/.test(_15[i])){
-if(_19===false){
-_19=i;
+if(_21<89&&!/[:,"\?]/.test(_1a[i])&&!/^\s*$/.test(_1a[i])){
+if(_1e===false){
+_1e=i;
 last=i;
 }else{
 last++;
 }
-_16[i]=_15[i];
+_1b[i]=_1a[i];
 }else{
-if(i!==last&&_19!==false&&last!==false){
-_13.request_verse(_12,_16.slice(_19,last+1));
+if(i!==last&&_1e!==false&&last!==false){
+_18.request_verse(_17,_1b.slice(_1e,last+1));
 }
-_19=last=false;
+_1e=last=false;
 }
-if(i+1===len&&_19!==false&&last!==false){
-_13.request_verse(_12,_16.slice(_19,last+1));
+if(i+1===len&&_1e!==false&&last!==false){
+_18.request_verse(_17,_1b.slice(_1e,last+1));
 }
 }
 }
-},request_verse:function(_1d,_1e){
-var v=_1e.join("<br/>");
-if(typeof _1d==="string"){
-_1d=Compilation.find_in_db(_1d,"q");
+},request_verse:function(_22,_23){
+var v=_23.join("<br/>");
+if(typeof _22==="string"){
+_22=Compilation.find_in_db(_22,"q");
 }
 if(window.console){
 console.log("Is this a verse?\n"+v);
 }
-if(_1d.verses===false){
-_1d.verses=[];
+if(_22.verses===false){
+_22.verses=[];
 }
-this.publish("verse_request",{verse:v,id:_1d.verses.length,quote:_1d.id});
-_1d.verses.push(_1e.join("\n"));
-},clean_new:function(_20){
-_20=BaltoUni(_20);
-_20=_21(_20);
-return _20;
-function _21(_22){
-var re,_24;
+this.publish("verse_request",{verse:v,id:_22.verses.length,quote:_22.id});
+_22.verses.push(_23.join("\n"));
+},clean_new:function(_25){
+_25=BaltoUni(_25);
+_25=_26(_25);
+return _25;
+function _26(_27){
+var re,_29;
 re=/[\[\(](.+?)[\]\)]/g;
-_24=/^\s*(\(\[\[(?:Vanisource:)?[^\[]+\]\]\))$/mg;
-_22=_22.replace(re,_25);
-_22=_22.replace(_24,":$1");
-return _22;
+_29=/^\s*(\(\[\[(?:Vanisource:)?[^\[]+\]\]\))$/mg;
+_27=_27.replace(re,_2a);
+_27=_27.replace(_29,":$1");
+return _27;
 };
-function _25(all,l){
-var f,_29;
-_29={"BG $1":/^Bg\. (\d+.\d+)$/i,"$1":/^(SB \d+.\d+.\d+)$/,"CC $1":/^Cc. ((?:Adi|Madhya|Antya) \d+.\d+)$/,"NOI $1":/^NoI (\d+)$/i,"ISO $1":/^Īśo (?:mantra )?(\d+)$/i};
-$.each(_29,function(sub,re){
+function _2a(all,l){
+var f,_2e;
+_2e={"BG $1":/^Bg\. (\d+.\d+)$/i,"$1":/^(SB \d+.\d+.\d+)$/,"CC $1":/^Cc. ((?:Adi|Madhya|Antya) \d+.\d+)$/,"NOI $1":/^NoI (\d+)$/i,"ISO $1":/^Īśo (?:mantra )?(\d+)$/i};
+$.each(_2e,function(sub,re){
 if(l.match(re)){
 f=l.replace(re,sub);
 return false;
@@ -13262,26 +13276,26 @@ return false;
 });
 return f?"([[Vanisource:"+f+"|"+f+"]])":"("+l+")";
 };
-}},{init:function(_2c){
-if(_2c===undefined){
+}},{init:function(_31){
+if(_31===undefined){
 if(window.console){
-console.error("Error creating new quote with quote_obj: "+_2c);
+console.error("Error creating new quote with quote_obj: "+_31);
 }
 return;
 }
-var _2d,_2e,_2f,_30;
-_2d=this;
-_30=/^(?:''')\[\[(?:Vanisource:)?(.+?)\|(.+?)\]\]:(?:''')?/;
-if(!_2c.link){
-$.each(_2d.Class.attr,function(i,a){
-!/^(?:text|trans|purport|heading)$/.test(a)?_2d[a]=$(_2c).attr(a)||false:_2d[a]=$(_2c).children("."+a).html()||false;
+var _32,_33,_34,_35;
+_32=this;
+_35=/^(?:''')\[\[(?:Vanisource:)?(.+?)\|(.+?)\]\]:(?:''')?/;
+if(!_31.link){
+$.each(_32.Class.attr,function(i,a){
+!/^(?:text|trans|purport|heading)$/.test(a)?_32[a]=$(_31).attr(a)||false:_32[a]=$(_31).children("."+a).html()||false;
 });
 }else{
-$.each(_2d.Class.attr,function(i,a){
-_2d[a]=_2c[a]||false;
+$.each(_32.Class.attr,function(i,a){
+_32[a]=_31[a]||false;
 });
 }
-if(!_35()){
+if(!_3a()){
 if(window.console){
 console.error("Quote.init#check_missing_attr: Error creating quote, missing link attribute which is vital to build a quote");
 }
@@ -13297,10 +13311,10 @@ if(!this.link_text){
 this.link_text=this.link;
 }
 this.link_text=this.link_text.replace("(New-2003)","");
-Section.exists(this.parent)?this.parent=this.parent.replace(/\s+/g,"_"):_36("parent");
-_2e=Compilation.db.quote_count[this.parent]?Compilation.db.quote_count[this.parent]:0;
+Section.exists(this.parent)?this.parent=this.parent.replace(/\s+/g,"_"):_3b("parent");
+_33=Compilation.db.quote_count[this.parent]?Compilation.db.quote_count[this.parent]:0;
 if(this.link){
-this.id=this.link.replace(/\W/g,"")+"_"+_2e;
+this.id=this.link.replace(/\W/g,"")+"_"+_33;
 }
 if(!this.book){
 this.book=Section.find_attr(this.parent,"sec_book");
@@ -13308,15 +13322,15 @@ this.book=Section.find_attr(this.parent,"sec_book");
 if(this.heading){
 this.heading=this.heading.replace(/'''/g,"");
 }
-_37();
-_38();
+_3c();
+_3d();
 this.Class.update_section(this);
 if(!this.text&&!this.trans&&!this.purport){
 if(window.console){
 console.error("No text, trans or purport in ref "+this.link);
 }
 }
-_39();
+_3e();
 if(!this.tips){
 this.Class.update_tips(this);
 }
@@ -13324,84 +13338,84 @@ if(!this.verses){
 this.Class.check_verses(this);
 }
 this.publish("created",this);
-function _38(){
+function _3d(){
 $.each(["trans","purport","text"],function(i,t){
-var _3c=false;
-if(_2d[t]){
-if(!_3c){
-_2d[t]=$.trim(_2d[t].replace(_30,""));
-_3c=true;
+var _41=false;
+if(_32[t]){
+if(!_41){
+_32[t]=$.trim(_32[t].replace(_35,""));
+_41=true;
 }
 }
 });
 };
-function _35(){
-$.each(["link","parent","index"],function(i,_3e){
-if(!_2d[_3e]){
-if(_3e=="link"){
+function _3a(){
+$.each(["link","parent","index"],function(i,_43){
+if(!_32[_43]){
+if(_43=="link"){
 if(window.console){
-console.error("Quote.init#check_missing_attr: Missing link!"+_3e);
+console.error("Quote.init#check_missing_attr: Missing link!"+_43);
 }
 return false;
 }else{
 if(window.console){
-console.warn("Quote.init#check_missing_attr: Missing "+_3e);
+console.warn("Quote.init#check_missing_attr: Missing "+_43);
 }
-_36(_3e);
+_3b(_43);
 }
 }
 });
 return true;
 };
-function _36(_3f){
-var _40;
+function _3b(_44){
+var _45;
 if(window.console){
-console.log("In Quote.init#find_attr, checking Quote.cache["+_2d.link+"] = ");
-console.dir(Quote.cache[_2d.link]);
+console.log("In Quote.init#find_attr, checking Quote.cache["+_32.link+"] = ");
+console.dir(Quote.cache[_32.link]);
 }
-if(Quote.cache[_2d.link]){
+if(Quote.cache[_32.link]){
 if(window.console){
-console.info("In Quote.init#find_attr, updating "+_3f+" with "+Quote.cache[_2d.link][_3f]);
+console.info("In Quote.init#find_attr, updating "+_44+" with "+Quote.cache[_32.link][_44]);
 }
-_2d[_3f]=Quote.cache[_2d.link][_3f];
+_32[_44]=Quote.cache[_32.link][_44];
 }else{
-if(!_2d.link){
+if(!_32.link){
 if(window.console){
-console.error("Quote.init#find_attr: Missing that.link to query db for missing "+_3f);
+console.error("Quote.init#find_attr: Missing that.link to query db for missing "+_44);
 }
 }else{
 if(window.console){
-console.warn("Quote.init#find_attr: "+_3f+" not found in Quote.cache for "+_2d.link+". Submiting request to Quote.find_reference");
+console.warn("Quote.init#find_attr: "+_44+" not found in Quote.cache for "+_32.link+". Submiting request to Quote.find_reference");
 }
-Quote.find_reference({quote:_2d,ref:_2d.link,type:"title",attr:_3f});
+Quote.find_reference({quote:_32,ref:_32.link,type:"title",attr:_44});
 }
 }
 };
-function _37(){
-if(!_2d.link_text){
-_2d.link_text=_2d.link.replace(/_/g," ");
+function _3c(){
+if(!_32.link_text){
+_32.link_text=_32.link.replace(/_/g," ");
 }
-$.each(Quote.link_text_db,function(_41,_42){
-if(_2d.link_text.indexOf(_41)===0){
-_2d.link_text=_2d.link_text.replace(_41,_42);
+$.each(Quote.link_text_db,function(_46,_47){
+if(_32.link_text.indexOf(_46)===0){
+_32.link_text=_32.link_text.replace(_46,_47);
 return false;
 }
 });
 };
-function _39(){
+function _3e(){
 $.each(["trans","purport","text"],function(i,t){
-var _45=false;
-if(_2d[t]){
-if(!_45){
-_2d[t]=$.trim(_2d[t].replace(_30,""));
-_45=true;
+var _4a=false;
+if(_32[t]){
+if(!_4a){
+_32[t]=$.trim(_32[t].replace(_35,""));
+_4a=true;
 }
-_2d[t]=_2d[t].replace(/\n+/g,"\n");
-_2d[t]=_2d[t].replace(/<br\/?>/g,"\n");
-_2d[t]=_2d[t].replace(/<p(?:.+?)?>(.+?)<\/p>/g,"$1\n");
-_2d[t]=_2d[t].replace(/'{2,}/g,"\"");
-_2d[t]=_2d[t].replace(/(^|\s)[“‘]+/g,"$1\"");
-_2d[t]=_2d[t].replace(/[”’]+(\s|$)/g,"\"$1");
+_32[t]=_32[t].replace(/\n+/g,"\n");
+_32[t]=_32[t].replace(/<br\/?>/g,"\n");
+_32[t]=_32[t].replace(/<p(?:.+?)?>(.+?)<\/p>/g,"$1\n");
+_32[t]=_32[t].replace(/'{2,}/g,"\"");
+_32[t]=_32[t].replace(/(^|\s)[“‘]+/g,"$1\"");
+_32[t]=_32[t].replace(/[”’]+(\s|$)/g,"\"$1");
 }
 });
 };
@@ -13474,8 +13488,10 @@ this.publish("created",this);
 }else{
 if(window.console){
 console.error("Section.init: Error building section for ref "+_f);
-return;
 }
+this.publish("warning",{msg:"Error creating Table of Contents for this quote<br/>Notify your vanitutor or coordinator and make note of this in the compilers notes and continue compiling."});
+this.publish("report_error",{msg:"Error creating section/TOC "+_f});
+return;
 }
 },_set_attr_auto:function(ref){
 if(window.console){
@@ -13602,6 +13618,7 @@ if(window.console){
 console.log("Setting "+_12+" to "+_13);
 }
 _c[_12]=_13;
+_b.publish("progressbar_update",{val:1});
 });
 $.each(_b.db,function(_15,val){
 if(window.console){
@@ -13897,7 +13914,7 @@ return c;
 },db:{terms:new Array(),notes:new String(),compiler:new Array(),complete:new Array(),goal:new Number(0),first:new String(),last:new String(),totals_by_section:{"BG":0,"SB":0,"CC":0,"OB":0,"Lec":0,"Con":0,"Let":0},total:new Number(0),toc:new String("right"),categories:new Array(),books:new Array("BG","SB","CC","OB","Lec","Con","Let")},terms:new Array()},{});
 ;
 include.set_path('controllers');
-CompileController=MVC.Controller.extend("compilation",{loading:false,compile_tools_menu_hover_options:{sensitivity:2,interval:300,over:function(){
+CompileController=MVC.Controller.extend("compilation",{progress_val:0,loading:false,compile_tools_menu_hover_options:{sensitivity:2,interval:300,over:function(){
 CompileController.show_tools_menu();
 },timeout:500,out:function(){
 CompileController.hide_tools_menu();
@@ -13909,139 +13926,142 @@ $("#compile_tools_menu").animate({right:"0px"},"fast");
 $(_1).autocomplete("/php/get_vanisource_title.php",{extraParams:{type:"title",suggest:true,minChars:2},resultsClass:"suggest_results",fixed:_2});
 }},{load:function(_3){
 this._loading("init");
-var _4;
-_4=$("#wpTextbox1").val();
-if(_4!==""&&_4.indexOf("<div id=\"compilation\">")===-1){
+var _4,_5;
+_4=this;
+_4.update_progressbar(10);
+_5=$("#wpTextbox1").val();
+if(_5!==""&&_5.indexOf("<div id=\"compilation\">")===-1){
 if(window.console){
 console.log("No compilation found in this page!");
 }
 this._loading("end_gracefully");
 return;
 }
-if(_4===""){
+_4.update_progressbar(10);
+if(_5===""){
 this.new_compilation_message();
-_4="<div id=\"compilation\"></div>";
+_5="<div id=\"compilation\"></div>";
 }
 this.render({after:"wikiPreview",action:"compilation"});
-Facts.build(_4);
-Compilation.build(_4);
-},"#compile_tools_hide click":function(_5){
+_4.update_progressbar(10);
+Facts.build(_5);
+_4.update_progressbar(10);
+Compilation.build(_5);
+},"#compile_tools_hide click":function(_6){
 this.hide_compile_tools();
 },"#transparent_background click":function(){
 this.hide_compile_tools();
-},"#compile_tools_toggle click":function(_6){
-var _7=_6.event.pageY-50;
-this.toggle_compile_tools(_7);
-},"#compile_tools_save click":function(_8){
-_8.event.kill();
+},"#compile_tools_toggle click":function(_7){
+var _8=_7.event.pageY-50;
+this.toggle_compile_tools(_8);
+},"#compile_tools_save click":function(_9){
+_9.event.kill();
 this.save();
-},"#compile_form .ui-state-default mouseover":function(_9){
-$(_9.element).addClass("ui-state-hover");
-},"#compile_form .ui-state-default mouseout":function(_a){
-$(_a.element).removeClass("ui-state-hover");
-},_loading:function(_b){
-var _c=this;
+},"#compile_form .ui-state-default mouseover":function(_a){
+$(_a.element).addClass("ui-state-hover");
+},"#compile_form .ui-state-default mouseout":function(_b){
+$(_b.element).removeClass("ui-state-hover");
+},_loading:function(_c){
+var _d=this;
 this.Class.loading=true;
-if(_b==="init"){
+if(_c==="init"){
+$("<div id=\"background_overlay\"></div>").appendTo("body");
+$("<div id=\"progressbar\"></div><").appendTo("body");
+_d.publish("progressbar",{text:"Loading Compilation..."});
 $("#editform, #toolbar").hide();
 $("#mw-edit-longpagewarning").hide();
 this.loading={};
-this.loading.message="Loading compiling data...";
-this.render({top:"bodyContent",action:"loading"});
 $("#p-cactions").children().each(function(){
 $("li#ca-edit",this).removeClass("selected");
 $("li#ca-compile",this).addClass("selected");
 });
 }
-if(_b==="end_gracefully"){
+if(_c==="end_gracefully"){
 if(window.console){
 console.info("In CompilationController._loading ending gracefully...");
 }
-$("#loading").fadeOut("slow");
+_d.update_progressbar(20);
+this.publish("progressbar_hide");
 $("#editform, #toolbar").show();
 }
-if(_b==="end"){
+if(_c==="end"){
 $(document).ready(function(){
-_c.attach_events();
-$("#p-logo, #p-cactions").css("z-index","1");
-$("#loading").fadeOut("slow",function(){
+_d.attach_events();
+_d.publish("progressbar_hide");
 $("#compilation").fadeIn("slow").removeClass("hidden");
+_d.show_compile_tools();
 });
-});
-setTimeout(function(){
-_c.publish("warning",{msg:"Your session will time out soon, please save your work soon to avoid a wiki session timeout."});
-},900000);
 this.Class.loading=false;
 }
 return;
 },attach_events:function(){
-var _d;
-_d=this;
+var _e;
+_e=this;
 $("#compile_tools").tabs().draggable({handle:"> ul"});
-$("#compile_tools_menu").hoverIntent(_d.Class.compile_tools_menu_hover_options);
-setTimeout(_d.Class.hide_tools_menu,5000);
+$("#compile_tools_menu").hoverIntent(_e.Class.compile_tools_menu_hover_options);
+setTimeout(_e.Class.hide_tools_menu,5000);
 $("#compile_tools_menu p").bind("mouseenter",function(){
 $(this).addClass("ui-state-hover");
 }).bind("mouseleave",function(){
 $(this).removeClass("ui-state-hover");
 });
 return;
-},_render_section:function(_e){
-var _f;
-this.section=_e;
-_f=this.section.parent;
+},_render_section:function(_f){
+var _10;
+this.section=_f;
+_10=this.section.parent;
 if(window.console){
-console.assert(_f);
+console.assert(_10);
 }
-if(_f!=="compilation"&&$("#"+_f).length!==1){
-this._render_section(Compilation.find_in_db(_f,"s"));
+if(_10!=="compilation"&&$("#"+_10).length!==1){
+this._render_section(Compilation.find_in_db(_10,"s"));
 }
 if(window.console){
-console.info("CompileController#_render_section: rendering "+this.section.id+" to "+_f);
+console.info("CompileController#_render_section: rendering "+this.section.id+" to "+_10);
 }
-this.render({bottom:_f,action:"sections"});
-this.sort_section(_f);
+this.render({bottom:_10,action:"sections"});
+this.sort_section(_10);
 },clean_up:function(){
 this._sort_sections();
 this._remove_empty_secs();
 this._sort_quotes();
-},sort_section:function(_10){
-if($("#"+_10).children().length>1){
-$("#"+_10).children(".section, .sub_section").tsort({attr:"sec_index"});
+},sort_section:function(_11){
+if($("#"+_11).children().length>1){
+$("#"+_11).children(".section, .sub_section").tsort({attr:"sec_index"});
 }
 },_sort_sections:function(){
-var _11=$(".section");
-var _12=$(".sub_section");
-$(_11).tsort({attr:"sec_index"});
+var _12=$(".section");
+var _13=$(".sub_section");
 $(_12).tsort({attr:"sec_index"});
+$(_13).tsort({attr:"sec_index"});
 },_remove_empty_secs:function(){
-var _13,id;
-_13=[];
-_15($(".sub_section"));
-_15($(".section"));
-function _15(_16){
-$(_16).each(function(){
+var _14,id;
+_14=[];
+_16($(".sub_section"));
+_16($(".section"));
+function _16(_17){
+$(_17).each(function(){
 id=$(this).attr("id");
-$.inArray(id,_13)>-1?_17(this):_13.push(id);
+$.inArray(id,_14)>-1?_18(this):_14.push(id);
 if($(this).children("div").length===0){
-_17(this);
+_18(this);
 }
 });
 };
-function _17(_18){
+function _18(_19){
 if(window.console){
-console.info("CompilationController#_remove_empty_secs: removing duplicate or empty section: "+$(_18).attr("id"));
+console.info("CompilationController#_remove_empty_secs: removing duplicate or empty section: "+$(_19).attr("id"));
 }
-$(_18).remove();
-Compilation.del_from_db($(_18).attr("id"),"s");
+$(_19).remove();
+Compilation.del_from_db($(_19).attr("id"),"s");
 };
 },_sort_quotes:function(){
 $(".quote").tsort({attr:"index"});
 },toggle_compile_tools:function(pos){
 $("#compile_tools").is(":hidden")?this.show_compile_tools(pos):this.hide_compile_tools(pos);
 },show_compile_tools:function(pos){
-var _1b;
-_1b=this;
+var _1c;
+_1c=this;
 this.fix_z_indexes(true);
 $("#compile_tools").css("opacity",1).fadeIn("fast",function(){
 if(pos){
@@ -14051,19 +14071,126 @@ window.scrollTo(0,pos);
 $("#compile_tools_toggle #compile_tools_toggle_text").text("Hide Tools");
 $("#transparent_background").show();
 },hide_compile_tools:function(){
-var _1c;
-_1c=this;
+var _1d;
+_1d=this;
 $("#transparent_background").hide();
 this.fix_z_indexes(false);
 $("#compile_tools").css("opacity",0);
 $("#compile_tools").effect("transfer",{to:"#compile_tools_toggle",className:"compile_tools_transfer"},"medium");
 $("#compile_tools").hide("fast");
 $("#compile_tools_toggle > #compile_tools_toggle_text").text("Show Tools");
-setTimeout(_1c.Class.hide_tools_menu,5000);
+setTimeout(_1d.Class.hide_tools_menu,5000);
 },fix_z_indexes:function(fix){
 $("#p-logo, #p-cactions").css("z-index",fix?1:"");
+},relogin:function(){
+var _1f,_20;
+_1f=this;
+this.user=wgUserName;
+this.render({to:"login_form",action:"login_form"});
+if(window.console){
+console.info(wgUserName+" needs to relogin");
+}
+_21();
+function _22(_23){
+_20=wgServer+wgScriptPath+"/api.php?action=login&format=json&"+_23;
+$.ajax({type:"POST",url:_20,dataType:"json",success:function(_24){
+if(window.console){
+console.dir(_24);
+}
+_1f.save();
+},error:function(_25,_26,_27){
+if(typeof console!="undefined"){
+console.log("Error in AjaxLogin.js!");
+}
+return false;
+}});
+};
+function _28(){
+$("#login_form").dialog("close");
+_22($("#login_form form").serialize());
+};
+function _21(){
+if(!$("#login_form").hasClass("ui-dialog-content")){
+$("#login_form").dialog({modal:true,title:"Log-in to save",modal:true,open:function(_29,ui){
+$("#login_form #lgpassword").focus();
+},buttons:{"Login":_28}}).keydown(function(e){
+if(e.keyCode===13){
+_28();
+}
+});
+}else{
+$("#login_form").dialog("open");
+}
+};
 },save:function(){
-var _1e,_1f,_20,_21,_22,_23;
+var _2c;
+_2c=this;
+_2c.publish("progressbar",{text:"Saving..."});
+_2c.check_user_loggedin();
+},check_internet_connection:function(){
+var _2d,_2e,_2f;
+_2d=this;
+_2e=false;
+_2f=new XMLHttpRequest();
+_2f.onreadystatechange=_30;
+_2f.open("HEAD","http://www.google.com",true);
+_2f.send(null);
+setTimeout(function(){
+if(_2f.readyState==4&&!_2e){
+_31();
+}
+},3000);
+function _30(){
+if(window.console){
+console.log(_2f.readyState);
+}
+if(_2f.readyState==4){
+if(_2f.statusText&&_2f.statusText!=""){
+if(window.console){
+console.log("Connected");
+}
+_2e=true;
+_2d.publish("progressbar_hide");
+_2d.publish("connection_error",{ajax:_2f,msg:"Vaniquotes server is unreachable, please wait a minute and try again."});
+}
+}
+};
+function _31(){
+_2d.publish("progressbar_hide");
+_2d.publish("connection_error",{ajax:_2f,msg:"You appear to be offline! Check your internet connection and try again."});
+};
+},check_user_loggedin:function(){
+var _32,_33;
+_32=this;
+_33=false;
+sajax_do_call("isUserLoggedIn",[],_34);
+setTimeout(function(){
+if(!_33){
+if(navigator.platform=="MacIntel"){
+_32.check_internet_connection();
+}else{
+_32.publish("progressbar_hide");
+_32.publish("connection_error",{ajax:{},msg:"Vaniquotes server is unreachable, please wait a minute and try to save again."});
+}
+}
+},3000);
+function _34(_35){
+_33=true;
+if(_35.status!=200){
+_32.publish("connection_error",{ajax:_35,msg:"Vaniquotes server is unreachable, please wait a minute and try to save again."});
+}else{
+console.log("Success: "+_35.responseText);
+}
+if(_35.responseText==="no"){
+_32.relogin();
+}else{
+_32._check_before_save();
+}
+};
+},_check_before_save:function(){
+var _36;
+_36=this;
+_36.update_progressbar();
 if($(".building_quote").not(".deleted_quote").length){
 this.publish("warning",{msg:"You must insert all quotes before saving!"});
 $.scrollTo(".building_quote","fast");
@@ -14077,12 +14204,21 @@ return;
 if(QuotesController.currently_editing){
 $(".edit_quote #Cancel_quote").click();
 }
-_22=$("<div id=\"compilation\"></div>");
-_1e=Facts.save();
-$("<div id=\"facts\">"+_1e+"</div>").appendTo(_22);
-_21=$(".quote").not(".deleted_quote").clone();
-_21.each(function(){
-var q,p,l,lt,_28;
+_36._do_save();
+},_do_save:function(){
+var _37,_38,_39,_3a,_3b,_3c,_3d,upb,_3f;
+_37=this;
+upb=_37.update_progressbar;
+_3c=$("<div id=\"compilation\"></div>");
+_37.update_progressbar();
+_38=Facts.save();
+_37.update_progressbar();
+$("<div id=\"facts\">"+_38+"</div>").appendTo(_3c);
+_37.update_progressbar();
+_3b=$(".quote").not(".deleted_quote").clone();
+_37.update_progressbar();
+_3b.each(function(){
+var q,p,l,lt,_44;
 q=$(this);
 p=q.attr("parent");
 l=q.attr("link").replace(/_/g," ");
@@ -14100,36 +14236,42 @@ $(this).replaceWith($(this).text());
 });
 q.removeClass("ui-corner-all q_new q_updated");
 if(/inline/.test(q.attr("style"))){
-_28=true;
+_44=true;
 }
 q.removeAttr("style");
-if(_28){
+if(_44){
 q.css("display","inline");
 }
+_37.update_progressbar(1);
 });
-_21.appendTo(_22);
-_1f=$(".section").clone();
-_20=$(".sub_section").clone();
-_20.each(_29);
-_1f.each(_29);
-function _29(){
-var s,l,h,id,_2e;
+_3b.appendTo(_3c);
+_39=$(".section").clone();
+_3a=$(".sub_section").clone();
+_3a.each(_45);
+_39.each(_45);
+function _45(){
+var s,l,h,id,_4a;
 s=$(this);
 l=s.hasClass("section")?2:3;
 h="h"+l;
-_2e=s.attr("text");
-id=_2e.replace(/ /g,"_");
+_4a=s.attr("text");
+id=_4a.replace(/ /g,"_");
 s.empty();
-$("<"+h+">"+_2e+"</"+h+"></div>").appendTo(s);
-$("div[parent=\""+id+"\"]:first",_22).before(s);
+$("<"+h+">"+_4a+"</"+h+"></div>").appendTo(s);
+$("div[parent=\""+id+"\"]:first",_3c).before(s);
+_37.update_progressbar();
 };
-_23=_22.wrap("<div></div>").parent("div").html().replace(/^\s+/mg,"").replace(/<\/span>\n/g,"</span>").replace(/(<div[^>]+?class="(?:quote|section|sub_section)")/g,"\n$1");
-$("#wpTextbox1").val(_23);
+_3d=_3c.wrap("<div></div>").parent("div").html().replace(/^\s+/mg,"").replace(/<\/span>\n/g,"</span>").replace(/(<div[^>]+?class="(?:quote|section|sub_section)")/g,"\n$1");
+_37.update_progressbar();
+$("#wpTextbox1").val(_3d);
+_37.update_progressbar();
 if(window.console){
-console.log(_1e);
-console.log(_21);
-console.log(_22);
+console.log(_38);
+console.log(_3b);
+console.log(_3c);
 }
+_37.update_progressbar();
+_37.update_progressbar();
 $("#wpSave").click();
 },new_compilation_message:function(){
 $(".mw-newarticletext").replaceWith("<div id=\"new_compilation_message\"></div>");
@@ -14138,31 +14280,63 @@ this.render({to:"new_compilation_message",action:"new_compilation_message"});
 },info:function(msg){
 this.info=msg;
 this.render({to:"info",action:"info"});
-$("#info:hidden, #darken:hidden").fadeIn();
+$("#info:hidden, #background_overlay:hidden").fadeIn();
 $(window).click(function(){
-$("#info, #darken").fadeOut();
+$("#info, #background_overlay").fadeOut();
 $(this).unbind("click");
 });
 },warning:function(msg){
-var _31,_32;
-_31=this;
-_32=$("#compile_tools").is(":visible");
+var _4d,_4e;
+_4d=this;
+_4e=$("#compile_tools").is(":visible");
 this.warning=msg;
 this.fix_z_indexes(true);
 this.render({to:"warning",action:"warning"});
-$("#warning:hidden, #darken:hidden").fadeIn();
+$("#warning:hidden, #warning_overlay:hidden").fadeIn();
 $(window).click(function(){
-$("#warning, #darken").fadeOut(function(){
-if(!_32){
-_31.fix_z_indexes(false);
+$("#warning, #warning_overlay").fadeOut(function(){
+if(!_4e){
+_4d.fix_z_indexes(false);
 }
 });
 $(this).unbind("click");
 });
+},report_error:function(msg){
+$.post("/php/report_error.php",{error:msg});
+},update_progressbar:function(val){
+var _51;
+_51=this;
+_51.Class.progress_val=val===undefined?_51.Class.progress_val+3:_51.Class.progress_val+val;
+$("#progressbar").progressbar("value",_51.Class.progress_val);
+if(window.console){
+}
+},block_background:function(_52){
+var _53;
+_53=this;
+if(window.console){
+console.info("In Compilation_controller.block_background with action: "+_52);
+}
+if(_52){
+_53.fix_z_indexes(true);
+$("#background_overlay").show();
+}else{
+_53.fix_z_indexes(false);
+$("#background_overlay").fadeOut();
+}
+},connection_error:function(_54){
+var _55;
+_55=this;
+if(window.console){
+console.log("Ajax error: "+_54.ajax.text+" : "+_54.ajax.error);
+}
+window.alert(_54.msg);
 },"compilation.built subscribe":function(){
+var _56;
+_56=this;
+_56.update_progressbar(20);
 this.clean_up();
 this._loading("end");
-},"quote.found_reference subscribe":function(_33){
+},"quote.found_reference subscribe":function(_57){
 if($("#compile_form #ref_lookup").is(":visible")){
 $("#compile_form #ref_lookup").each(function(){
 $(this).hide();
@@ -14173,38 +14347,88 @@ $("#ref_lookup_input > #link",this).val("");
 if($("#compile_tools").is(":visible")){
 this.hide_compile_tools();
 }
-},"compilation.quote_inserted subscribe":function(_34){
+},"compilation.quote_inserted subscribe":function(_58){
 this.show_compile_tools();
-},"section.created subscribe":function(_35){
-Compilation.add_to_db(_35,_35.id,_35.parent,"s");
-this._render_section(_35);
+},"section.created subscribe":function(_59){
+Compilation.add_to_db(_59,_59.id,_59.parent,"s");
+this._render_section(_59);
 },"hide_compile_tools subscribe":function(){
 this.hide_compile_tools();
-},"info subscribe":function(_36){
+},"info subscribe":function(_5a){
 if(window.console){
-console.info("Info: "+_36.msg);
+console.info("Info: "+_5a.msg);
 }
-this.info(_36.msg);
-},"warning subscribe":function(_37){
+this.info(_5a.msg);
+},"warning subscribe":function(_5b){
 if(window.console){
-console.log("Warning: "+_37.msg);
+console.log("Warning: "+_5b.msg);
 }
-this.warning(_37.msg);
-},"quote.warning subscribe":function(_38){
+this.warning(_5b.msg);
+},"quote.warning subscribe":function(_5c){
 if(window.console){
-console.log("Warning: "+_38.msg);
+console.log("Warning: "+_5c.msg);
 }
-this.warning(_38.msg);
-},"facts.warning subscribe":function(_39){
+this.warning(_5c.msg);
+},"facts.warning subscribe":function(_5d){
 if(window.console){
-console.log("Warning: "+_39.msg);
+console.log("Warning: "+_5d.msg);
 }
-this.warning(_39.msg);
-},"compilation.warning subscribe":function(_3a){
+this.warning(_5d.msg);
+},"compilation.warning subscribe":function(_5e){
 if(window.console){
-console.log("Warning: "+_3a.msg);
+console.log("Warning: "+_5e.msg);
 }
-this.warning(_3a.msg);
+this.warning(_5e.msg);
+},"section.warning subscribe":function(_5f){
+if(window.console){
+console.log("Warning: "+_5f.msg);
+}
+this.warning(_5f.msg);
+},"report_error subscribe":function(_60){
+if(window.console){
+console.log("Reporting error to developers/maintainers: "+_60.msg);
+}
+this.report_error(_60.msg);
+},"connection_error subscribe":function(_61){
+this.connection_error(_61);
+},"quote.connection_error subscribe":function(_62){
+this.connection_error(_62);
+},"progressbar subscribe":function(_63){
+var _64;
+_64=this;
+_64.block_background(true);
+if(window.console){
+console.info("Init progressbar");
+}
+if($("#compile_tools").is(":visible")){
+_64.hide_compile_tools();
+}
+$("#progressbar").progressbar({value:0});
+$("#progressbar > div").text(_63.text);
+},"progressbar_hide subscribe":function(_65){
+if(!$("#progressbar").hasClass("ui-progressbar")){
+return;
+}
+var _66;
+_66=this;
+if(window.console){
+console.info("Closing progressbar");
+}
+$("#progressbar").progressbar("destroy");
+_66.block_background(false);
+_66.Class.progress_val=0;
+},"progressbar_update subscribe":function(_67){
+if(window.console){
+console.count("Progressbar_update subscribe");
+}
+this.update_progressbar(_67.val);
+},"compilation.progressbar_update subscribe":function(_68){
+if(window.console){
+console.count("Progressbar_update subscribe");
+}
+this.update_progressbar(_68.val);
+},"quote.check_internet_connection subscribe":function(_69){
+this.check_internet_connection(_69);
 }});
 ;
 include.set_path('controllers');
@@ -14579,7 +14803,7 @@ $(this).unbind("keydown");
 },_append_quote:function(_56){
 var _57;
 this.quote=_56;
-_57=this.quote.parent?this.quote.parent.replace(/[.,\(\)]/g,""):"compilation";
+_57=this.quote.parent?this.quote.parent.replace(/[.,()]/g,""):"compilation";
 if(window.console){
 console.info("QuotesController#_append_quote: appending "+_56.id+" to "+_57);
 }
@@ -14589,6 +14813,7 @@ this.render({bottom:_57,action:"new_quote"});
 if(window.console){
 console.error("QuotesController#_append_quote: error rendering "+_56.id+" to "+_57);
 }
+this.publish("report_error",{msg:"Error rendering "+_56.id+" to "+_57});
 return;
 }
 },hi_terms:function(_58){
@@ -14688,7 +14913,7 @@ $(".verse").dialog({dialogClass:"verse_dialog",buttons:{"Yes":_76,"No":_77}});
 },"rendered subscribe":function(_78){
 var _79;
 _79=this;
-if($(_78).hasClass("deleted_quote")){
+if($(_78).hasClass("deleted_quote")||$(_78).hasClass("edit_quote")){
 return;
 }
 _7a(_78);
@@ -14865,31 +15090,34 @@ if(window.console){
 console.info("CompileformController#ref_lookup_table_open was clicked");
 }
 _6.event.kill();
+if($("#ref_lookup_table").is(":empty")){
+this.render({to:"ref_lookup_table",action:"ref_lookup_table"});
+}
 $("#ref_lookup_table").dialog("open");
 },process_new_quote:function(){
-var _7,_8,rl;
+var _7,_8,rl,_a;
 _7=this;
 _8=$("#compile_tools > #compile_form > textarea")[0];
 rl=$("#ref_lookup");
-attr={};
+_a={};
 if(rl.not(":hidden")){
 if(window.console){
 console.log("CompileformController In process_new_quote!");
 }
-attr["ref"]=$("input#link",rl).val();
+_a["ref"]=$("input#link",rl).val();
 $("#clear_form").click();
 }
-attr["text"]=_8.value;
-if(this.action_name!=="#submit_quote click"&&!attr["ref"]&&!this.check_text(_8.value)){
+_a["text"]=_8.value;
+if(this.action_name!=="#submit_quote click"&&!_a["ref"]&&!this.check_text(_8.value)){
 return;
 }
-this.submit_quote(attr);
-},check_text:function(_a){
-_a=$.trim(_a);
-if(_a===""||_a===this.Class.last_quote_value||!this.check_uninserted_quotes()){
+this.submit_quote(_a);
+},check_text:function(_b){
+_b=$.trim(_b);
+if(_b===""||_b===this.Class.last_quote_value||!this.check_uninserted_quotes()){
 return false;
 }
-this.Class.last_quote_value=_a;
+this.Class.last_quote_value=_b;
 return true;
 },check_uninserted_quotes:function(){
 if($("div.building_quote").not(".deleted_quote").length!==0){
@@ -14899,18 +15127,18 @@ $.scrollTo(".building_quote","slow",{easing:"easeOutExpo",offset:-50});
 return false;
 }
 return true;
-},submit_quote:function(_b){
-var re,_d,_e,_f,_10,_11;
+},submit_quote:function(_c){
+var re,_e,_f,ref,_11,_12;
 re=new RegExp(">>> Ref. VedaBase => (.+)");
-_d=_b["text"];
-if(re.test(_d)){
-_11={};
-_10=$.trim(_d.replace(re,""));
-this.Class.temp_quote=_10;
-_11["ref"]=_b["ref"]?_b["ref"]:$.trim(re.exec(_d)[1]);
-_11["ref"]=_11["ref"].replace(/\s+/g," ");
-_b["ref"]?_11["type"]="title":"";
-Quote.find_reference(_11);
+_e=_c["text"];
+if(re.test(_e)){
+_12={};
+_11=$.trim(_e.replace(re,""));
+this.Class.temp_quote=_11;
+_12["ref"]=_c["ref"]?_c["ref"]:$.trim(re.exec(_e)[1]);
+_12["ref"]=_12["ref"].replace(/\s+/g," ");
+_c["ref"]?_12["type"]="title":"";
+Quote.find_reference(_12);
 }else{
 this.publish("warning",{msg:"No Vedabase Reference in pasted quote!\nPerhaps you forgot to use the \"Copy with Reference\" button in Vedabase"});
 return;
@@ -14919,18 +15147,18 @@ return;
 if($("#compile_form textarea").length){
 $("#compile_form textarea").val("");
 }
-},"quote.not_found_reference subscribe":function(_12){
+},"quote.not_found_reference subscribe":function(_13){
 if($("#compile_tools #ref_lookup").is(":hidden")){
-$("#compile_tools #ref_lookup #ref").html("Search for link for this quote and click submit.<br/>Orig ref. was: <b>"+_12.ref+"</b>");
+$("#compile_tools #ref_lookup #ref").html("Search for link for this quote and click submit.<br/>Orig ref. was: <b>"+_13.ref+"</b>");
 $("#compile_tools #ref_lookup").show();
 }
-},"quote.title_req_failed subscribe":function(_13){
-this.publish("warning",{msg:_13.msg});
-},"quote.ajax subscribe":function(_14){
-if(_14.type==="start"){
+},"quote.title_req_failed subscribe":function(_14){
+this.publish("warning",{msg:_14.msg});
+},"quote.ajax subscribe":function(_15){
+if(_15.type==="start"){
 $("#ajax").show();
 }
-if(_14.type==="end"){
+if(_15.type==="end"){
 $("#ajax").hide();
 }
 }});
