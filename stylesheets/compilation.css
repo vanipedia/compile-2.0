@@ -188,17 +188,26 @@
 #progressbar {
 	position: fixed;
 	z-index: 200;
-	width: 50%;
+	width: 30%;
 	top: 30%;
-	left: 25%;
-	height: 2.5em;
+	left: 35%;
+	background: none;
 }
 
 #progressbar > div {
-	font-weight: bold;
 	font-size: 1.5em;
 	text-align: left;
 	padding: 0px 10px;
 	white-space: nowrap;
-	color: Indigo;
+}
+
+#login_form form label {
+    width: 4em;
+    float: left;
+    text-align: right;
+    margin-right: 0.5em;
+    display: block;
+}
+#login_form form input {
+    margin-left: 4.5em;
 }
