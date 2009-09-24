@@ -284,6 +284,7 @@ CompileController = MVC.Controller.extend('compilation',
     relogin: function() {
         var that, actionURL;
         that = this;
+        $("#progressbar").progressbar('disable');
         this.user = wgUserName;
         this.render({
             to: 'login_form',
@@ -301,6 +302,7 @@ CompileController = MVC.Controller.extend('compilation',
                 //data : dataString,
                 success : function( data ) {
                     if(window.console) { console.dir(data); }
+                    $("#progressbar").progressbar('enable');
                     // if login succeded try to save again
                     that.save();
                 },
