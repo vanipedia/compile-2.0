@@ -86,6 +86,7 @@ Quote = MVC.Model.extend('quote',
             dataType: "json",
             async: async,
             data: request,
+            error: connection_error,
             success: function(resp) {
                 if(resp.result !== 'Found') {
                     result = resp.result;
@@ -121,6 +122,17 @@ Quote = MVC.Model.extend('quote',
                 }
             }
         });
+        function connection_error(xmlreq, text, error) {
+            var ajax;
+            ajax = {};
+            ajax.text = text;
+            ajax.error = error;
+            if(navigator.platform == 'MacIntel') {
+                    that.publish('check_internet_connection');
+                } else {
+                    that.publish('connection_error', { ajax: ajax, msg: 'Vaniquotes server is unreachable, please wait a minute and submit your quote again.' });
+                }
+        }
         $(document).ajaxStart(function() {
             that.publish('ajax', { type: 'start', msg: 'Quote being processed...'});
         });

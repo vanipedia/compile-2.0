@@ -532,7 +532,7 @@ QuotesController = MVC.Controller.extend('quotes',
     _append_quote: function(quote) {
         var section;
         this.quote = quote;
-        section = this.quote.parent ? this.quote.parent.replace(/[.,\(\)]/g, '') : 'compilation';
+        section = this.quote.parent ? this.quote.parent.replace(/[.,()]/g, '') : 'compilation';
         if (window.console) {
             console.info('QuotesController#_append_quote: appending ' + quote.id + ' to ' + section);
         }
@@ -545,6 +545,7 @@ QuotesController = MVC.Controller.extend('quotes',
 												if (window.console) {
                 console.error('QuotesController#_append_quote: error rendering ' + quote.id + ' to ' + section);
             }
+            this.publish('report_error', { msg: 'Error rendering ' + quote.id + ' to ' + section });
 												return;
 								}
     },
@@ -683,7 +684,7 @@ QuotesController = MVC.Controller.extend('quotes',
     "rendered subscribe": function(elem) {
         var that;
         that = this;
-        if ($(elem).hasClass('deleted_quote')) return;
+        if ($(elem).hasClass('deleted_quote') || $(elem).hasClass('edit_quote'))  { return; }
         reformat_verses(elem);
         fix_links(elem);
         fix_spacing(elem);
@@ -752,7 +753,7 @@ QuotesController = MVC.Controller.extend('quotes',
                     // "Mr. Tombe: hari hari<br".match(/^.+?<br/)[0].match(/^.+?:/)[0].match(/ /g).length
                     inline = true;
                     t = $(this).children('div.text:first').html();
-                    if (/^.+?(?:<br|\n|$)/.test(t)) a = t.match(/^.+?(?:<br|\n|$)/)[0];
+                    if (/^.+?(?:<br|\n|$)/.test(t)) { a = t.match(/^.+?(?:<br|\n|$)/)[0]; }
                     if (a && a.indexOf(':') > -1) b = a.substring(0, a.indexOf(':'));
                     if (b) c = b.split(' '); // use split because match(/\w+/) makes a strange array with unicode chars
                     if (a && b && c && c.length < 4) {

@@ -1,5 +1,6 @@
 MVC.ApplicationError = MVC.Model.JsonP.extend('application_error',
 {
+	send_in_progress: false,
     controller_name: "error",
     domain: 'https://damnit.jupiterit.com', name: 'error',
 	textarea_text: "type description here",
@@ -67,7 +68,11 @@ MVC.ApplicationError = MVC.Model.JsonP.extend('application_error',
 			params.error.content = this.generate_content(error);
 			this.kill_event(event);
             params.user_crypted_key = APPLICATION_KEY;
-			this.create(params, function(){});
+            MVC.ApplicationError.send_in_progress = true;
+        	var callback = function(){
+        		MVC.ApplicationError.send_in_progress = false;
+        	};
+			this.create(params, callback);
 		}, this);
 	},
 	create_dom: function(error){

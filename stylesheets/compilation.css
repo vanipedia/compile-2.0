@@ -58,7 +58,7 @@
  display: block;
 }
 
-#loading {
+#wait {
   position: fixed;
   width:  65%;
   height: 200px;
@@ -66,7 +66,7 @@
   text-align: center;
   z-index:201;
 }
-#loading_bak {
+#wait_bak {
   top: inherit;
   height:   inherit;
   opacity:  0.8;
@@ -74,7 +74,7 @@
   -moz-border-radius:    15px;
   -webkit-border-radius: 15px;
 }
-#loading #loading_img{
+#wait #wait_img{
   background-image: url("images/loading.gif");
   background-repeat: no-repeat;
   position:   relative;
@@ -84,7 +84,7 @@
   margin-left: auto;
   margin-right: auto;
 }
-#loading > #loading_text {
+#wait > #wait_msg {
   color:      white;
   display:    inline;
   font-family:Georgia;
@@ -156,7 +156,7 @@
   border: 2px dotted gray;
   z-index: 200;
 }
-#darken {
+#background_overlay, #warning_overlay {
 	position:fixed;
 	top:0;
 	left:0;
@@ -165,7 +165,12 @@
 	display:none;
 	z-index:199;
 	background:black;
-	opacity:0.7;
+}
+#background_overlay {
+	opacity: 0.8;
+}
+#warning_overlay {
+	opacity: 0.7;
 }
 #transparent_background {
   position:fixed;
@@ -174,4 +179,26 @@
   left:0;
   top:0;
   z-index:99;
+}
+
+#ca-talk { display:none!important; }
+#ca-protect { display:none!important; }
+#ca-watch { display:none!important; }
+
+#progressbar {
+	position: fixed;
+	z-index: 200;
+	width: 50%;
+	top: 30%;
+	left: 25%;
+	height: 2.5em;
+}
+
+#progressbar > div {
+	font-weight: bold;
+	font-size: 1.5em;
+	text-align: left;
+	padding: 0px 10px;
+	white-space: nowrap;
+	color: Indigo;
 }

@@ -8,7 +8,11 @@
 CompileController = MVC.Controller.extend('compilation',
 /* @Static */
 {
-		loading: false,
+    progress_val: 0,
+
+    loading: false,
+
+    saving: false,
 
     compile_tools_menu_hover_options: {
         sensitivity: 2, // number = sensitivity threshold (must be 1 or higher)
@@ -49,9 +53,12 @@ CompileController = MVC.Controller.extend('compilation',
 	 * onLoad handler to retrieve the data from the current Vaniquotes page
 	 * It will only retrieve if the page is in edit mode (wiki wgAction == 'edit' global)
 	 */
+
     load: function(params) {
         this._loading('init');
-        var data;
+        var that, data;
+        that = this;
+        that.update_progressbar(10);
         data = $('#wpTextbox1').val();
         // Check this page for existing compilation tags
         if(data !== '' && data.indexOf('<div id="compilation">') === -1) {
@@ -59,6 +66,7 @@ CompileController = MVC.Controller.extend('compilation',
             this._loading('end_gracefully');
             return;
         }
+        that.update_progressbar(10);
         if(data === '') {
             this.new_compilation_message();
             data = '<div id="compilation"></div>';
@@ -70,9 +78,12 @@ CompileController = MVC.Controller.extend('compilation',
         });
 
         // Start building the compilation
+        that.update_progressbar(10);
         Facts.build(data);
+        that.update_progressbar(10);
         Compilation.build(data);
     },
+
     "#compile_tools_hide click": function(params) {
         this.hide_compile_tools();
     },
@@ -98,17 +109,14 @@ CompileController = MVC.Controller.extend('compilation',
     // Loading message while building compilation
     _loading: function(now) {
         var that = this;
-				this.Class.loading = true;
+        this.Class.loading = true;
         if (now === 'init') {
+            $('<div id="background_overlay"></div>').appendTo('body');
+            $('<div id="progressbar"></div><').appendTo('body')
+            that.publish('progressbar', { text: 'Loading Compilation...'});
             $('#editform, #toolbar').hide();
-						$('#mw-edit-longpagewarning').hide();
+            $('#mw-edit-longpagewarning').hide();
             this.loading = {};
-            this.loading.message = 'Loading compiling data...';
-            this.render({
-                top: 'bodyContent',
-                action: 'loading'
-            });
-
             $('#p-cactions').children().each(function() {
                 $('li#ca-edit', this).removeClass('selected');
                 $('li#ca-compile', this).addClass('selected');
@@ -117,7 +125,8 @@ CompileController = MVC.Controller.extend('compilation',
 
         if (now === 'end_gracefully') {
             if(window.console) { console.info('In CompilationController._loading ending gracefully...'); }
-            $('#loading').fadeOut('slow');
+            that.update_progressbar(20);
+            this.publish('progressbar_hide');
             $('#editform, #toolbar').show();
         }
 
@@ -125,16 +134,14 @@ CompileController = MVC.Controller.extend('compilation',
             $(document).ready(function() {
                 // Attach jQuery bindings to elements
                 that.attach_events();
-                // fix logo z-index for overlays in compile tools
-                $('#p-logo, #p-cactions').css('z-index', '1');
-                $('#loading').fadeOut('slow', function() {
-                    $('#compilation').fadeIn('slow').removeClass('hidden');
-                });
+                that.publish('progressbar_hide');
+                $('#compilation').fadeIn('slow').removeClass('hidden');
+                that.show_compile_tools();
             });
-						setTimeout(function() {
-								that.publish('warning', { msg: "Your session will time out soon, please save your work soon to avoid a wiki session timeout." });
-						}, 900000);
-						this.Class.loading = false;
+            //setTimeout(function() {
+              //that.publish('warning', { msg: "Your session will time out soon, please save your work soon to avoid a wiki session timeout." });
+            //}, 900000);
+            this.Class.loading = false;
         }
         return;
     },
@@ -153,7 +160,13 @@ CompileController = MVC.Controller.extend('compilation',
         }).bind('mouseleave', function() {
             $(this).removeClass('ui-state-hover');
         });
-				return;
+
+        // Safeguard for accidental navigation away from compilation
+        window.onbeforeunload = function() {
+            if(!that.Class.saving) {
+                return "";
+            }
+        }
     },
     // Function to render sections
     _render_section: function(section) {
@@ -268,13 +281,147 @@ CompileController = MVC.Controller.extend('compilation',
         $('#p-logo, #p-cactions').css('z-index', fix ? 1 : '');
     },
 
+    relogin: function() {
+        var that, actionURL;
+        that = this;
+        this.user = wgUserName;
+        this.render({
+            to: 'login_form',
+            action: 'login_form'
+        });
+        if(window.console) { console.info(wgUserName+' needs to relogin'); }
+        login();
+
+        function submit_login(credentials) {
+            actionURL = wgServer + wgScriptPath + '/api.php?action=login&format=json&'+credentials;
+            $.ajax({
+                type : 'POST',
+                url : actionURL,
+                dataType : 'json',
+                //data : dataString,
+                success : function( data ) {
+                    if(window.console) { console.dir(data); }
+                    // if login succeded try to save again
+                    that.save();
+                },
+                error : function( XMLHttpRequest, textStatus, errorThrown ){
+                    //TODO : add error handling here
+                    if(window.console) {
+                        console.log( 'Error in AjaxLogin.js!' );
+                    }
+                    return false;
+                }
+            });
+        }
+
+        function submit() {
+            $('#login_form').dialog('close');
+            submit_login($('#login_form form').serialize());
+        }
+
+        function login() {
+            if(!$('#login_form').hasClass('ui-dialog-content')) {
+                $('#login_form').dialog({
+                    modal: true,
+                    title: 'Log-in to save',
+                    modal: true,
+                    open: function(event, ui) { $('#login_form #lgpassword').focus() },
+                    buttons: {
+                        "Login": submit
+                    }
+                }).keydown(function(e) {
+                    if (e.keyCode === 13) {
+                        submit();
+                    }
+                });
+            } else {
+                $('#login_form').dialog('open');
+            }
+        }
+    },
+
     /**
    * Save compilation data will dump all the quotes, sections and facts compiled to the original wiki editbox.
    */
     save: function() {
-        var facts, sections, subs, quotes, new_compilation, final_html;
+        var that;
+        that = this;
+        that.publish('progressbar', { text: 'Saving...'}); // init progresbar
         // Checks before saving
-								// check if a new quote has not been inserted yet
+        that.check_user_loggedin();
+    },
+    check_internet_connection: function() {
+        var that, connected, xmlReq;
+        that = this;
+        connected = false;
+        xmlReq = new XMLHttpRequest();
+        xmlReq.onreadystatechange = state_change;
+        //xmlReq.onerror = ajax_error;
+        xmlReq.open("HEAD", "http://www.google.com", true);
+        xmlReq.send(null);
+        setTimeout(function() {
+            if(xmlReq.readyState == 4 && !connected) { ajax_error(); }
+        }, 3000);
+
+        function state_change() {
+            if(window.console) {
+                console.log(xmlReq.readyState);
+                //console.dir(xmlReq);
+            }
+            if(xmlReq.readyState == 4) {
+                if (xmlReq.statusText && xmlReq.statusText != "") {
+                    if(window.console) {
+                        console.log('Connected');
+                        //console.dir(xmlReq);
+                    }
+                    connected = true;
+                    that.publish('progressbar_hide');
+                    that.publish('connection_error', { ajax: xmlReq, msg: 'Vaniquotes server is unreachable, please wait a minute and try again.' });
+                }
+            }
+        }
+        function ajax_error() {
+            that.publish('progressbar_hide');
+            that.publish('connection_error', { ajax: xmlReq, msg: 'You appear to be offline! Check your internet connection and try again.' });
+        }
+    },
+    check_user_loggedin: function() {
+        var that, resp;
+        that = this;
+        resp = false;
+        // check if user is loggedIn before actual _do_save()
+        sajax_do_call("isUserLoggedIn", [], isUserLoggedIn_callback);
+        setTimeout(function() {
+            if(!resp) {
+                if(navigator.platform == 'MacIntel') {
+                    that.check_internet_connection();
+                } else {
+                    that.publish('progressbar_hide');
+                    that.publish('connection_error', { ajax: {} , msg: 'Vaniquotes server is unreachable, please wait a minute and try to save again.' });
+                }
+            }
+        }, 3000);
+
+        function isUserLoggedIn_callback(request) {
+            resp = true;
+            if(request.status != 200) {
+                that.publish('connection_error', { ajax: request, msg: 'Vaniquotes server is unreachable, please wait a minute and try to save again.' });
+            } else {
+                if(window.console) { console.log("Success: "+request.responseText); }
+            }
+
+            if(request.responseText === 'no') {
+                that.relogin();
+            } else {
+                that._check_before_save();
+            }
+        }
+    },
+    _check_before_save: function() {
+        var that;
+        that = this;
+        that.update_progressbar();
+        // check if a new quote has not been inserted yet
         if($('.building_quote').not('.deleted_quote').length) {
             this.publish('warning', {
                 msg: 'You must insert all quotes before saving!'
@@ -290,14 +437,23 @@ CompileController = MVC.Controller.extend('compilation',
             return;
 								}
         if(QuotesController.currently_editing) $(".edit_quote #Cancel_quote").click();
-
+        that._do_save();
+    },
+    _do_save: function() {
+        var that, facts, sections, subs, quotes, new_compilation, final_html, upb, progress;
+        that = this;
+        this.Class.saving = true;
+        upb = that.update_progressbar;
         new_compilation = $('<div id="compilation"></div>');
-
+        that.update_progressbar();
+        // Process facts
         facts   = Facts.save();
+         that.update_progressbar();
         $('<div id="facts">'+facts+'</div>').appendTo(new_compilation);
-
+        that.update_progressbar();
         // Process quotes
         quotes = $('.quote').not('.deleted_quote').clone();
+        that.update_progressbar();
         quotes.each(function() {
             var q, p, l, lt, inline;
             q = $(this);
@@ -319,6 +475,7 @@ CompileController = MVC.Controller.extend('compilation',
             if(/inline/.test(q.attr('style'))) inline = true;
             q.removeAttr('style');
             if(inline) q.css('display', 'inline');
+             that.update_progressbar(1);
         });
         quotes.appendTo(new_compilation);
 
@@ -339,19 +496,24 @@ CompileController = MVC.Controller.extend('compilation',
             $('<'+h+'>'+text+'</'+h+'></div>').appendTo(s);
             // Insert section before the first div with attr[parent] === this.id
             $('div[parent="'+id+'"]:first', new_compilation).before(s);
+             that.update_progressbar();
         }
 
         // Append all to new_compilation
         final_html = new_compilation.wrap('<div></div>').parent('div').html().replace(/^\s+/mg, '').replace(/<\/span>\n/g, '</span>').replace(/(<div[^>]+?class="(?:quote|section|sub_section)")/g, '\n$1');
+         that.update_progressbar();
         $('#wpTextbox1').val(final_html);
+         that.update_progressbar();
         if(window.console) {
             console.log(facts);
             console.log(quotes);
             console.log(new_compilation);
         }
+         that.update_progressbar();
         // Save!
+        that.update_progressbar();
         $('#wpSave').click();
-    }, // End of save
+    }, // End of _do_save
 
     new_compilation_message: function() {
         $('.mw-newarticletext').replaceWith('<div id="new_compilation_message"></div>');
@@ -367,9 +529,9 @@ CompileController = MVC.Controller.extend('compilation',
             to: 'info',
             action: 'info'
         });
-        $('#info:hidden, #darken:hidden').fadeIn();
+        $('#info:hidden, #background_overlay:hidden').fadeIn();
         $(window).click(function() {
-            $('#info, #darken').fadeOut();
+            $('#info, #background_overlay').fadeOut();
             $(this).unbind('click');
         });
     },
@@ -389,14 +551,52 @@ CompileController = MVC.Controller.extend('compilation',
             to: 'warning',
             action: 'warning'
         });
-        $('#warning:hidden, #darken:hidden').fadeIn();
+        $('#warning:hidden, #warning_overlay:hidden').fadeIn()
         $(window).click(function() {
-            $('#warning, #darken').fadeOut(function() { if(!compile_tools) { that.fix_z_indexes(false); } });
+            $('#warning, #warning_overlay').fadeOut(function() { if(!compile_tools) { that.fix_z_indexes(false); } });
             $(this).unbind('click');
         });
     },
+    report_error: function(msg) {
+        $.post('/php/report_error.php', { error: msg });
+    },
+    update_progressbar: function(val) {
+        var that;
+        that = this;
+        that.Class.progress_val = val === undefined ? that.Class.progress_val + 3 : that.Class.progress_val + val;
+        $('#progressbar').progressbar('value', that.Class.progress_val);
+        if(window.console) {
+            //console.count('progressbar');
+            //console.log('Updating progressbar to '+that.Class.progress_val)
+            //if(that.Class.progress_val > 100) { console.trace(); }
+        }
+    },
+    block_background: function(action) {
+        var that;
+        that = this;
+        if(window.console) {
+            console.info('In Compilation_controller.block_background with action: '+action);
+        }
+        if(action) {
+            that.fix_z_indexes(true);
+            $('#background_overlay').show();
+        } else {
+            that.fix_z_indexes(false);
+            $('#background_overlay').fadeOut();
+        }
+    },
+    connection_error: function(params) {
+        var that;
+        that = this;
+        if(window.console) { console.log('Ajax error: '+params.ajax.text+' : '+params.ajax.error); }
+        //that.publish('warning', { msg: "Connection error: Server is not responding. Check your internet connection or wait a minute and try again." });
+        window.alert(params.msg);
+    },
     /***** Subscriptions ******/
     "compilation.built subscribe": function() {
+        var that;
+        that = this;
+        that.update_progressbar(20);
         this.clean_up(); // Clean sections for extra sections and unordered
         this._loading('end');
 
@@ -444,5 +644,48 @@ CompileController = MVC.Controller.extend('compilation',
     "compilation.warning subscribe": function(params) {
         if(window.console) { console.log('Warning: '+params.msg); }
         this.warning(params.msg);
+    },
+    "section.warning subscribe": function(params) {
+        if(window.console) { console.log('Warning: '+params.msg); }
+        this.warning(params.msg);
+    },
+    "report_error subscribe": function(params) {
+        if(window.console) { console.log('Reporting error to developers/maintainers: '+params.msg); }
+        this.report_error(params.msg);
+    },
+    "connection_error subscribe": function(params) {
+        this.connection_error(params);
+    },
+    "quote.connection_error subscribe": function(params) {
+        this.connection_error(params);
+    },
+    "progressbar subscribe": function(params) {
+        var that;
+        that = this;
+        that.block_background(true);
+        if(window.console) { console.info('Init progressbar'); }
+        if($("#compile_tools").is(':visible')) { that.hide_compile_tools(); }
+        $('#progressbar').progressbar({ value: 0 });
+        $('#progressbar > div').text(params.text);
+    },
+    "progressbar_hide subscribe": function(params) {
+        if(!$('#progressbar').hasClass('ui-progressbar')) { return; }
+        var that;
+        that = this;
+        if(window.console) { console.info('Closing progressbar'); }
+        $('#progressbar').progressbar('destroy');
+        that.block_background(false);
+        that.Class.progress_val = 0;
+    },
+    "progressbar_update subscribe": function(params) {
+        if(window.console) { console.count('Progressbar_update subscribe'); }
+        this.update_progressbar(params.val);
+    },
+    "compilation.progressbar_update subscribe": function(params) {
+        if(window.console) { console.count('Progressbar_update subscribe'); }
+        this.update_progressbar(params.val);
+    },
+    "quote.check_internet_connection subscribe": function(params) {
+        this.check_internet_connection(params);
     }
 }); // End of CompileController

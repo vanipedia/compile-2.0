@@ -129,8 +129,10 @@ Section = MVC.Model.extend('section',
         } else {
             if (window.console) {
                 console.error('Section.init: Error building section for ref ' + ref);
-																return;
             }
+            this.publish('warning', { msg: 'Error creating Table of Contents for this quote<br/>Notify your vanitutor or coordinator and make note of this in the compilers notes and continue compiling.'});
+            this.publish('report_error', { msg: 'Error creating section/TOC ' + ref})
+            return;
         }
     },
     _set_attr_auto: function(ref) {

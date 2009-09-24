@@ -23,6 +23,7 @@ Compilation = MVC.Model.extend('compilation',
                 if(!$(this).attr('link').length) { return; }
                 // Create new quote
                 that.new_quote(this);
+                that.publish('progressbar_update', { val: 1 });
             });
         }
         if(window.console) { console.dir(this.db); }
@@ -44,6 +45,7 @@ Compilation = MVC.Model.extend('compilation',
             $('.section, .sub_section', data).each(function() {
                 //if(window.console) { console.log('Creating section with element: '+this); }
                 that.create_new_section(this);
+                that.publish('progressbar_update', { val: 1 });
             });
         }
     },
@@ -249,7 +251,8 @@ Compilation = MVC.Model.extend('compilation',
         if(params.action === 'set') {
             attr.heading = params.heading;
             attr.heading = attr.heading.replace(/^[a-z]/, camel);
-            attr.heading = attr.heading.replace(/[^.?!]$/, fullstop);
+            attr.heading = attr.heading.replace(/,$/, '.');
+            attr.heading = attr.heading.replace(/[^.?!"]$/, fullstop);
         }
         if(params.action === 'new') { attr.heading = ' '; }
 

@@ -77,26 +77,27 @@ Facts = MVC.Model.extend('facts',
     }
     // Loop through array to build temp facts obj
     $.each(f_array, function(i, val) {
-      var name, value;
-      val = clean(val);
-      if(val.indexOf('toc') === 0) {
-        facts['toc'] = $.trim(val.substr(val.indexOf(' ') + 1));
-        return true;
-      }
-      name = $.trim(val.substring(0, val.indexOf('|')));
-      value = $.trim(val.substr(val.indexOf('|') + 1));
-      if(window.console) { console.log('Setting '+name+' to '+value); }
-      facts[name] = value;
+        var name, value;
+        val = clean(val);
+        if(val.indexOf('toc') === 0) {
+            facts['toc'] = $.trim(val.substr(val.indexOf(' ') + 1));
+            return true;
+        }
+        name = $.trim(val.substring(0, val.indexOf('|')));
+        value = $.trim(val.substr(val.indexOf('|') + 1));
+        if(window.console) { console.log('Setting '+name+' to '+value); }
+        facts[name] = value;
+        that.publish('progressbar_update', { val: 1 });
     });
 
     // set the Facts.db to with the values found and saved in the facts obj
     $.each(that.db, function(name, val) {
-      if(window.console) { console.log(name+' is '+typeof facts[name]+' in facts'); }
-      if(typeof facts[name] !== 'undefined') {
-        process_fact(name, facts[name]);
-      } else {
-        if(window.console) { console.log('In Facts.build_with: '+name+' was not found in extracted facts db'); }
-      }
+        if(window.console) { console.log(name+' is '+typeof facts[name]+' in facts'); }
+        if(typeof facts[name] !== 'undefined') {
+          process_fact(name, facts[name]);
+        } else {
+          if(window.console) { console.log('In Facts.build_with: '+name+' was not found in extracted facts db'); }
+        }
     });
 
     // process (reformat) fact according to its own requirements (e.g.: string, array or obj)
@@ -126,8 +127,7 @@ Facts = MVC.Model.extend('facts',
         });
         value = totals;
       }
-
-      that.set(name, value);
+        that.set(name, value);
     }
 
     function clean(str) {
@@ -152,10 +152,10 @@ Facts = MVC.Model.extend('facts',
     /**** Categories ****/
     categories = data.match(re_categories);     // Extract the Categories
     if(categories !== null) {
-      categories = $.map(categories, function(val) { // Clean the brackets
-        return val.replace(re_categories, '$1');
-      });
-      this.set('categories', categories);
+        categories = $.map(categories, function(val) { // Clean the brackets
+          return val.replace(re_categories, '$1');
+        });
+        this.set('categories', categories);
     }
     /**** User ****/
     this.add_user();
@@ -352,13 +352,13 @@ Facts = MVC.Model.extend('facts',
 				all = false;
     wiki = '';
     $.each(that.db, function(f, values) {
-      if(f === 'books')     return true;
-      if(f === 'terms')     wiki += wiki_format(f, format_terms(values));
-      if(f === 'notes' || f === 'goal' || f === 'first' || f === 'last' || f === 'total') wiki += wiki_format(f, values);
-      if(f === 'compiler' || f === 'complete')  wiki += wiki_format(f, values.join('|'));
-      if(f === 'totals_by_section') wiki += wiki_format(f, format_tbs(values));
-      if(f === 'toc') wiki += '\n{{toc right}}';
-      if(f === 'categories') wiki += format_cats(values);
+        if(f === 'books')     return true;
+        if(f === 'terms')     wiki += wiki_format(f, format_terms(values));
+        if(f === 'notes' || f === 'goal' || f === 'first' || f === 'last' || f === 'total') wiki += wiki_format(f, values);
+        if(f === 'compiler' || f === 'complete')  wiki += wiki_format(f, values.join('|'));
+        if(f === 'totals_by_section') wiki += wiki_format(f, format_tbs(values));
+        if(f === 'toc') wiki += '\n{{toc right}}';
+        if(f === 'categories') wiki += format_cats(values);
     });
 
     return wiki;
