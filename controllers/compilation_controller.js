@@ -423,8 +423,12 @@ CompileController = MVC.Controller.extend('compilation',
         var that;
         that = this;
         that.update_progressbar();
+        function cancel_save() {
+            that.publish('progressbar_hide');
+        }
         // check if a new quote has not been inserted yet
         if($('.building_quote').not('.deleted_quote').length) {
+            cancel_save();
             this.publish('warning', {
                 msg: 'You must insert all quotes before saving!'
             });
@@ -432,6 +436,7 @@ CompileController = MVC.Controller.extend('compilation',
             return;
         }
 								if($('.bad_link').length) {
+            cancel_save();
 												 this.publish('warning', {
                 msg: 'You must fix bad links in page before saving!'
             });

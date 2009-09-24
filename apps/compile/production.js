@@ -14089,6 +14089,7 @@ $("#p-logo, #p-cactions").css("z-index",fix?1:"");
 },relogin:function(){
 var _1f,_20;
 _1f=this;
+$("#progressbar").progressbar("disable");
 this.user=wgUserName;
 this.render({to:"login_form",action:"login_form"});
 if(window.console){
@@ -14101,6 +14102,7 @@ $.ajax({type:"POST",url:_20,dataType:"json",success:function(_24){
 if(window.console){
 console.dir(_24);
 }
+$("#progressbar").progressbar("enable");
 _1f.save();
 },error:function(_25,_26,_27){
 if(window.console){
@@ -14197,12 +14199,17 @@ _32._check_before_save();
 var _36;
 _36=this;
 _36.update_progressbar();
+function _37(){
+_36.publish("progressbar_hide");
+};
 if($(".building_quote").not(".deleted_quote").length){
+_37();
 this.publish("warning",{msg:"You must insert all quotes before saving!"});
 $.scrollTo(".building_quote","fast");
 return;
 }
 if($(".bad_link").length){
+_37();
 this.publish("warning",{msg:"You must fix bad links in page before saving!"});
 $.scrollTo(".bad_link","fast",{offset:-50});
 return;
@@ -14212,20 +14219,20 @@ $(".edit_quote #Cancel_quote").click();
 }
 _36._do_save();
 },_do_save:function(){
-var _37,_38,_39,_3a,_3b,_3c,_3d,upb,_3f;
-_37=this;
+var _38,_39,_3a,_3b,_3c,_3d,_3e,upb,_40;
+_38=this;
 this.Class.saving=true;
-upb=_37.update_progressbar;
-_3c=$("<div id=\"compilation\"></div>");
-_37.update_progressbar();
-_38=Facts.save();
-_37.update_progressbar();
-$("<div id=\"facts\">"+_38+"</div>").appendTo(_3c);
-_37.update_progressbar();
-_3b=$(".quote").not(".deleted_quote").clone();
-_37.update_progressbar();
-_3b.each(function(){
-var q,p,l,lt,_44;
+upb=_38.update_progressbar;
+_3d=$("<div id=\"compilation\"></div>");
+_38.update_progressbar();
+_39=Facts.save();
+_38.update_progressbar();
+$("<div id=\"facts\">"+_39+"</div>").appendTo(_3d);
+_38.update_progressbar();
+_3c=$(".quote").not(".deleted_quote").clone();
+_38.update_progressbar();
+_3c.each(function(){
+var q,p,l,lt,_45;
 q=$(this);
 p=q.attr("parent");
 l=q.attr("link").replace(/_/g," ");
@@ -14243,42 +14250,42 @@ $(this).replaceWith($(this).text());
 });
 q.removeClass("ui-corner-all q_new q_updated");
 if(/inline/.test(q.attr("style"))){
-_44=true;
+_45=true;
 }
 q.removeAttr("style");
-if(_44){
+if(_45){
 q.css("display","inline");
 }
-_37.update_progressbar(1);
+_38.update_progressbar(1);
 });
-_3b.appendTo(_3c);
-_39=$(".section").clone();
-_3a=$(".sub_section").clone();
-_3a.each(_45);
-_39.each(_45);
-function _45(){
-var s,l,h,id,_4a;
+_3c.appendTo(_3d);
+_3a=$(".section").clone();
+_3b=$(".sub_section").clone();
+_3b.each(_46);
+_3a.each(_46);
+function _46(){
+var s,l,h,id,_4b;
 s=$(this);
 l=s.hasClass("section")?2:3;
 h="h"+l;
-_4a=s.attr("text");
-id=_4a.replace(/ /g,"_");
+_4b=s.attr("text");
+id=_4b.replace(/ /g,"_");
 s.empty();
-$("<"+h+">"+_4a+"</"+h+"></div>").appendTo(s);
-$("div[parent=\""+id+"\"]:first",_3c).before(s);
-_37.update_progressbar();
+$("<"+h+">"+_4b+"</"+h+"></div>").appendTo(s);
+$("div[parent=\""+id+"\"]:first",_3d).before(s);
+_38.update_progressbar();
 };
-_3d=_3c.wrap("<div></div>").parent("div").html().replace(/^\s+/mg,"").replace(/<\/span>\n/g,"</span>").replace(/(<div[^>]+?class="(?:quote|section|sub_section)")/g,"\n$1");
-_37.update_progressbar();
-$("#wpTextbox1").val(_3d);
-_37.update_progressbar();
+_3e=_3d.wrap("<div></div>").parent("div").html().replace(/^\s+/mg,"").replace(/<\/span>\n/g,"</span>").replace(/(<div[^>]+?class="(?:quote|section|sub_section)")/g,"\n$1");
+_38.update_progressbar();
+$("#wpTextbox1").val(_3e);
+_38.update_progressbar();
 if(window.console){
-console.log(_38);
-console.log(_3b);
+console.log(_39);
 console.log(_3c);
+console.log(_3d);
 }
-_37.update_progressbar();
-_37.update_progressbar();
+_38.update_progressbar();
+_38.update_progressbar();
 $("#wpSave").click();
 },new_compilation_message:function(){
 $(".mw-newarticletext").replaceWith("<div id=\"new_compilation_message\"></div>");
@@ -14293,17 +14300,17 @@ $("#info, #background_overlay").fadeOut();
 $(this).unbind("click");
 });
 },warning:function(msg){
-var _4d,_4e;
-_4d=this;
-_4e=$("#compile_tools").is(":visible");
+var _4e,_4f;
+_4e=this;
+_4f=$("#compile_tools").is(":visible");
 this.warning=msg;
 this.fix_z_indexes(true);
 this.render({to:"warning",action:"warning"});
 $("#warning:hidden, #warning_overlay:hidden").fadeIn();
 $(window).click(function(){
 $("#warning, #warning_overlay").fadeOut(function(){
-if(!_4e){
-_4d.fix_z_indexes(false);
+if(!_4f){
+_4e.fix_z_indexes(false);
 }
 });
 $(this).unbind("click");
@@ -14311,39 +14318,39 @@ $(this).unbind("click");
 },report_error:function(msg){
 $.post("/php/report_error.php",{error:msg});
 },update_progressbar:function(val){
-var _51;
-_51=this;
-_51.Class.progress_val=val===undefined?_51.Class.progress_val+3:_51.Class.progress_val+val;
-$("#progressbar").progressbar("value",_51.Class.progress_val);
+var _52;
+_52=this;
+_52.Class.progress_val=val===undefined?_52.Class.progress_val+3:_52.Class.progress_val+val;
+$("#progressbar").progressbar("value",_52.Class.progress_val);
 if(window.console){
 }
-},block_background:function(_52){
-var _53;
-_53=this;
+},block_background:function(_53){
+var _54;
+_54=this;
 if(window.console){
-console.info("In Compilation_controller.block_background with action: "+_52);
+console.info("In Compilation_controller.block_background with action: "+_53);
 }
-if(_52){
-_53.fix_z_indexes(true);
+if(_53){
+_54.fix_z_indexes(true);
 $("#background_overlay").show();
 }else{
-_53.fix_z_indexes(false);
+_54.fix_z_indexes(false);
 $("#background_overlay").fadeOut();
 }
-},connection_error:function(_54){
-var _55;
-_55=this;
-if(window.console){
-console.log("Ajax error: "+_54.ajax.text+" : "+_54.ajax.error);
-}
-window.alert(_54.msg);
-},"compilation.built subscribe":function(){
+},connection_error:function(_55){
 var _56;
 _56=this;
-_56.update_progressbar(20);
+if(window.console){
+console.log("Ajax error: "+_55.ajax.text+" : "+_55.ajax.error);
+}
+window.alert(_55.msg);
+},"compilation.built subscribe":function(){
+var _57;
+_57=this;
+_57.update_progressbar(20);
 this.clean_up();
 this._loading("end");
-},"quote.found_reference subscribe":function(_57){
+},"quote.found_reference subscribe":function(_58){
 if($("#compile_form #ref_lookup").is(":visible")){
 $("#compile_form #ref_lookup").each(function(){
 $(this).hide();
@@ -14354,88 +14361,88 @@ $("#ref_lookup_input > #link",this).val("");
 if($("#compile_tools").is(":visible")){
 this.hide_compile_tools();
 }
-},"compilation.quote_inserted subscribe":function(_58){
+},"compilation.quote_inserted subscribe":function(_59){
 this.show_compile_tools();
-},"section.created subscribe":function(_59){
-Compilation.add_to_db(_59,_59.id,_59.parent,"s");
-this._render_section(_59);
+},"section.created subscribe":function(_5a){
+Compilation.add_to_db(_5a,_5a.id,_5a.parent,"s");
+this._render_section(_5a);
 },"hide_compile_tools subscribe":function(){
 this.hide_compile_tools();
-},"info subscribe":function(_5a){
+},"info subscribe":function(_5b){
 if(window.console){
-console.info("Info: "+_5a.msg);
+console.info("Info: "+_5b.msg);
 }
-this.info(_5a.msg);
-},"warning subscribe":function(_5b){
-if(window.console){
-console.log("Warning: "+_5b.msg);
-}
-this.warning(_5b.msg);
-},"quote.warning subscribe":function(_5c){
+this.info(_5b.msg);
+},"warning subscribe":function(_5c){
 if(window.console){
 console.log("Warning: "+_5c.msg);
 }
 this.warning(_5c.msg);
-},"facts.warning subscribe":function(_5d){
+},"quote.warning subscribe":function(_5d){
 if(window.console){
 console.log("Warning: "+_5d.msg);
 }
 this.warning(_5d.msg);
-},"compilation.warning subscribe":function(_5e){
+},"facts.warning subscribe":function(_5e){
 if(window.console){
 console.log("Warning: "+_5e.msg);
 }
 this.warning(_5e.msg);
-},"section.warning subscribe":function(_5f){
+},"compilation.warning subscribe":function(_5f){
 if(window.console){
 console.log("Warning: "+_5f.msg);
 }
 this.warning(_5f.msg);
-},"report_error subscribe":function(_60){
+},"section.warning subscribe":function(_60){
 if(window.console){
-console.log("Reporting error to developers/maintainers: "+_60.msg);
+console.log("Warning: "+_60.msg);
 }
-this.report_error(_60.msg);
-},"connection_error subscribe":function(_61){
-this.connection_error(_61);
-},"quote.connection_error subscribe":function(_62){
+this.warning(_60.msg);
+},"report_error subscribe":function(_61){
+if(window.console){
+console.log("Reporting error to developers/maintainers: "+_61.msg);
+}
+this.report_error(_61.msg);
+},"connection_error subscribe":function(_62){
 this.connection_error(_62);
-},"progressbar subscribe":function(_63){
-var _64;
-_64=this;
-_64.block_background(true);
+},"quote.connection_error subscribe":function(_63){
+this.connection_error(_63);
+},"progressbar subscribe":function(_64){
+var _65;
+_65=this;
+_65.block_background(true);
 if(window.console){
 console.info("Init progressbar");
 }
 if($("#compile_tools").is(":visible")){
-_64.hide_compile_tools();
+_65.hide_compile_tools();
 }
 $("#progressbar").progressbar({value:0});
-$("#progressbar > div").text(_63.text);
-},"progressbar_hide subscribe":function(_65){
+$("#progressbar > div").text(_64.text);
+},"progressbar_hide subscribe":function(_66){
 if(!$("#progressbar").hasClass("ui-progressbar")){
 return;
 }
-var _66;
-_66=this;
+var _67;
+_67=this;
 if(window.console){
 console.info("Closing progressbar");
 }
 $("#progressbar").progressbar("destroy");
-_66.block_background(false);
-_66.Class.progress_val=0;
-},"progressbar_update subscribe":function(_67){
-if(window.console){
-console.count("Progressbar_update subscribe");
-}
-this.update_progressbar(_67.val);
-},"compilation.progressbar_update subscribe":function(_68){
+_67.block_background(false);
+_67.Class.progress_val=0;
+},"progressbar_update subscribe":function(_68){
 if(window.console){
 console.count("Progressbar_update subscribe");
 }
 this.update_progressbar(_68.val);
-},"quote.check_internet_connection subscribe":function(_69){
-this.check_internet_connection(_69);
+},"compilation.progressbar_update subscribe":function(_69){
+if(window.console){
+console.count("Progressbar_update subscribe");
+}
+this.update_progressbar(_69.val);
+},"quote.check_internet_connection subscribe":function(_6a){
+this.check_internet_connection(_6a);
 }});
 ;
 include.set_path('controllers');
