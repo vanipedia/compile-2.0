@@ -15277,7 +15277,7 @@ Facts.check_totals();
 },attach_events:function(){
 var _22;
 _22=this;
-$("#facts").accordion({autoHeight:false,active:false});
+$("#facts").accordion({autoHeight:false,collapsible:true,active:false});
 this.color_list($(".term, .categories, .compiler, #complete > div, #totals_by_section > div"));
 $.fn.check=function(){
 return this.each(function(){

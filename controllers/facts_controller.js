@@ -132,7 +132,7 @@ FactsController = MVC.Controller.extend('facts',
     that = this;
     $('#facts').accordion({
         autoHeight: false,
-        //collapsible: true,
+        collapsible: true,
         active: false
 		});
     this.color_list($('.term, .categories, .compiler, #complete > div, #totals_by_section > div'));

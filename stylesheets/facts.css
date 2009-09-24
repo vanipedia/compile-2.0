@@ -1,7 +1,6 @@
 #facts {
 height: 320px;
-overflow-x:hidden;
-overflow-y:visible;
+overflow: hidden;
 }
 #facts > div {
 color:#603F9D;
@@ -48,4 +47,7 @@ margin: 2px 0px;
 }
 #facts #categories .facts_sortable_placeholder {
   border: dashed 3px;
+}
+#facts .fact {
+	max-height: 250px;
 }
