@@ -35,12 +35,12 @@ FactsController = MVC.Controller.extend('facts',
   add: function(params) {
     var fact, value;
     fact = $(params.element).parents('.fact').attr('id');
-    value = $(params.element).parent().children('input').val();
+    value = $(params.element).parent().children('input').val().replace(/"/g, '');
     $(params.element).parent().children('input').val('');
     fact === 'terms' && /\|/.test(value) ? add_multiple_terms(value) : Facts.add(fact, value);
     function add_multiple_terms(values) {
         var terms_list;
-        terms_list = values.replace(/"/g, '').split('|');
+        terms_list = values.split('|');
         $.each(terms_list, function(i, t) { Facts.add('terms', t); });
     }
   },
