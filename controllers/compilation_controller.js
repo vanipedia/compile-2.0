@@ -254,6 +254,7 @@ CompileController = MVC.Controller.extend('compilation',
         $('#compile_tools').css('opacity', 1).fadeIn('fast', function() {
             if(pos) window.scrollTo(0, pos);
         });
+        $('#compile_tools textarea').focus();
         $('#compile_tools_toggle #compile_tools_toggle_text').text('Hide Tools');
         $('#transparent_background').show();
 
@@ -467,21 +468,18 @@ CompileController = MVC.Controller.extend('compilation',
             p = q.attr('parent');
             l = q.attr('link').replace(/_/g, ' ');
             lt = $('.link a', q).text();
-            $('.q_menu', q).empty().remove();
+            $('.q_menu', q).remove();
             $('.link', q).html("[[Vanisource:"+l+"|"+lt+"]]: ");
             $('.cited_link', q).each(function() {
                 $(this).replaceWith('[[Vanisource:'+$(this).text()+'|'+$(this).text()+']]');
             });
             $('.verse_in_q', q).each(function() {
-                $(this).text($(this).text().replace(/^([^\n])/mg, ':$1')).replaceWith($(this).html());
+                $(this).replaceWith($(this).text().replace(/^([^\n])/mg, ':$1'));
             });
             $('.highlight_terms', q).each(function() {
                 $(this).replaceWith($(this).text());
             })
             q.removeClass('ui-corner-all q_new q_updated');
-            if(/inline/.test(q.attr('style'))) inline = true;
-            q.removeAttr('style');
-            if(inline) q.css('display', 'inline');
              that.update_progressbar(1);
         });
         quotes.appendTo(new_compilation);
