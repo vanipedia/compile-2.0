@@ -467,9 +467,10 @@ Quote = MVC.Model.extend('quote',
                     that[t] = that[t].replace(/<br\/?>/g, '\n');
                     that[t] = that[t].replace(/<p(?:.+?)?>(.+?)<\/p>/g, '$1\n');
                     // fix apostrophies and quotation marks
-                    that[t] = that[t].replace(/'{2,}/g, '"');
-                    that[t] = that[t].replace(/(^|\s)[“‘]+/g, '$1"');
-                    that[t] = that[t].replace(/[”’]+(\s|$)/g, '"$1');
+                    that[t] = that[t].replace(/(^|\s)'{2,}(.+?)'{2,}(\s|$)/g, '$1"$2"$3');
+                    that[t] = that[t].replace(/(^|\s)[“‘]+(.+?)[”’]+(\s|$)/g, '$1"$2"$3');
+                    //that[t] = that[t].replace(/(^|\s)[“‘]+/g, '$1');
+                    that[t] = that[t].replace(/(\w+)’/g, "$1'");
                 }
             });
 
