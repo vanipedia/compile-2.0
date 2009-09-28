@@ -111,8 +111,12 @@ CompileController = MVC.Controller.extend('compilation',
         var that = this;
         this.Class.loading = true;
         if (now === 'init') {
+            if(wgUserName === null) {
+                alert('You must Log-in to compile.');
+                return;
+            }
             $('<div id="background_overlay"></div>').appendTo('body');
-            $('<div id="progressbar"></div><').appendTo('body')
+            $('<div id="progressbar"></div>').appendTo('body')
             that.publish('progressbar', { text: 'Loading Compilation...'});
             $('#editform, #toolbar').hide();
             $('#mw-edit-longpagewarning').hide();
