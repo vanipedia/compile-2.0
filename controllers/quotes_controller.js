@@ -696,12 +696,12 @@ QuotesController = MVC.Controller.extend('quotes',
             $('.text', elem).each(function() {
                 var this_html, verses;
                 this_html = $(this).html();
-                this_html = this_html.replace(/^:(.+?)$/mg, '<dd>$1 </dd>');
+                this_html = this_html.replace(/^:(.+?)$/mg, '<dd>$1</dd>');
                 // save each verse into a string and push it into verses array
                 verses = this_html.match(/(<dd>.+?<\/dd>\n?)+/g);
                 if (verses) {
                     $.each(verses, function(i, verse) {
-                        var re = new RegExp('(.+?\\n)' + RegExp.escape(verse), 'g');
+                        var re = new RegExp('(.+?\\n+)' + RegExp.escape(verse), 'g');
                         this_html = this_html.replace(re, function(all, prev) {
                             // if verse is already wrapped avoid double wrapping (this is for quotes where verses are quoted more than once)
                             return prev.indexOf('<dl class="verse_in_q">') > -1 ? all : prev + '<dl class="verse_in_q">\n' + verse + '</dl>\n';
