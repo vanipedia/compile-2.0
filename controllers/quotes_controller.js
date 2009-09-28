@@ -692,7 +692,6 @@ QuotesController = MVC.Controller.extend('quotes',
         // Hilite terms in this elem
         this.hi_terms($(elem).children('.text'));
 
-        // Reformat cited verses (vers_in_quote)
         function reformat_verses(elem) {
             $('.text', elem).each(function() {
                 var this_html, verses;
@@ -702,7 +701,11 @@ QuotesController = MVC.Controller.extend('quotes',
                 verses = this_html.match(/(<dd>.+?<\/dd>\n?)+/g);
                 if (verses) {
                     $.each(verses, function(i, verse) {
-                        this_html = this_html.replace(verse, '<dl class="verse_in_q">\n' + verse + '</dl>\n');
+                        var re = new RegExp('(.+?\\n)' + RegExp.escape(verse), 'g');
+                        this_html = this_html.replace(re, function(all, prev) {
+                            // if verse is already wrapped avoid double wrapping (this is for quotes where verses are quoted more than once)
+                            return prev.indexOf('<dl class="verse_in_q">') > -1 ? all : prev + '<dl class="verse_in_q">\n' + verse + '</dl>\n';
+                        });
                     });
                 }
                 $(this).html(this_html);
