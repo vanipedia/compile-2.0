@@ -6,32 +6,9 @@ Facts = MVC.Model.extend('facts',
 {
   build: function(compilation) {
     var facts;
-    if(!this.find(wgArticleId)) {
-      facts = $('div#facts', compilation).html();
-      facts ? this.build_with(facts) : this.build_new();
-      this.publish('created', {facts: this.db});
-    }
-  },
-  /**
-   * find retrieves a json formated facts database for the current compilation/page
-   * @param {string} id Contains the MediaWiki articleId which should match the one on the facts server database
-   */
-  find: function(id) {
-    var that;
-    that = this;
-    // Get id from mw global id value
-    $.getJSON('/php/get_facts.php',
-      {id: id},
-      function(resp) {
-        if(resp.result !== 'Found') {
-          if(window.console) { console.log('No existing facts for article '+id+' in facts.db'); }
-          return false;
-        } else {
-           that.db = resp.db;
-           return true;
-        }
-      }
-    );
+    facts = $('div#facts', compilation).html();
+    facts ? this.build_with(facts) : this.build_new();
+    this.publish('created', {facts: this.db});
   },
   /**
    * builds a blank facts.db
