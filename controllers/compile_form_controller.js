@@ -10,7 +10,7 @@ CompileFormController = MVC.Controller.extend('compile_form',
 {
   load: function() {
     // Set autocomplete on link box in form
-				CompileController.autocomplete($('input#link'), true);
+				CompileController.link_autocomplete($('input#link'), true);
 				// Intialize Vanisource reference lookup table as a dialog and close it
 				$('#ref_lookup_table').dialog({
 								autoOpen: false,

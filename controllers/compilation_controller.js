@@ -36,13 +36,23 @@ CompileController = MVC.Controller.extend('compilation',
             right: "0px"
         }, 'fast');
     },
-				autocomplete: function(elem, fixed) {
+				link_autocomplete: function(elem, fixed) {
 								// autocomplete for suggest box on quote or link not found
 								// jQuery.autocomplete was customized in order to display properly
 								// in our fixed compile_tools box
 								$(elem).autocomplete("/php/get_vanisource_title.php", {
 												extraParams: { type: 'title', suggest: true, minChars: 2},
-												resultsClass: 'suggest_results',
+												resultsClass: 'link_suggest_results',
+												fixed: fixed
+								});
+				},
+    category_autocomplete: function(elem, fixed) {
+								// autocomplete for suggest box on quote or link not found
+								// jQuery.autocomplete was customized in order to display properly
+								// in our fixed compile_tools box
+								$(elem).autocomplete("/php/category_search2.php", {
+												extraParams: { minChars: 2},
+												resultsClass: 'cat_suggest_results',
 												fixed: fixed
 								});
 				}
@@ -509,7 +519,7 @@ CompileController = MVC.Controller.extend('compilation',
         }
 
         // Append all to new_compilation
-        final_html = new_compilation.wrap('<div></div>').parent('div').html().replace(/^\s+/mg, '').replace(/<\/span>\n/g, '</span>').replace(/(<div[^>]+?class="(?:quote|section|sub_section)")/g, '\n$1');
+        final_html = new_compilation.wrap('<div></div>').parent('div').html().replace(/^\s+/mg, '').replace(/<\/span>\n/g, '</span>').replace(/(<div[^>]+?(?:id="facts"|class="(?:quote|section|sub_section)"))/g, '\n$1').replace(/([^\n])<\/div>/g, '$1\n</div>');
          that.update_progressbar();
         $('#wpTextbox1').val(final_html);
          that.update_progressbar();

@@ -8,7 +8,7 @@ color:#603F9D;
 #facts > div > div {
 padding: 4px 2px;
 }
-#facts > div li {
+#facts > div > ul > li {
 list-style-image:none;
 list-style-position:outside;
 list-style-type:none;
@@ -30,24 +30,63 @@ width:100%;
 display: table-row;
 }
 
-#facts .facts_tools div > *:not(input) {
+#facts .facts_tools > div > label, #facts .facts_tools > div > span  {
  margin: 6px 4px;
  float: left;
 }
-#facts .facts_tools div > input {
+#facts .facts_tools > div > input {
 float: left;
 margin: 2px 0px;
+width: 30em;
 }
 #facts .facts_tools > div > span {
 cursor:pointer;
 margin: 2px 0px;
 }
 #facts #terms_tools #copy_terms_man {
-    display: none;
+  display: none;
 }
 #facts #categories .facts_sortable_placeholder {
   border: dashed 3px;
 }
 #facts .fact {
 	max-height: 250px;
+}
+
+.cat_suggest_results {
+	padding: 0px;
+	margin: 0px;
+	border: 1px solid black;
+	background-color: white;
+	overflow: hidden;
+	z-index: 99999;
+	left: 106px;
+}
+
+.cat_suggest_results ul {
+	width: 100%;
+	list-style-position: outside;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.cat_suggest_results li {
+	margin: 0px;
+	padding: 2px 5px;
+	cursor: default;
+	display: block;
+	/*
+	if width will be 100% horizontal scrollbar will apear
+	when scroll mode will be used
+	*/
+	/*width: 100%;*/
+	font: menu;
+	font-size: 12px;
+	/*
+	it is very important, if line-height not setted or setted
+	in relative units scroll will be broken in firefox
+	*/
+	line-height: 16px;
+	overflow: hidden;
 }

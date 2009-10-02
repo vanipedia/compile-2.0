@@ -283,11 +283,11 @@ Quote = MVC.Model.extend('quote',
     * Clean text in new quote
     * @param {strin} text to be cleaned up from wiki markup and balaram encoding
     */
-    clean_new: function(text) {
+    clean: function(quote) {
         // Convert Balaram to Unicode
-        text = BaltoUni(text);
-        text = fix_links(text);
-        return text;
+        if(quote.type == 'new') { quote.text = BaltoUni(quote.text); }
+        quote.text = fix_links(quote.text);
+        quote.text = fix_q_marks(quote.text);
 
         function fix_links(text) {
             var re, re_l;
@@ -302,18 +302,30 @@ Quote = MVC.Model.extend('quote',
             l_db = {
                 'BG $1': /^Bg\. (\d+.\d+)$/i,
                 '$1': /^(SB \d+.\d+.\d+)$/,
-                'CC $1': /^Cc. ((?:Adi|Madhya|Antya) \d+.\d+)$/,
+                'CC $1': /^Cc. ((?:Adi|Ādi|Madhya|Antya) \d+.\d+)$/,
                 'NOI $1': /^NoI (\d+)$/i,
 																'ISO $1': /^Īśo (?:mantra )?(\d+)$/i
             };
             $.each(l_db, function(sub, re) {
                 if(l.match(re)) {
-                    f = l.replace(re, sub);
+                    f = l.replace(re, sub).replace(/Ādi/g, 'Adi');
                     return false;
                 }
             });
 
             return f ? '([[Vanisource:'+f+'|'+f+']])' : '('+l+')';
+        }
+        function fix_q_marks(text) {
+            text = text.replace(/\n+/g, '\n');
+            text = text.replace(/<br\/?>/g, '\n');
+            text = text.replace(/<p(?:.+?)?>(.+?)<\/p>/g, '$1\n');
+            // fix apostrophies and quotation marks
+            text = text.replace(/‘([^‘“”]+?)’/g, '"$1"');
+            text = text.replace(/“([^“‘’]+?)”/g, '"$1"');
+            text = text.replace(/'{2,}(.+?)'{2,}/g, '"$1"');
+            text = text.replace(/(\S+)’/g, "$1'");
+            text = text.replace(/(\S+)’s/g, "$1's");
+            return text;
         }
     }
 },
@@ -349,8 +361,11 @@ Quote = MVC.Model.extend('quote',
 												return;
 								}
 
+        // Remove link from the text before we clean text and update the sections
+								remove_link();
+
         // Clean text
-        if(this.type == 'new') { this.text = this.Class.clean_new(this.text); }
+        this.Class.clean(this);
 
         // Remove underscores and extraspaces
         if(this.link) { this.link = this.link.replace(/[_\s]+/g, ' '); }
@@ -376,17 +391,11 @@ Quote = MVC.Model.extend('quote',
         // check if link_text needs to be transformed e.g.: NOI 3 to Nectar of Instruction 3
         transform_link_text();
 
-								// Remove link from the text before we update the sections
-								remove_link();
-
         // Find translation and purport
         this.Class.update_section(this);
 
         // Verify that we have a text
         if(!this.text && !this.trans && !this.purport) { if(window.console) { console.error('No text, trans or purport in ref '+this.link); } }
-
-								// General clean_texts
-        clean_texts();
 
         // get_tips
         if(!this.tips) { this.Class.update_tips(this); }
@@ -452,29 +461,6 @@ Quote = MVC.Model.extend('quote',
                 }
 
             });
-        }
-
-        function clean_texts() {
-            $.each(['trans', 'purport', 'text'], function(i, t) {
-				// Extract link and remove <br/>
-                var link_ready = false;
-                if(that[t]) {
-                    if(!link_ready) {
-                        that[t] = $.trim(that[t].replace(link_re, ''));
-                        link_ready = true;
-                    }
-                    that[t] = that[t].replace(/\n+/g, '\n');
-                    that[t] = that[t].replace(/<br\/?>/g, '\n');
-                    that[t] = that[t].replace(/<p(?:.+?)?>(.+?)<\/p>/g, '$1\n');
-                    // fix apostrophies and quotation marks
-                    that[t] = that[t].replace(/‘([^‘“”]+?)’/g, '"$1"');
-                    that[t] = that[t].replace(/“([^“‘’]+?)”/g, '"$1"');
-                    that[t] = that[t].replace(/'{2,}(.+?)'{2,}/g, '"$1"');
-                    that[t] = that[t].replace(/(\S+)’/g, "$1'");
-                    that[t] = that[t].replace(/(\S+)’s/g, "$1's");
-                }
-            });
-
         }
 
     } // End of init
