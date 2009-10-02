@@ -117,12 +117,16 @@ Section = MVC.Model.extend('section',
         if (typeof ref !== 'string') {
             // if attr present already use _set_attr_auto else use _set_attr_man
             new_section = $(ref).attr('parent') && $(ref).attr('class') && $(ref).attr('sec_index') ? this._set_attr_auto(ref) : this._set_attr_man($(ref).attr('id'));
+            if (window.console) {
+                console.log('Section.init: new section:');
+                console.dir(ref);
+            }
         } else {
             new_section = this._set_attr_man(ref);
-        }
-        if (window.console) {
-            console.log('Section.init: new section:');
-            //console.dir(this);
+            if (window.console) {
+                console.log('Section.init: new section: '+ref);
+                //console.dir(this);
+            }
         }
         if (new_section) {
             this.publish('created', this);

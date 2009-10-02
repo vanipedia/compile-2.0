@@ -578,12 +578,12 @@ $.Autocompleter.Select = function (options, input, select, config) {
 			return;
 		element = $("<div/>")
 		.hide()
-		.addClass(options.resultsClass)
-        .css("position", "absolute");
+		.addClass(options.resultsClass);
+
 		if(!options.fixed) {
-            element.appendTo(document.body);
+            element.appendTo(document.body).css("position", "absolute");;
         } else {
-            element.insertAfter(input); // mod by AndresRamirez108@gmail.com
+            element.insertAfter(input).css("position", "relative");; // mod by AndresRamirez108@gmail.com
         }
 
 		list = $("<ul/>").appendTo(element).mouseover( function(event) {
@@ -707,17 +707,17 @@ $.Autocompleter.Select = function (options, input, select, config) {
 			var offset = $(input).offset();
 			element.css({
 				width: typeof options.width == "string" || options.width > 0 ? options.width : $(input).width(),
-				top:  !options.fixed ? offset.top + input.offsetHeight : offset.top - $('#compile_tools').offset().top + input.offsetHeight, // Added by AndresRamirez108@gmail.com
+				top:  !options.fixed ? offset.top + input.offsetHeight : '', // Added by AndresRamirez108@gmail.com
 				left: !options.fixed ? offset.left: ''                       //
 			}).show();
-            if(options.scroll) {
-                list.scrollTop(0);
-                list.css({
-					maxHeight: options.scrollHeight,
-					overflow: 'auto'
-				});
+    if(options.scroll) {
+        list.scrollTop(0);
+        list.css({
+            maxHeight: options.scrollHeight,
+            overflow: 'auto'
+        });
 
-                if($.browser.msie && typeof document.body.style.maxHeight === "undefined") {
+    if($.browser.msie && typeof document.body.style.maxHeight === "undefined") {
 					var listHeight = 0;
 					listItems.each(function() {
 						listHeight += this.offsetHeight;

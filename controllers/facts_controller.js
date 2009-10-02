@@ -3,6 +3,10 @@ FactsController = MVC.Controller.extend('facts',
 {},
 /* @Prototype */
 {
+    load: function() {
+        // Set autocomplet for category search
+        CompileController.category_autocomplete($('#facts > #categories #add_categories > input'), true);
+    },
   /****** Event listeners ******/
   ".facts_tools .add click": function(params) {
     this.add(params);
