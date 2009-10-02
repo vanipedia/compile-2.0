@@ -269,7 +269,7 @@ QuotesController = MVC.Controller.extend('quotes',
 
         // Set autocomplete for bad_links
         if (params['view'] === 'edit') {
-            CompileController.autocomplete($('#' + id + ' #fix_link_input'), false);
+            CompileController.link_autocomplete($('#' + id + ' #fix_link_input'), false);
             if (this.quote.bad_link) {
                 $('#' + id + ' #fix_link').show().children('#fix_link_input').focus();
             }
