@@ -329,6 +329,7 @@ Quote = MVC.Model.extend('quote',
             text = text.replace(/<\/p><p/g, '<\/p>\n<p'); // make newline between paragraphs
             text = text.replace(/<p(?:.*?)>(.+?)<\/p>/g, '$1'); // remove paragraph markup
             text = text.replace(/\n+/g, '\n');
+            text = text.replace(/^\n+|\n+$/g, '');
             return text;
         }
         function fix_q_marks(text) {
