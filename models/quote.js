@@ -245,24 +245,27 @@ Quote = MVC.Model.extend('quote',
             first = false;
             last = false;
 
-			for(i = 0, len = lines.length; i < len; i++) {
+            for(i = 0, len = lines.length; i < len; i++) {
                 // Define current line length
                 line_len = lines[i].length;
-				if(line_len > longest) { longest = lines[i].length; }
-				if(line_len < 89 && !/[:,"\?]/.test(lines[i]) && !/^\s*$/.test(lines[i])) {
-                    if(first === false) {
-                        first = i;
-                        last = i;
-                        } else {
-                        last++;
+                if(line_len > longest) { longest = lines[i].length; }
+                if(line_len < 89 && !/[:,"\?]/.test(lines[i]) && !/^\s*$/.test(lines[i])) {
+                if(first === false) {
+                    first = i;
+                    last = i;
+                } else {
+                    last++;
+                }
+                verses[i] = lines[i];
+                } else {
+                    if(i !== last && first !== false && last !== false) {
+                        that.request_verse(quote, verses.slice(first, last + 1));
                     }
-                    verses[i] = lines[i];
-                    } else {
-                    if(i !== last && first !== false && last !== false) { that.request_verse(quote, verses.slice(first, last + 1)); }
                     first = last = false;
                 }
-                if(i + 1 === len && first !== false && last !== false) { that.request_verse(quote, verses.slice(first, last + 1)); }
-                //if(window.console) { console.log('index: '+i+' first: '+first+' last: '+last); }
+                if(i + 1 === len && first !== false && last !== false) {
+                    that.request_verse(quote, verses.slice(first, last + 1));
+                }
             }
         }
     },
@@ -280,14 +283,19 @@ Quote = MVC.Model.extend('quote',
         quote.verses.push(verse.join('\n'));
     },
     /**
-    * Clean text in new quote
+    * Clean text in quote
     * @param {strin} text to be cleaned up from wiki markup and balaram encoding
     */
     clean: function(quote) {
         // Convert Balaram to Unicode
         if(quote.type == 'new') { quote.text = BaltoUni(quote.text); }
-        quote.text = fix_links(quote.text);
-        quote.text = fix_q_marks(quote.text);
+        $.each(['trans', 'purport', 'text'], function(i, text) {
+            if(quote[text]) {
+                quote[text] = fix_links(quote[text]);
+                quote[text] = fix_spacing(quote[text]);
+                quote[text] = fix_q_marks(quote[text]);
+            }
+        });
 
         function fix_links(text) {
             var re, re_l;
@@ -315,10 +323,15 @@ Quote = MVC.Model.extend('quote',
 
             return f ? '([[Vanisource:'+f+'|'+f+']])' : '('+l+')';
         }
-        function fix_q_marks(text) {
-            text = text.replace(/\n+/g, '\n');
+        function fix_spacing(text) {
             text = text.replace(/<br\/?>/g, '\n');
-            text = text.replace(/<p(?:.+?)?>(.+?)<\/p>/g, '$1\n');
+            text = text.replace(/<p>\s*<\/p>/g, ''); // eliminate empty paragraphs
+            text = text.replace(/<\/p><p/g, '<\/p>\n<p'); // make newline between paragraphs
+            text = text.replace(/<p(?:.*?)>(.+?)<\/p>/g, '$1'); // remove paragraph markup
+            text = text.replace(/\n+/g, '\n');
+            return text;
+        }
+        function fix_q_marks(text) {
             // fix apostrophies and quotation marks
             text = text.replace(/‘([^‘“”]+?)’/g, '"$1"');
             text = text.replace(/“([^“‘’]+?)”/g, '"$1"');
@@ -335,7 +348,8 @@ Quote = MVC.Model.extend('quote',
     /**
     * Create a new quote
     * To create a new quote you require: ref, parent, heading, text (trans/purport) and index.
-    *    attributes for quotes are: 'id', 'parent', 'book', 'heading', 'link', 'link_text', 'text', 'trans', 'purport', 'index', 'type', 'tips', 'verses'),
+    * attributes for quotes are: 'id', 'parent', 'book', 'heading', 'link',
+    * 'link_text', 'text', 'trans', 'purport', 'index', 'type', 'tips', 'verses'),
     */
     init: function(quote_obj) {
         if(quote_obj === undefined) {
@@ -345,11 +359,13 @@ Quote = MVC.Model.extend('quote',
         var that, this_sec_index, this_text, link_re;
         that            = this; // Use for introspection changes
         link_re         = /^(?:''')\[\[(?:Vanisource:)?(.+?)\|(.+?)\]\]:(?:''')?/;
-        // Iteration to assign attributes in quote_obj to this instance independent of source of quote_obj(from a dom node or new_quote)
+        // Iteration to assign attributes in quote_obj to this
+        // instance independent of source of quote_obj(from a dom node or new_quote)
         if(!quote_obj.link)  {
             $.each(that.Class.attr, function(i, a) {
-                !/^(?:text|trans|purport|heading)$/.test(a) ? that[a] = $(quote_obj).attr(a) || false : that[a] = $(quote_obj).children('.'+a).html() || false;
-                //if(window.console) { console.log($(quote_obj).attr('link')+' => '+a+': '+that[a]); }
+                !/^(?:text|trans|purport|heading)$/.test(a) ?
+                    that[a] = $(quote_obj).attr(a) || false :
+                    that[a] = $(quote_obj).children('.'+a).html() || false;
             });
             } else {
 																$.each(that.Class.attr, function(i, a) { that[a] = quote_obj[a] || false; });
@@ -357,7 +373,8 @@ Quote = MVC.Model.extend('quote',
 
 								// Check for missing (vital) attributes before building quote
         if(!check_missing_attr()) {
-												if(window.console) { console.error('Quote.init#check_missing_attr: Error creating quote, missing link attribute which is vital to build a quote'); }
+												if(window.console) { console.error('Quote.init#check_missing_attr: \
+                                               Error creating quote, missing link attribute which is vital to build a quote'); }
 												return;
 								}
 
@@ -365,7 +382,9 @@ Quote = MVC.Model.extend('quote',
 								remove_link();
 
         // Clean text
+        if(window.console) { console.log('Quote.clean#fix_spacing: was => '+this.text); }
         this.Class.clean(this);
+        if(window.console) { console.log('Quote.clean#fix_spacing: after => '+this.text); }
 
         // Remove underscores and extraspaces
         if(this.link) { this.link = this.link.replace(/[_\s]+/g, ' '); }
@@ -395,7 +414,9 @@ Quote = MVC.Model.extend('quote',
         this.Class.update_section(this);
 
         // Verify that we have a text
-        if(!this.text && !this.trans && !this.purport) { if(window.console) { console.error('No text, trans or purport in ref '+this.link); } }
+        if(!this.text && !this.trans && !this.purport) {
+            if(window.console) { console.error('No text, trans or purport in ref '+this.link); }
+        }
 
         // get_tips
         if(!this.tips) { this.Class.update_tips(this); }
