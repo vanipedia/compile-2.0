@@ -494,6 +494,7 @@ CompileController = MVC.Controller.extend('compilation',
                 $(this).replaceWith($(this).text());
             })
             q.removeClass('ui-corner-all q_new q_updated');
+            q.removeAttr('style');
              that.update_progressbar(1);
         });
         quotes.appendTo(new_compilation);

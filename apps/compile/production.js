@@ -13257,20 +13257,25 @@ _22.verses.push(_23.join("\n"));
 if(_25.type=="new"){
 _25.text=BaltoUni(_25.text);
 }
-_25.text=_26(_25.text);
-_25.text=_27(_25.text);
-function _26(_28){
-var re,_2a;
+$.each(["trans","purport","text"],function(i,_27){
+if(_25[_27]){
+_25[_27]=_28(_25[_27]);
+_25[_27]=_29(_25[_27]);
+_25[_27]=_2a(_25[_27]);
+}
+});
+function _28(_2b){
+var re,_2d;
 re=/[\[\(](.+?)[\]\)]/g;
-_2a=/^\s*(\(\[\[(?:Vanisource:)?[^\[]+\]\]\))$/mg;
-_28=_28.replace(re,_2b);
-_28=_28.replace(_2a,":$1");
-return _28;
+_2d=/^\s*(\(\[\[(?:Vanisource:)?[^\[]+\]\]\))$/mg;
+_2b=_2b.replace(re,_2e);
+_2b=_2b.replace(_2d,":$1");
+return _2b;
 };
-function _2b(all,l){
-var f,_2f;
-_2f={"BG $1":/^Bg\. (\d+.\d+)$/i,"$1":/^(SB \d+.\d+.\d+)$/,"CC $1":/^Cc. ((?:Adi|Ādi|Madhya|Antya) \d+.\d+)$/,"NOI $1":/^NoI (\d+)$/i,"ISO $1":/^Īśo (?:mantra )?(\d+)$/i};
-$.each(_2f,function(sub,re){
+function _2e(all,l){
+var f,_32;
+_32={"BG $1":/^Bg\. (\d+.\d+)$/i,"$1":/^(SB \d+.\d+.\d+)$/,"CC $1":/^Cc. ((?:Adi|Ādi|Madhya|Antya) \d+.\d+)$/,"NOI $1":/^NoI (\d+)$/i,"ISO $1":/^Īśo (?:mantra )?(\d+)$/i};
+$.each(_32,function(sub,re){
 if(l.match(re)){
 f=l.replace(re,sub).replace(/Ādi/g,"Adi");
 return false;
@@ -13278,44 +13283,56 @@ return false;
 });
 return f?"([[Vanisource:"+f+"|"+f+"]])":"("+l+")";
 };
-function _27(_32){
-_32=_32.replace(/\n+/g,"\n");
-_32=_32.replace(/<br\/?>/g,"\n");
-_32=_32.replace(/<p(?:.+?)?>(.+?)<\/p>/g,"$1\n");
-_32=_32.replace(/‘([^‘“”]+?)’/g,"\"$1\"");
-_32=_32.replace(/“([^“‘’]+?)”/g,"\"$1\"");
-_32=_32.replace(/'{2,}(.+?)'{2,}/g,"\"$1\"");
-_32=_32.replace(/(\S+)’/g,"$1'");
-_32=_32.replace(/(\S+)’s/g,"$1's");
-return _32;
+function _29(_35){
+_35=_35.replace(/<br\/?>/g,"\n");
+_35=_35.replace(/<p>\s*<\/p>/g,"");
+_35=_35.replace(/<\/p><p/g,"</p>\n<p");
+_35=_35.replace(/<p(?:.*?)>(.+?)<\/p>/g,"$1");
+_35=_35.replace(/\n+/g,"\n");
+_35=_35.replace(/^\n+|\n+$/g,"");
+return _35;
 };
-}},{init:function(_33){
-if(_33===undefined){
+function _2a(_36){
+_36=_36.replace(/‘([^‘“”]+?)’/g,"\"$1\"");
+_36=_36.replace(/“([^“‘’]+?)”/g,"\"$1\"");
+_36=_36.replace(/'{2,}(.+?)'{2,}/g,"\"$1\"");
+_36=_36.replace(/(\S+)’/g,"$1'");
+_36=_36.replace(/(\S+)’s/g,"$1's");
+return _36;
+};
+}},{init:function(_37){
+if(_37===undefined){
 if(window.console){
-console.error("Error creating new quote with quote_obj: "+_33);
+console.error("Error creating new quote with quote_obj: "+_37);
 }
 return;
 }
-var _34,_35,_36,_37;
-_34=this;
-_37=/^(?:''')\[\[(?:Vanisource:)?(.+?)\|(.+?)\]\]:(?:''')?/;
-if(!_33.link){
-$.each(_34.Class.attr,function(i,a){
-!/^(?:text|trans|purport|heading)$/.test(a)?_34[a]=$(_33).attr(a)||false:_34[a]=$(_33).children("."+a).html()||false;
+var _38,_39,_3a,_3b;
+_38=this;
+_3b=/^(?:''')\[\[(?:Vanisource:)?(.+?)\|(.+?)\]\]:(?:''')?/;
+if(!_37.link){
+$.each(_38.Class.attr,function(i,a){
+!/^(?:text|trans|purport|heading)$/.test(a)?_38[a]=$(_37).attr(a)||false:_38[a]=$(_37).children("."+a).html()||false;
 });
 }else{
-$.each(_34.Class.attr,function(i,a){
-_34[a]=_33[a]||false;
+$.each(_38.Class.attr,function(i,a){
+_38[a]=_37[a]||false;
 });
 }
-if(!_3c()){
+if(!_40()){
 if(window.console){
-console.error("Quote.init#check_missing_attr: Error creating quote, missing link attribute which is vital to build a quote");
+console.error("Quote.init#check_missing_attr:                                                Error creating quote, missing link attribute which is vital to build a quote");
 }
 return;
 }
-_3d();
+_41();
+if(window.console){
+console.log("Quote.clean#fix_spacing: was => "+this.text);
+}
 this.Class.clean(this);
+if(window.console){
+console.log("Quote.clean#fix_spacing: after => "+this.text);
+}
 if(this.link){
 this.link=this.link.replace(/[_\s]+/g," ");
 }
@@ -13323,10 +13340,10 @@ if(!this.link_text){
 this.link_text=this.link;
 }
 this.link_text=this.link_text.replace("(New-2003)","");
-Section.exists(this.parent)?this.parent=this.parent.replace(/\s+/g,"_"):_3e("parent");
-_35=Compilation.db.quote_count[this.parent]?Compilation.db.quote_count[this.parent]:0;
+Section.exists(this.parent)?this.parent=this.parent.replace(/\s+/g,"_"):_42("parent");
+_39=Compilation.db.quote_count[this.parent]?Compilation.db.quote_count[this.parent]:0;
 if(this.link){
-this.id=this.link.replace(/\W/g,"")+"_"+_35;
+this.id=this.link.replace(/\W/g,"")+"_"+_39;
 }
 if(!this.book){
 this.book=Section.find_attr(this.parent,"sec_book");
@@ -13334,7 +13351,7 @@ this.book=Section.find_attr(this.parent,"sec_book");
 if(this.heading){
 this.heading=this.heading.replace(/'''/g,"");
 }
-_3f();
+_43();
 this.Class.update_section(this);
 if(!this.text&&!this.trans&&!this.purport){
 if(window.console){
@@ -13348,66 +13365,66 @@ if(!this.verses){
 this.Class.check_verses(this);
 }
 this.publish("created",this);
-function _3d(){
+function _41(){
 $.each(["trans","purport","text"],function(i,t){
-var _42=false;
-if(_34[t]){
-if(!_42){
-_34[t]=$.trim(_34[t].replace(_37,""));
-_42=true;
+var _46=false;
+if(_38[t]){
+if(!_46){
+_38[t]=$.trim(_38[t].replace(_3b,""));
+_46=true;
 }
 }
 });
 };
-function _3c(){
-$.each(["link","parent","index"],function(i,_44){
-if(!_34[_44]){
-if(_44=="link"){
+function _40(){
+$.each(["link","parent","index"],function(i,_48){
+if(!_38[_48]){
+if(_48=="link"){
 if(window.console){
-console.error("Quote.init#check_missing_attr: Missing link!"+_44);
+console.error("Quote.init#check_missing_attr: Missing link!"+_48);
 }
 return false;
 }else{
 if(window.console){
-console.warn("Quote.init#check_missing_attr: Missing "+_44);
+console.warn("Quote.init#check_missing_attr: Missing "+_48);
 }
-_3e(_44);
+_42(_48);
 }
 }
 });
 return true;
 };
-function _3e(_45){
-var _46;
+function _42(_49){
+var _4a;
 if(window.console){
-console.log("In Quote.init#find_attr, checking Quote.cache["+_34.link+"] = ");
-console.dir(Quote.cache[_34.link]);
+console.log("In Quote.init#find_attr, checking Quote.cache["+_38.link+"] = ");
+console.dir(Quote.cache[_38.link]);
 }
-if(Quote.cache[_34.link]){
+if(Quote.cache[_38.link]){
 if(window.console){
-console.info("In Quote.init#find_attr, updating "+_45+" with "+Quote.cache[_34.link][_45]);
+console.info("In Quote.init#find_attr, updating "+_49+" with "+Quote.cache[_38.link][_49]);
 }
-_34[_45]=Quote.cache[_34.link][_45];
+_38[_49]=Quote.cache[_38.link][_49];
 }else{
-if(!_34.link){
+if(!_38.link){
 if(window.console){
-console.error("Quote.init#find_attr: Missing that.link to query db for missing "+_45);
+console.error("Quote.init#find_attr: Missing that.link to query db for missing "+_49);
 }
 }else{
 if(window.console){
-console.warn("Quote.init#find_attr: "+_45+" not found in Quote.cache for "+_34.link+". Submiting request to Quote.find_reference");
+console.warn("Quote.init#find_attr: "+_49+" not found in Quote.cache for "+_38.link+". Submiting request to Quote.find_reference");
 }
-Quote.find_reference({quote:_34,ref:_34.link,type:"title",attr:_45});
+Quote.find_reference({quote:_38,ref:_38.link,type:"title",attr:_49});
 }
 }
 };
-function _3f(){
-if(!_34.link_text){
-_34.link_text=_34.link.replace(/_/g," ");
+function _43(){
+if(!_38.link_text){
+_38.link_text=_38.link.replace(/_/g," ");
 }
-$.each(Quote.link_text_db,function(_47,_48){
-if(_34.link_text.indexOf(_47)===0){
-_34.link_text=_34.link_text.replace(_47,_48);
+$.each(Quote.link_text_db,function(_4b,_4c){
+if(_38.link_text.indexOf(_4b)===0){
+_38.link_text=_38.link_text.replace(_4b,_4c);
 return false;
 }
 });
@@ -14237,6 +14254,7 @@ $(".highlight_terms",q).each(function(){
 $(this).replaceWith($(this).text());
 });
 q.removeClass("ui-corner-all q_new q_updated");
+q.removeAttr("style");
 _3a.update_progressbar(1);
 });
 _3e.appendTo(_3f);
