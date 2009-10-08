@@ -22,26 +22,30 @@ position:relative;
 }
 
 #facts .facts_tools {
-background:#D2C1F2 none repeat scroll 0 0;
-width:100%;
+	background-color:#D2C1F2;
 }
 
 #facts .facts_tools > div {
-display: table-row;
+	display: table;
+	width: 100%
 }
 
 #facts .facts_tools > div > label, #facts .facts_tools > div > span  {
- margin: 6px 4px;
- float: left;
+}
+#facts .facts_tools > div > label {
+	width: 15%;
+	margin: 6px 4px;
+	float: left;
 }
 #facts .facts_tools > div > input {
-float: left;
-margin: 2px 0px;
-width: 30em;
+	width: 75%;
+	margin: 6px 2px 0px 2px;
+	float: left;
 }
 #facts .facts_tools > div > span {
-cursor:pointer;
-margin: 2px 0px;
+	margin: 10px 4px;
+	float: right;
+	cursor:pointer;
 }
 #facts #terms_tools #copy_terms_man {
   display: none;
@@ -58,9 +62,9 @@ margin: 2px 0px;
 	margin: 0px;
 	border: 1px solid black;
 	background-color: white;
+	float: left; /* windows */
 	overflow: hidden;
 	z-index: 99999;
-	left: 106px;
 }
 
 .cat_suggest_results ul {
