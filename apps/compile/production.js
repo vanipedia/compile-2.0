@@ -13326,13 +13326,7 @@ console.error("Quote.init#check_missing_attr:                                   
 return;
 }
 _41();
-if(window.console){
-console.log("Quote.clean#fix_spacing: was => "+this.text);
-}
 this.Class.clean(this);
-if(window.console){
-console.log("Quote.clean#fix_spacing: after => "+this.text);
-}
 if(this.link){
 this.link=this.link.replace(/[_\s]+/g," ");
 }
@@ -13489,7 +13483,6 @@ if(typeof _f!=="string"){
 _10=$(_f).attr("parent")&&$(_f).attr("class")&&$(_f).attr("sec_index")?this._set_attr_auto(_f):this._set_attr_man($(_f).attr("id"));
 if(window.console){
 console.log("Section.init: new section:");
-console.dir(_f);
 }
 }else{
 _10=this._set_attr_man(_f);
@@ -13584,7 +13577,7 @@ _3.set(_4,new Array(_6));
 }
 });
 },build_with:function(_7){
-var _8,_9,_a,_b,_c;
+var _8,_9,_a,_b,_c,_d;
 _8=this;
 _9=new Object();
 _a=new Array();
@@ -13603,61 +13596,64 @@ if(window.console){
 console.error("Error creating facts array");
 }
 }
-$.each(_a,function(i,_e){
-var _f,_10;
-_e=_11(_e);
-if(_e.indexOf("toc")===0){
-_9["toc"]=$.trim(_e.substr(_e.indexOf(" ")+1));
+$.each(_a,function(i,_f){
+var _10,_11;
+_f=_12(_f);
+if(_f.indexOf("toc")===0){
+_9["toc"]=$.trim(_f.substr(_f.indexOf(" ")+1));
 return true;
 }
-_f=$.trim(_e.substring(0,_e.indexOf("|")));
-_10=$.trim(_e.substr(_e.indexOf("|")+1));
-if(window.console){
-console.log("Setting "+_f+" to "+_10);
+if(_f.indexOf("|")===-1||_f.indexOf("false")>-1){
+return true;
 }
-_9[_f]=_10;
+_10=$.trim(_f.substring(0,_f.indexOf("|")));
+_11=$.trim(_f.substr(_f.indexOf("|")+1));
+if(window.console){
+console.log("Setting "+_10+" to "+_11);
+}
+_9[_10]=_11;
 _8.publish("progressbar_update",{val:1});
 });
-$.each(_8.db,function(_12,val){
+$.each(_8.db,function(_13,val){
 if(window.console){
-console.log(_12+" is "+typeof _9[_12]+" in facts");
+console.log(_13+" is "+typeof _9[_13]+" in current_facts");
 }
-if(typeof _9[_12]!=="undefined"){
-_14(_12,_9[_12]);
+if(typeof _9[_13]!=="undefined"){
+_15(_13,_9[_13]);
 }else{
 if(window.console){
-console.log("In Facts.build_with: "+_12+" was not found in extracted facts db");
+console.log("In Facts.build_with: "+_13+" was not found in extracted facts db");
 }
 }
 });
-function _14(_15,_16){
-if(!_16){
+function _15(_16,_17){
+if(!_17){
 return;
 }
-if((_15==="terms"&&!/^Copy /.test(_16))||_15==="compiler"||_15==="complete"){
-_16=_17(_16);
+if((_16==="terms"&&!/^Copy /.test(_17))||_16==="compiler"||_16==="complete"){
+_17=_18(_17);
 }
-if(_15==="total"){
-_16=Number(_16)||0;
+if(_16==="total"){
+_17=Number(_17)||0;
 }
-if(_15==="last"||(_15==="first"&&_16==="")){
-_16=_8.get_date();
+if(_16==="last"||(_16==="first"&&_17==="")){
+_17=_8.get_date();
 }
-if(_15==="totals_by_section"){
-var _18,re,_1a,val;
-_18={};
+if(_16==="totals_by_section"){
+var _19,re,_1b,val;
+_19={};
 re=/(.+?)\s?=\s?(\d+)/;
-_16=_17(_16);
-$.each(_16,function(i,sec){
-_1a=sec.match(re)[1];
-val=sec.match(re)[2];
-_18[_1a]=Number(val);
+_17=_18(_17);
+$.each(_17,function(i,sec){
+_1b=sec.match(re)[1];
+val=Number(sec.match(re)[2]);
+_19[_1b]=val;
 });
-_16=_18;
+_17=_19;
 }
-_8.set(_15,_16);
+_8.set(_16,_17);
 };
-function _11(str){
+function _12(str){
 var now;
 now=str.replace(/"/g,"\"");
 now=now.replace(/<.+/,"");
@@ -13666,14 +13662,14 @@ now=now.replace(/^(.+?)\}\}.*/,"$1");
 now=$.trim(now);
 return now;
 };
-function _17(str){
-var _21,_22;
-_21=str;
-_21=_21.replace(/"/g,"");
-_21=_21.replace(/ +\||\| +/g,"|");
-_21=_21.replace(/^ +| +$/g,"");
-_22=_21.split("|")||_21;
-return _22;
+function _18(str){
+var _22,_23;
+_22=str;
+_22=_22.replace(/"/g,"");
+_22=_22.replace(/ +\||\| +/g,"|");
+_22=_22.replace(/^ +| +$/g,"");
+_23=_22.split("|")||_22;
+return _23;
 };
 _b=_7.match(_c);
 if(_b!==null){
@@ -13686,222 +13682,222 @@ this.add_user();
 if(window.console){
 console.log(this.db);
 }
-},update:function(_24,_25,_26){
-_26=$.trim(_26);
-if(this.db[_24]===undefined){
+},update:function(_25,_26,_27){
+_27=$.trim(_27);
+if(this.db[_25]===undefined){
 if(window.console){
-console.log("Error updating Facts.db in "+_24+" with "+_26);
+console.log("Error updating Facts.db in "+_25+" with "+_27);
 }
 return false;
 }
-if(_26===""){
-if(_24==="goal"){
+if(_27===""){
+if(_25==="goal"){
 this.publish("warning",{msg:"Wrong goal setting. You must calculate your goal based on the amount of matches for your expressions search in Vedabase"});
 return 0;
 }
-if(_25!==null){
-this.publish("deleted",{fact:_24,index:_25,old:this.db[_24][_25]});
+if(_26!==null){
+this.publish("deleted",{fact:_25,index:_26,old:this.db[_25][_26]});
 }
 }
-if(_24==="goal"&&isNaN(_26)){
+if(_25==="goal"&&isNaN(_27)){
 this.publish("warning",{msg:"Goal must be number"});
 return 0;
 }
-_25===null?this.db[_24]=_26:this.db[_24][_25]=_26;
+_26===null?this.db[_25]=_27:this.db[_25][_26]=_27;
 this.publish("updated");
-if(_24==="terms"&&_26!==""){
-this.publish("updated_term",{term:_26});
+if(_25==="terms"&&_27!==""){
+this.publish("updated_term",{term:_27});
 }
-return _26;
-},set:function(_27,_28){
-var _29;
-_29=this;
-if(!_27||!_28){
+return _27;
+},set:function(_28,_29){
+var _2a;
+_2a=this;
+if(!_28||!_29){
 if(window.console){
-console.log("Parameters missing in Facts.set(). name: "+_27+" value: "+_28);
+console.log("Parameters missing in Facts.set(). name: "+_28+" value: "+_29);
 }
 }
-_29.db[_27]=_28;
-},add:function(_2a,_2b){
-if(this.db[_2a]===undefined||_2b===""){
+_2a.db[_28]=_29;
+},add:function(_2b,_2c){
+if(this.db[_2b]===undefined||_2c===""){
 if(window.console){
-console.log("Bad fact in Facts.add "+_2a+" val "+_2b);
+console.log("Bad fact in Facts.add "+_2b+" val "+_2c);
 }
 return;
 }
-this.db[_2a].push($.trim(UniToASCII(BaltoUni(_2b))));
-this.publish("added",{fact:_2a,index:this.db[_2a].length-1});
-},get:function(_2c,_2d){
-return _2d===undefined?this.db[_2c]:this.db[_2c][_2d];
+this.db[_2b].push($.trim(UniToASCII(BaltoUni(_2c))));
+this.publish("added",{fact:_2b,index:this.db[_2b].length-1});
+},get:function(_2d,_2e){
+return _2e===undefined?this.db[_2d]:this.db[_2d][_2e];
 },get_all_terms:function(){
-var _2e;
-_2e=this.db.terms;
-_2e=$.map(_2e,function(t){
+var _2f;
+_2f=this.db.terms;
+_2f=$.map(_2f,function(t){
 if(t!==""){
 return "\""+t+"\"";
 }
 });
-return _2e.sort().join("|");
+return _2f.sort().join("|");
 },check_user:function(){
-var _30,_31;
-_30=this;
-_31=wgUserName||false;
-if(!_31){
+var _31,_32;
+_31=this;
+_32=wgUserName||false;
+if(!_32){
 this.publish("warning",{msg:"You are not logged in"});
 return false;
 }else{
-return _31;
+return _32;
 }
 },add_user:function(){
-var _32,_33,_34;
-_32=this;
-_33=this.check_user();
-_34=_32.db.compiler;
-if(_33&&$.inArray(_33,_34)===-1){
-_32.add("compiler",_33);
+var _33,_34,_35;
+_33=this;
+_34=this.check_user();
+_35=_33.db.compiler;
+if(_34&&$.inArray(_34,_35)===-1){
+_33.add("compiler",_34);
 }
 },get_date:function(){
-var _35=new Array("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec");
+var _36=new Array("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec");
 var d=new Date();
 var day=d.getDate().toString();
-var _38=_35[d.getMonth()];
-var _39=d.getYear().toString().substring(1,3);
+var _39=_36[d.getMonth()];
+var _3a=d.getYear().toString().substring(1,3);
 if(day.length==1){
 day="0"+day;
 }
-var _3a=day+_38+_39;
-return _3a;
-},complete:function(_3b,_3c){
-var _3d;
-_3d=this.db.complete;
-if(_3c==="add"){
-if(_3b==="ALL"){
-_3d.splice(0);
-_3d.push(_3b);
+var _3b=day+_39+_3a;
+return _3b;
+},complete:function(_3c,_3d){
+var _3e;
+_3e=this.db.complete;
+if(_3d==="add"){
+if(_3c==="ALL"){
+_3e.splice(0);
+_3e.push(_3c);
 }else{
-if($.inArray("ALL",_3d)>-1){
-_3d.splice($.inArray("ALL",_3d),1);
+if($.inArray("ALL",_3e)>-1){
+_3e.splice($.inArray("ALL",_3e),1);
 }
-_3d.push(_3b);
+_3e.push(_3c);
 }
 }else{
-_3d.splice($.inArray(_3b,_3d),1);
+_3e.splice($.inArray(_3c,_3e),1);
 }
-},update_totals:function(_3e){
-var q,_40;
-q=Compilation.find_in_db(_3e.id,"q");
+},update_totals:function(_3f){
+var q,_41;
+q=Compilation.find_in_db(_3f.id,"q");
 if(q){
-_40=q.book;
-this.db.totals_by_section[_40]++;
+_41=q.book;
+this.db.totals_by_section[_41]++;
 this.db.total++;
 }else{
-_40=Compilation.find_in_db(_3e.id,"u").book;
-this.db.totals_by_section[_40]--;
+_41=Compilation.find_in_db(_3f.id,"u").book;
+this.db.totals_by_section[_41]--;
 this.db.total--;
 }
 this.publish("totals_updated");
 },check_totals:function(){
-var _41,_42,_43,_44;
-_41=this;
-_43=0;
-_42={};
+var _42,_43,_44,_45;
+_42=this;
+_44=0;
+_43={};
 if(window.console){
 console.info("In Facts#check_totals");
 }
-$.each(Compilation.db.quotes,function(_45,_46){
-var _47=Compilation.db.quotes[_45]["book"];
-_42[_47]?_42[_47]++:_42[_47]=1;
+$.each(Compilation.db.quotes,function(_46,_47){
+var _48=Compilation.db.quotes[_46]["book"];
+_43[_48]?_43[_48]++:_43[_48]=1;
 if(window.console){
-console.log("Facts#check_totals: In quote: "+_45+" count for "+_47+" is: "+_42[_47]);
+console.log("Facts#check_totals: In quote: "+_46+" count for "+_48+" is: "+_43[_48]);
 }
 });
-$.each(Facts.db.totals_by_section,function(_48,val){
-if(!_42[_48]){
+$.each(Facts.db.totals_by_section,function(_49,val){
+if(!_43[_49]){
 if(window.console){
-console.warn("Facts#check_totals: No book_count for "+_48+" => "+_42[_48]);
+console.warn("Facts#check_totals: No book_count for "+_49+" => "+_43[_49]);
 }
-_42[_48]=0;
+_43[_49]=0;
 }
-if(val!==_42[_48]){
+if(val!==_43[_49]){
 if(window.console){
-console.warn("Facts#check_totals: Facts.db totals_by_section doesn't match totals in Compilation.quotes.db for "+_48+" totals: "+val+" => "+_42[_48]);
+console.warn("Facts#check_totals: Facts.db totals_by_section doesn't match totals in Compilation.quotes.db for "+_49+" totals: "+val+" => "+_43[_49]);
 }
-Facts.db.totals_by_section[_48]=_42[_48];
-_44=true;
+Facts.db.totals_by_section[_49]=_43[_49];
+_45=true;
 }
-_43+=_42[_48];
+_44+=_43[_49];
 });
-if(_44){
+if(_45){
 if(window.console){
-console.info("Updating Facts.db with quotes total "+_43);
+console.info("Updating Facts.db with quotes total "+_44);
 }
-this.db.total=_43;
+this.db.total=_44;
 this.publish("totals_updated");
 }
 },save:function(){
-var _4a,_4b,all;
-_4a=this;
+var _4b,_4c,all;
+_4b=this;
 all=false;
-_4b="";
-$.each(_4a.db,function(f,_4e){
+_4c="";
+$.each(_4b.db,function(f,_4f){
 if(f==="books"){
 return true;
 }
 if(f==="terms"){
-_4b+=_4f(f,_50(_4e));
+_4c+=_50(f,_51(_4f));
 }
 if(f==="notes"||f==="goal"||f==="first"||f==="last"||f==="total"){
-_4b+=_4f(f,_4e);
+_4c+=_50(f,_4f);
 }
 if(f==="compiler"||f==="complete"){
-_4b+=_4f(f,_4e.join("|"));
+_4c+=_50(f,_4f.join("|"));
 }
 if(f==="totals_by_section"){
-_4b+=_4f(f,_51(_4e));
+_4c+=_50(f,_52(_4f));
 }
 if(f==="toc"){
-_4b+="\n{{toc right}}";
+_4c+="\n{{toc right}}";
 }
 if(f==="categories"){
-_4b+=_52(_4e);
+_4c+=_53(_4f);
 }
 });
-return _4b;
-function _4f(_53,val){
-if(_53==="complete"&&val==="ALL"){
+return _4c;
+function _50(_54,val){
+if(_54==="complete"&&val==="ALL"){
 all=true;
 }
-if(_53==="goal"&&all){
+if(_54==="goal"&&all){
 return "";
 }
-return "\n{{"+_53+"|"+val+"}}";
+return "\n{{"+_54+"|"+val+"}}";
 };
-function _50(_55){
+function _51(_56){
 var t;
-t=$.map(_55,function(_57){
-if(_57!==""){
-return "\""+_57+"\"";
+t=$.map(_56,function(_58){
+if(_58!==""){
+return "\""+_58+"\"";
 }
 }).sort();
 return t.join("|");
 };
-function _51(_58){
+function _52(_59){
 var t;
 t=new Array();
-$.each(_58,function(_5a,_5b){
-t.push(_5a+"="+_5b);
+$.each(_59,function(_5b,_5c){
+t.push(_5b+"="+_5c);
 });
 return t.join("|");
 };
-function _52(_5c){
-var c,_5e,_5f;
-_5e=$("#categories_list").sortable("toArray");
-_5f=$.map(_5e,function(val,i){
+function _53(_5d){
+var c,_5f,_60;
+_5f=$("#categories_list").sortable("toArray");
+_60=$.map(_5f,function(val,i){
 var n=/\d+/.exec(val);
-return _5c[n];
+return _5d[n];
 });
 c="";
-$.each(_5f,function(i,cat){
+$.each(_60,function(i,cat){
 if(cat===""){
 return true;
 }
@@ -15229,7 +15225,7 @@ this.f_class=_13.fact;
 this.value=Facts.get(_13.fact,_13.index);
 if($("#"+_15).length===0){
 if(window.console){
-console.log("Error in FactsController.append: "+_15+" does not exist in dom");
+console.error("Error in FactsController.append: "+_15+" does not exist in dom");
 }
 return;
 }

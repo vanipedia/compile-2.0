@@ -119,7 +119,7 @@ Section = MVC.Model.extend('section',
             new_section = $(ref).attr('parent') && $(ref).attr('class') && $(ref).attr('sec_index') ? this._set_attr_auto(ref) : this._set_attr_man($(ref).attr('id'));
             if (window.console) {
                 console.log('Section.init: new section:');
-                console.dir(ref);
+                //console.dir(ref);
             }
         } else {
             new_section = this._set_attr_man(ref);

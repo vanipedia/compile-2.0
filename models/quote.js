@@ -383,9 +383,7 @@ Quote = MVC.Model.extend('quote',
 								remove_link();
 
         // Clean text
-        if(window.console) { console.log('Quote.clean#fix_spacing: was => '+this.text); }
         this.Class.clean(this);
-        if(window.console) { console.log('Quote.clean#fix_spacing: after => '+this.text); }
 
         // Remove underscores and extraspaces
         if(this.link) { this.link = this.link.replace(/[_\s]+/g, ' '); }

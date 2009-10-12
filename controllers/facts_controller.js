@@ -67,7 +67,7 @@ FactsController = MVC.Controller.extend('facts',
     this.f_class  = params.fact;
     this.value  = Facts.get(params.fact, params.index);
     if($('#'+parent).length === 0) {
-      if(window.console) { console.log('Error in FactsController.append: '+parent+' does not exist in dom'); }
+      if(window.console) { console.error('Error in FactsController.append: '+parent+' does not exist in dom'); }
       return;
     }
     this.render({
