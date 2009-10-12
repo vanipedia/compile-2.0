@@ -32,11 +32,12 @@ Facts = MVC.Model.extend('facts',
    * @param {string} data contains all the data found within the <div id="facts"> in the compilation.
    */
   build_with: function(data) {
-    var that, facts, f_array, categories, re_categories;
+    var that, facts, current_facts, categories, re_categories, facts_array;
     that        = this;
     facts       = new Object();
-    f_array     = new Array();
+    current_facts = new Array();
     categories  = new Array();
+
     re_categories = /\[\[Category:\s?(.+?)\s?\]\]/ig;
 
     // Check for data
@@ -47,21 +48,23 @@ Facts = MVC.Model.extend('facts',
 
     /**** Facts ****/
     // Split data into its fields e.g: {{terms| etc...}}
-    f_array = data.split('{{');
-    f_array.shift();
-    if(!f_array.length) {
+    current_facts = data.split('{{');
+    current_facts.shift();
+    if(!current_facts.length) {
         if(window.console) { console.error('Error creating facts array');  }
     }
     // Loop through array to build temp facts obj
-    $.each(f_array, function(i, val) {
+    $.each(current_facts, function(i, val) {
         var name, value;
         val = clean(val);
         if(val.indexOf('toc') === 0) {
             facts['toc'] = $.trim(val.substr(val.indexOf(' ') + 1));
             return true;
         }
+        if(val.indexOf('|') === -1 || val.indexOf('false') > -1) { return true; } // If no pipe in fact, is some strange fact, continue
         name = $.trim(val.substring(0, val.indexOf('|')));
         value = $.trim(val.substr(val.indexOf('|') + 1));
+        
         if(window.console) { console.log('Setting '+name+' to '+value); }
         facts[name] = value;
         that.publish('progressbar_update', { val: 1 });
@@ -69,7 +72,7 @@ Facts = MVC.Model.extend('facts',
 
     // set the Facts.db to with the values found and saved in the facts obj
     $.each(that.db, function(name, val) {
-        if(window.console) { console.log(name+' is '+typeof facts[name]+' in facts'); }
+        if(window.console) { console.log(name+' is '+typeof facts[name]+' in current_facts'); }
         if(typeof facts[name] !== 'undefined') {
           process_fact(name, facts[name]);
         } else {
@@ -99,8 +102,9 @@ Facts = MVC.Model.extend('facts',
         value = convert_to_array(value);
         $.each(value, function(i, sec) {
           book = sec.match(re)[1];
-          val  = sec.match(re)[2];
-          totals[book] = Number(val);
+          val  = Number(sec.match(re)[2]);
+          //if(book === false || val === NaN ) { return true; }
+          totals[book] = val;
         });
         value = totals;
       }
