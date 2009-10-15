@@ -717,7 +717,7 @@ QuotesController = MVC.Controller.extend('quotes',
                 if ($(this).html().indexOf('[[') > -1) {
                     var t;
                     t = $(this).html();
-                    t = t.replace(/\[\[(?:Vanisource:)?.+?\|(.+?)\]\]/g, '<a class="cited_link" href="http://vanisource.org/wiki/$1"><b>$1</b></a>');
+                    t = t.replace(/\[\[(?:Vanisource:)?(.+?)\|(.+?)\]\]/g, '<a class="cited_link" href="http://vanisource.org/wiki/$1"><b>$2</b></a>');
                     $(this).html(t);
                 }
             })
