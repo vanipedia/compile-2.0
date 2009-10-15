@@ -38,9 +38,6 @@
 <h3><a href="#">goal</a></h3>
 <div id="goal" class="fact"><%= facts.goal %></div>
 
-<h3><a href="#">notes from the compiler</a></h3>
-<div id="notes" class="fact"><%= facts.notes %></div>
-
 <h3><a href="#">completed sections</a></h3>
 <div id="complete" class="fact">
     <% for(i = 0; i < facts.books.length; i++) { %>
@@ -50,6 +47,9 @@
     <% } %>
     <div class="check_div"><label>ALL</label><input type="checkbox" class="complete_checks" id="complete_ALL"/></div>
 </div>
+
+<h3><a href="#">notes from the compiler</a></h3>
+<div id="notes" class="fact"><%= facts.notes %></div>
 
 <h3><a href="#">compiler</a></h3>
 <div id="compiler" class="fact">
