@@ -13266,15 +13266,20 @@ _25[_27]=_2a(_25[_27]);
 });
 function _28(_2b){
 var re,_2d;
-re=/[\[\(](.+?)[\]\)]/g;
+re1=/\[(.+?)\]/g;
+re2=/\((.+?)\)/g;
 _2d=/^\s*(\(\[\[(?:Vanisource:)?[^\[]+\]\]\))$/mg;
-_2b=_2b.replace(re,_2e);
+_2b=_2b.replace(re1,_2e);
+_2b=_2b.replace(re2,_2e);
 _2b=_2b.replace(_2d,":$1");
 return _2b;
 };
 function _2e(all,l){
 var f,_32;
-_32={"BG $1":/^Bg\. (\d+.\d+)$/i,"$1":/^(SB \d+.\d+.\d+)$/,"CC $1":/^Cc. ((?:Adi|Ādi|Madhya|Antya) \d+.\d+)$/,"NOI $1":/^NoI (\d+)$/i,"ISO $1":/^Īśo (?:mantra )?(\d+)$/i};
+if(/\[/.test(l)){
+return all;
+}
+_32={"BG $1":/^Bg\. (\d+.\d+)$/i,"$1":/^(SB \d+.\d+.\d+)$/,"CC $1":/^(?:Cc. )?((?:Adi|Ādi|Madhya|Antya) \d+.\d+)$/,"NOI $1":/^NoI (\d+)$/i,"ISO $1":/^Īśo (?:mantra )?(\d+)$/i};
 $.each(_32,function(sub,re){
 if(l.match(re)){
 f=l.replace(re,sub).replace(/Ādi/g,"Adi");
@@ -14952,7 +14957,7 @@ $(".text",_86).each(function(){
 if($(this).html().indexOf("[[")>-1){
 var t;
 t=$(this).html();
-t=t.replace(/\[\[(?:Vanisource:)?.+?\|(.+?)\]\]/g,"<a class=\"cited_link\" href=\"http://vanisource.org/wiki/$1\"><b>$1</b></a>");
+t=t.replace(/\[\[(?:Vanisource:)?(.+?)\|(.+?)\]\]/g,"<a class=\"cited_link\" href=\"http://vanisource.org/wiki/$1\"><b>$2</b></a>");
 $(this).html(t);
 }
 });

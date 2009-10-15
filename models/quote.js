@@ -299,18 +299,21 @@ Quote = MVC.Model.extend('quote',
 
         function fix_links(text) {
             var re, re_l;
-            re = /[\[\(](.+?)[\]\)]/g;
+            re1 = /\[(.+?)\]/g;
+            re2 = /\((.+?)\)/g;
             re_l = /^\s*(\(\[\[(?:Vanisource:)?[^\[]+\]\]\))$/mg;
-            text = text.replace(re, replace_link);
+            text = text.replace(re1, replace_link);
+            text = text.replace(re2, replace_link);
             text = text.replace(re_l, ':$1');
             return text;
         }
         function replace_link(all, l) {
             var f, l_db;
+            if(/\[/.test(l)) { return all; }
             l_db = {
                 'BG $1': /^Bg\. (\d+.\d+)$/i,
                 '$1': /^(SB \d+.\d+.\d+)$/,
-                'CC $1': /^Cc. ((?:Adi|Ādi|Madhya|Antya) \d+.\d+)$/,
+                'CC $1': /^(?:Cc. )?((?:Adi|Ādi|Madhya|Antya) \d+.\d+)$/,
                 'NOI $1': /^NoI (\d+)$/i,
 																'ISO $1': /^Īśo (?:mantra )?(\d+)$/i
             };
