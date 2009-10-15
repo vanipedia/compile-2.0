@@ -22,7 +22,7 @@
 <%if (quote.heading) { %>
         <div class="heading"><%= quote.heading %></div>
 <% } %>
-<span class="link<% if(quote.bad_link) { %> bad_link<% } %>"><a href='/wiki/index.php/<%= quote.link %>'><%= quote.link_text %><% if (quote.section) { %>, <%= quote.section %><% } %></a>:</span>
+<span class="link<% if(quote.bad_link) { %> bad_link<% } %>"><a href='http://vanisource.org/wiki/<%= quote.link %>'><%= quote.link_text %><% if (quote.section) { %>, <%= quote.section %><% } %></a>:</span>
 <%if (quote.trans || quote.purport) { %>
     <%if (quote.trans) { %>
       <div class="trans text"><%= quote.trans %></div>
