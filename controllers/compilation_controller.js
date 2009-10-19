@@ -41,7 +41,8 @@ CompileController = MVC.Controller.extend('compilation',
 								// jQuery.autocomplete was customized in order to display properly
 								// in our fixed compile_tools box
 								$(elem).autocomplete("/php/get_vanisource_title.php", {
-												extraParams: { type: 'title', suggest: true, minChars: 2},
+												extraParams: { type: 'title', suggest: true},
+            minChars: 4,
 												resultsClass: 'link_suggest_results',
 												fixed: fixed
 								});
@@ -51,11 +52,11 @@ CompileController = MVC.Controller.extend('compilation',
 								// jQuery.autocomplete was customized in order to display properly
 								// in our fixed compile_tools box
 								$(elem).autocomplete("/php/category_search2.php", {
-												extraParams: { minChars: 2},
-												resultsClass: 'cat_suggest_results',
-            max: 100,
+												minChars: 3,
+            resultsClass: 'cat_suggest_results',
+            max: 45,
 												fixed: fixed,
-            matchContains: true,
+            matchContains: true
 								});
 				}
 },
