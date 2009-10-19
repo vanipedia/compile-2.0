@@ -53,7 +53,9 @@ CompileController = MVC.Controller.extend('compilation',
 								$(elem).autocomplete("/php/category_search2.php", {
 												extraParams: { minChars: 2},
 												resultsClass: 'cat_suggest_results',
-												fixed: fixed
+            max: 100,
+												fixed: fixed,
+            matchContains: true,
 								});
 				}
 },
