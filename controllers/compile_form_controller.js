@@ -96,7 +96,7 @@ CompileFormController = MVC.Controller.extend('compile_form',
     if (re.test(text)) {
       submit = {};
       // Remove Ref from VedaBase
-      temp_quote = $.trim(text.replace(re, ''));
+      temp_quote = $.trim(text.replace(re, '').replace(/^[a-z]/, camel));
       // Convert Balaram to Unicode encoding and diacritics
       //temp_quote = BaltoUni(temp_quote); *** deprecated since we are doing the conversion inside the Quote.init
       // Save quote text to Class variable temp_quote
@@ -114,6 +114,9 @@ CompileFormController = MVC.Controller.extend('compile_form',
     } else {
       this.publish('warning', { msg: "No Vedabase Reference in pasted quote!\nPerhaps you forgot to use the \"Copy with Reference\" button in Vedabase"});
       return;
+    }
+    function camel(first) {
+        return first.toUpperCase();
     }
   },
 

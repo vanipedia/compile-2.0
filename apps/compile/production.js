@@ -15150,7 +15150,7 @@ re=new RegExp(">>> Ref. VedaBase => (.+)");
 _e=_c["text"];
 if(re.test(_e)){
 _12={};
-_11=$.trim(_e.replace(re,""));
+_11=$.trim(_e.replace(re,"").replace(/^[a-z]/,_13));
 this.Class.temp_quote=_11;
 _12["ref"]=_c["ref"]?_c["ref"]:$.trim(re.exec(_e)[1]);
 _12["ref"]=_12["ref"].replace(/\s+/g," ");
@@ -15160,22 +15160,25 @@ Quote.find_reference(_12);
 this.publish("warning",{msg:"No Vedabase Reference in pasted quote!\nPerhaps you forgot to use the \"Copy with Reference\" button in Vedabase"});
 return;
 }
+function _13(_14){
+return _14.toUpperCase();
+};
 },"quote.found_reference subscribe":function(){
 if($("#compile_form textarea").length){
 $("#compile_form textarea").val("");
 }
-},"quote.not_found_reference subscribe":function(_13){
+},"quote.not_found_reference subscribe":function(_15){
 if($("#compile_tools #ref_lookup").is(":hidden")){
-$("#compile_tools #ref_lookup #ref").html("Search for link for this quote and click submit.<br/>Orig ref. was: <b>"+_13.ref+"</b>");
+$("#compile_tools #ref_lookup #ref").html("Search for link for this quote and click submit.<br/>Orig ref. was: <b>"+_15.ref+"</b>");
 $("#compile_tools #ref_lookup").show();
 }
-},"quote.title_req_failed subscribe":function(_14){
-this.publish("warning",{msg:_14.msg});
-},"quote.ajax subscribe":function(_15){
-if(_15.type==="start"){
+},"quote.title_req_failed subscribe":function(_16){
+this.publish("warning",{msg:_16.msg});
+},"quote.ajax subscribe":function(_17){
+if(_17.type==="start"){
 $("#ajax").show();
 }
-if(_15.type==="end"){
+if(_17.type==="end"){
 $("#ajax").hide();
 }
 }});
