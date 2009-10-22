@@ -8,16 +8,22 @@ FactsController = MVC.Controller.extend('facts',
         CompileController.category_autocomplete($('#facts > #categories #add_categories > input'), true);
     },
   /****** Event listeners ******/
-  ".facts_tools .add click": function(params) {
-    this.add(params);
-  },
-  ".facts_tools input keyup": function(params) {
-    var that = this;
-    params.event.kill();
-    if(params.event.keyCode === 13) {
-      that.add(params);
-    }
-  },
+    ".facts_tools .add keyup": function(params) {
+      var that = this;
+      params.event.kill();
+      if(params.event.keyCode === 13) {
+        that.add(params);
+      }
+    },
+    ".facts_tools .add blur": function(params) {
+        if($('.cat_suggest_results').is(':hidden')) { this.reset_input(params.element); }
+    },
+    ".facts_tools .add focus": function(params) {
+        if(params.element.value.indexOf('Add new') === 0) {
+            $(params.element).css({ color: 'black', 'font-size': '1.2em', 'font-weight': 'normal' });
+            params.element.value = '';
+        }
+    },
   "#copy_terms .copy click": function(params) {
     var that, all_terms;
     that = this;
@@ -174,6 +180,12 @@ FactsController = MVC.Controller.extend('facts',
     if($("#complete_ALL").is(':checked')) $('#facts #goal').prev().hide();
     this.editable();
   },
+    reset_input: function(elem) {
+        var fact;
+        $(elem).css({color: '#D2C1F2', 'font-size': '', 'font-weight': '' });
+        fact = $(elem.parentNode).attr('fact') === 'terms' ? 'expressions' : $(elem.parentNode).attr('fact');
+        elem.value = 'Add new '+fact+'...';
+    },
     color_list: function(list) {
         list.filter(':even').css({
             background: '#D4D9F9'
