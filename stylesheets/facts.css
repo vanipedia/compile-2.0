@@ -30,21 +30,25 @@ position:relative;
 	width: 100%
 }
 
-#facts .facts_tools > div > label, #facts .facts_tools > div > span  {
-}
 #facts .facts_tools > div > label {
 	width: 15%;
-	margin: 6px 4px;
+	margin: 6px 2px;
 	float: left;
 }
 #facts .facts_tools > div > input {
-	width: 75%;
-	margin: 6px 2px 0px 2px;
+	margin: 6px;
 	float: left;
+	width: 65%;
+}
+#facts .facts_tools > div > .add {
+	width: 85%;
+	color: #D2C1F2;
+	font-size: 1.1em;
+	font-weight: bold;
 }
 #facts .facts_tools > div > span {
-	margin: 10px 4px;
-	float: right;
+	margin: 4px;
+	float: left;
 	cursor:pointer;
 }
 #facts #terms_tools #copy_terms_man {

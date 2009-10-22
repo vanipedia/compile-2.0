@@ -15186,105 +15186,112 @@ $("#ajax").hide();
 include.set_path('controllers');
 FactsController=MVC.Controller.extend("facts",{},{load:function(){
 CompileController.category_autocomplete($("#facts > #categories #add_categories > input"),true);
-},".facts_tools .add click":function(_1){
-this.add(_1);
-},".facts_tools input keyup":function(_2){
-var _3=this;
-_2.event.kill();
-if(_2.event.keyCode===13){
-_3.add(_2);
+},".facts_tools .add keyup":function(_1){
+var _2=this;
+_1.event.kill();
+if(_1.event.keyCode===13){
+_2.add(_1);
 }
-},"#copy_terms .copy click":function(_4){
-var _5,_6;
-_5=this;
-_4.event.kill();
-_6=Facts.get_all_terms();
-if(_6===""){
+},".facts_tools .add blur":function(_3){
+if($(".cat_suggest_results").is(":hidden")){
+this.reset_input(_3.element);
+}
+},".facts_tools .add focus":function(_4){
+if(_4.element.value.indexOf("Add new")===0){
+$(_4.element).css({color:"black","font-size":"1.2em","font-weight":"normal"});
+_4.element.value="";
+}
+},"#copy_terms .copy click":function(_5){
+var _6,_7;
+_6=this;
+_5.event.kill();
+_7=Facts.get_all_terms();
+if(_7===""){
 this.publish("warning",{msg:"You have no expressions to copy"});
 return;
 }
 if(window.console){
-console.log(_6);
+console.log(_7);
 }
-$("#copy_terms_man").val(_6).show().select();
-},add:function(_7){
-var _8,_9;
-_8=$(_7.element).parents(".fact").attr("id");
-_9=$(_7.element).parent().children("input").val().replace(/"/g,"");
-$(_7.element).parent().children("input").val("");
-_8==="terms"&&/\|/.test(_9)?_a(_9):Facts.add(_8,_9);
-function _a(_b){
-var _c;
-_c=_b.split("|");
-$.each(_c,function(i,t){
+$("#copy_terms_man").val(_7).show().select();
+},add:function(_8){
+var _9,_a;
+_9=$(_8.element).parents(".fact").attr("id");
+_a=$(_8.element).parent().children("input").val().replace(/"/g,"");
+$(_8.element).parent().children("input").val("");
+_9==="terms"&&/\|/.test(_a)?_b(_a):Facts.add(_9,_a);
+function _b(_c){
+var _d;
+_d=_c.split("|");
+$.each(_d,function(i,t){
 Facts.add("terms",t);
 });
 };
-},update:function(_f,_10){
-var _11,_12;
-_11=$(_f).hasClass("fact")?_f.id:$(_f).parents(".fact").attr("id");
-_12=_f.id.match(/\d+/);
-return Facts.update(_11,_12,_10);
-},append:function(_13){
-var css,_15;
-_15=_13.fact+"_list";
-this.id=_13.fact+"_"+_13.index;
-this.f_class=_13.fact;
-this.value=Facts.get(_13.fact,_13.index);
-if($("#"+_15).length===0){
+},update:function(_10,_11){
+var _12,_13;
+_12=$(_10).hasClass("fact")?_10.id:$(_10).parents(".fact").attr("id");
+_13=_10.id.match(/\d+/);
+return Facts.update(_12,_13,_11);
+},append:function(_14){
+var css,_16;
+_16=_14.fact+"_list";
+this.id=_14.fact+"_"+_14.index;
+this.f_class=_14.fact;
+this.value=Facts.get(_14.fact,_14.index);
+if($("#"+_16).length===0){
 if(window.console){
-console.error("Error in FactsController.append: "+_15+" does not exist in dom");
+console.error("Error in FactsController.append: "+_16+" does not exist in dom");
 }
 return;
 }
-this.render({bottom:_15,action:"append"});
-css=_13.index%2?{background:"#DEE2F9"}:{background:"#D4D9F9"};
+this.render({bottom:_16,action:"append"});
+css=_14.index%2?{background:"#DEE2F9"}:{background:"#D4D9F9"};
 $("#"+this.id).css(css);
 this.editable(this.id);
-if(_13.fact==="terms"){
+if(_14.fact==="terms"){
 this.hilite(this.value);
 }
-},hilite:function(_16){
-if(_16===""){
+},hilite:function(_17){
+if(_17===""){
 return;
 }
-$(".quote .text").highlight_sanskrit(_16);
-},un_hilite:function(_17){
-if(!_17){
+$(".quote .text").highlight_sanskrit(_17);
+},un_hilite:function(_18){
+if(!_18){
 if(window.console){
-console.log("term missing in FactsController.un_hilite "+_17);
+console.log("term missing in FactsController.un_hilite "+_18);
 }
 return;
 }
 var v,re;
-re=new RegExp("<span class=\"highlight_terms\">"+_17+"</span>","g");
+re=new RegExp("<span class=\"highlight_terms\">"+_18+"</span>","g");
 $(".quote .text").each(function(){
-v=$(this).html().replace(re,_17);
+v=$(this).html().replace(re,_18);
 $(this).html(v);
 });
 },editable:function(id){
-var _1b,_1c;
-_1c=this;
-_1b=id?"#"+id:".term, #goal, .categories, #notes";
-$(_1b).editable(function(_1d,_1e){
-return _1c.update(this,_1d);
+var _1c,_1d;
+_1d=this;
+_1c=id?"#"+id:".term, #goal, .categories, #notes";
+$(_1c).editable(function(_1e,_1f){
+return _1d.update(this,_1e);
 },{event:"dblclick",type:"text",style:"border: solid 0px indigo;"});
-},_render_facts:function(_1f){
-var _20,_21;
-_20=this;
-this.facts=_1f;
-$("#facts").length?_21={to:"facts",action:"facts"}:_21={bottom:"compile_tools",action:"facts"};
-this.render(_21);
+},_render_facts:function(_20){
+var _21,_22;
+_21=this;
+this.facts=_20;
+$("#facts").length?_22={to:"facts",action:"facts"}:_22={bottom:"compile_tools",action:"facts"};
+this.render(_22);
 $(document).ready(function(){
-_20.attach_events();
+_21.attach_events();
 });
 },"compilation.built subscribe":function(){
 this.run_checks();
 },run_checks:function(){
 Facts.check_totals();
 },attach_events:function(){
-var _22;
-_22=this;
+var _23;
+_23=this;
 $("#facts").accordion({autoHeight:false,collapsible:true,active:false});
 this.color_list($(".term, .categories, .compiler, #complete > div, #totals_by_section > div"));
 $.fn.check=function(){
@@ -15301,7 +15308,7 @@ $.each(Facts.db.complete,function(){
 $("#complete_"+this).check();
 });
 $(".complete_checks").click(function(){
-_22.checkbox(this);
+_23.checkbox(this);
 if($(".complete_checks:checked").length===7){
 $("#complete_ALL").check().click().check();
 return;
@@ -15318,47 +15325,52 @@ if($("#complete_ALL").is(":checked")){
 $("#facts #goal").prev().hide();
 }
 this.editable();
-},color_list:function(_23){
-_23.filter(":even").css({background:"#D4D9F9"}).end().filter(":odd").css({background:"#DEE2F9"});
-},checkbox:function(_24){
-var _25,_26;
-_25=_24.id.replace(/complete_/,"");
-_26=_24.checked?"add":"del";
-Facts.complete(_25,_26);
+},reset_input:function(_24){
+var _25;
+$(_24).css({color:"#D2C1F2","font-size":"","font-weight":""});
+_25=$(_24.parentNode).attr("fact")==="terms"?"expressions":$(_24.parentNode).attr("fact");
+_24.value="Add new "+_25+"...";
+},color_list:function(_26){
+_26.filter(":even").css({background:"#D4D9F9"}).end().filter(":odd").css({background:"#DEE2F9"});
+},checkbox:function(_27){
+var _28,_29;
+_28=_27.id.replace(/complete_/,"");
+_29=_27.checked?"add":"del";
+Facts.complete(_28,_29);
 },update_t_b_sections_view:function(){
 this.totals=Facts.db.totals_by_section;
 this.render({to:"totals_by_section",action:"totals"});
 },update_totals_view:function(){
 this.total=Facts.db.total;
 this.render({to:"total",action:"total"});
-},"facts.created subscribe":function(_27){
-var _28;
-_28=this;
-this._render_facts(_27.facts);
+},"facts.created subscribe":function(_2a){
+var _2b;
+_2b=this;
+this._render_facts(_2a.facts);
 $("#categories_list").sortable({placeholder:"facts_sortable_placeholder",axis:"y",cursor:"move",forcePlaceholderSize:true,items:"li",opacity:0.7,update:function(){
-_28.color_list($(".categories"));
+_2b.color_list($(".categories"));
 }});
 $("#categories_list").disableSelection();
-},"facts.added subscribe":function(_29){
-this.append(_29);
-},"facts.deleted subscribe":function(_2a){
-var _2b;
-_2b="#"+_2a.fact+"_"+_2a.index;
-if(_2a.fact==="terms"){
-this.un_hilite(_2a.old);
+},"facts.added subscribe":function(_2c){
+this.append(_2c);
+},"facts.deleted subscribe":function(_2d){
+var _2e;
+_2e="#"+_2d.fact+"_"+_2d.index;
+if(_2d.fact==="terms"){
+this.un_hilite(_2d.old);
 }
-$(_2b).remove();
-},"facts.totals_updated subscribe":function(_2c){
+$(_2e).remove();
+},"facts.totals_updated subscribe":function(_2f){
 this.update_t_b_sections_view();
 this.update_totals_view();
-},"facts.updated_term subscribe":function(_2d){
-this.hilite(_2d.term);
-},"quote.created subscribe":function(_2e){
-Facts.update_totals(_2e);
-},"compilation.deleted subscribe":function(_2f){
-Facts.update_totals(_2f);
-},"compilation.undone subscribe":function(_30){
-Facts.update_totals(_30);
+},"facts.updated_term subscribe":function(_30){
+this.hilite(_30.term);
+},"quote.created subscribe":function(_31){
+Facts.update_totals(_31);
+},"compilation.deleted subscribe":function(_32){
+Facts.update_totals(_32);
+},"compilation.undone subscribe":function(_33){
+Facts.update_totals(_33);
 }});
 ;
 include.end_of_production();
