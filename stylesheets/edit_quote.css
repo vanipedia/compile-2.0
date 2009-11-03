@@ -48,13 +48,7 @@
  cursor: pointer;
  padding: 3px;
 }
-.edit_quote #diacritics {
-    position: relative;
-    float: right;
-    right: 5%;
-    margin: 0px 10px;
-    font-size: 1.1em;
-}
+
 .edit_quote #prabhupada_icon {
   background-image: url("images/prabhupada_icon.png");
   background-repeat: no-repeat;
@@ -64,6 +58,30 @@
   float: right;
   border: #3F4C9D solid;
   border-width: 1px 2px 2px 1px;
-  right: 5%;
+  right: 1%;
   cursor: pointer;
+}
+.edit_quote #diacritics {
+    position: relative;
+    float: right;
+    right: 1%;
+    margin: 0px 10px;
+}
+.edit_quote #diacritics #diacritics_toggle:hover {
+	cursor: pointer;
+	text-decoration: underline;
+	color: #3F4C9D;
+}
+.edit_quote #diacritics p {
+	display: none;
+}
+
+.edit_quote #diacritics a {
+	border: 1px transparent solid;
+	padding: 2px;
+}
+.edit_quote #diacritics a:hover {
+	text-decoration: none;
+  border: #3F4C9D solid;
+  border-width: 2px 1px;
 }

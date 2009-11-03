@@ -66,6 +66,9 @@ QuotesController = MVC.Controller.extend('quotes',
         }
         this.insert_prabhupada_speaker(edit_quote_text);
     },
+    "#diacritics b#diacritics_toggle click": function(params) {
+      $(params.element).siblings('p').toggle();
+    },
     "#diacritics a click": function(params) {
         var edit_quote_text, diacritic;
         params.event.kill();

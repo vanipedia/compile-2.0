@@ -128,6 +128,9 @@ CompileController = MVC.Controller.extend('compilation',
                 alert('You must Log-in to compile.');
                 return;
             }
+            $('title, #firstHeading').each(function() {
+                $(this).text($(this).text().replace(/Editing/, 'Compiling'));
+            });
             $('<div id="background_overlay"></div>').appendTo('body');
             $('<div id="progressbar"></div>').appendTo('body')
             that.publish('progressbar', { text: 'Loading Compilation...'});
