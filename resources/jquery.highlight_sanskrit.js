@@ -1,3 +1,4 @@
+
 /**
   Highlight_sanskrit.js plug-in for jQuery
   This plug-in is used to highlight terms used in every vaniquotes article and to highlight terms passed
@@ -6,7 +7,7 @@
   options are global: boolean(true|false) and i(case insensitive): boolean(true|false). By default they are both true.
 **/
 
-(function($) {
+;(function($) {
   jQuery.fn.highlight_sanskrit = function(key, options) {
     defaults = {
       i: true,
