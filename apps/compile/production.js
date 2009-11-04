@@ -15355,7 +15355,6 @@ this._render_facts(_2a.facts);
 $("#categories_list").sortable({placeholder:"facts_sortable_placeholder",axis:"y",cursor:"move",forcePlaceholderSize:true,items:"li",opacity:0.7,update:function(){
 _2b.color_list($(".categories"));
 }});
-$("#categories_list").disableSelection();
 },"facts.added subscribe":function(_2c){
 this.append(_2c);
 },"facts.deleted subscribe":function(_2d){
