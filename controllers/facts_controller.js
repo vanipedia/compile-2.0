@@ -232,8 +232,6 @@ FactsController = MVC.Controller.extend('facts',
         opacity: 0.7,
         update: function() { that.color_list($('.categories')) }
     });
-    $("#categories_list").disableSelection();
-
   },
   /**
    * facts.added will receive message from facts and add the element to the dom for display
