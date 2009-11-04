@@ -56,7 +56,8 @@ CompileController = MVC.Controller.extend('compilation',
             resultsClass: 'cat_suggest_results',
             max: 45,
 												fixed: fixed,
-            matchContains: true
+            matchContains: true,
+            selectFirst: false
 								});
 				}
 },

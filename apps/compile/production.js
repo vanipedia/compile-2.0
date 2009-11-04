@@ -13924,7 +13924,7 @@ $("#compile_tools_menu").animate({right:"0px"},"fast");
 },link_autocomplete:function(_1,_2){
 $(_1).autocomplete("/php/get_vanisource_title.php",{extraParams:{type:"title",suggest:true},minChars:4,resultsClass:"link_suggest_results",fixed:_2});
 },category_autocomplete:function(_3,_4){
-$(_3).autocomplete("/php/category_search2.php",{minChars:3,resultsClass:"cat_suggest_results",max:45,fixed:_4,matchContains:true});
+$(_3).autocomplete("/php/category_search2.php",{minChars:3,resultsClass:"cat_suggest_results",max:45,fixed:_4,matchContains:true,selectFirst:false});
 }},{load:function(_5){
 this._loading("init");
 var _6,_7;
