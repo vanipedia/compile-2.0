@@ -159,9 +159,6 @@ CompileController = MVC.Controller.extend('compilation',
                 $('#compilation').fadeIn('slow').removeClass('hidden');
                 that.show_compile_tools();
             });
-            //setTimeout(function() {
-              //that.publish('warning', { msg: "Your session will time out soon, please save your work soon to avoid a wiki session timeout." });
-            //}, 900000);
             this.Class.loading = false;
         }
         return;
@@ -540,6 +537,12 @@ CompileController = MVC.Controller.extend('compilation',
         // Save!
         that.update_progressbar();
         $('#wpSave').click();
+        // Last check in case we are still here
+        setTimeout(function() {
+            if(that.Class.saving) {
+                that.check_internet_connection();
+            }
+        }, 15000);
     }, // End of _do_save
 
     new_compilation_message: function() {

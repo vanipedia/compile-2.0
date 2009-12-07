@@ -13298,11 +13298,12 @@ _35=_35.replace(/^\n+|\n+$/g,"");
 return _35;
 };
 function _2a(_36){
-_36=_36.replace(/‘([^‘“”]+?)’/g,"\"$1\"");
-_36=_36.replace(/“([^“‘’]+?)”/g,"\"$1\"");
-_36=_36.replace(/'{2,}(.+?)'{2,}/g,"\"$1\"");
-_36=_36.replace(/(\S+)’/g,"$1'");
-_36=_36.replace(/(\S+)’s/g,"$1's");
+_36=_36.replace(/"([^"]+?)''/g,"\"$1\"");
+_36=_36.replace(/‘([^‘“”’]+?)’/g,"\"$1\"");
+_36=_36.replace(/“([^“”‘’]+?)”/g,"\"$1\"");
+_36=_36.replace(/'{2,}/g,"\"");
+_36=_36.replace(/(\w)’(\s)/g,"$1'$2");
+_36=_36.replace(/(\w)’s/g,"$1's");
 return _36;
 };
 }},{init:function(_37){
@@ -14290,6 +14291,11 @@ console.log(_3f);
 _3a.update_progressbar();
 _3a.update_progressbar();
 $("#wpSave").click();
+setTimeout(function(){
+if(_3a.Class.saving){
+_3a.check_internet_connection();
+}
+},15000);
 },new_compilation_message:function(){
 $(".mw-newarticletext").replaceWith("<div id=\"new_compilation_message\"></div>");
 this.text="Welcome to a new Vaniquotes compiling page. Use the Compiling tools box to make new quotes and edit this page's facts";

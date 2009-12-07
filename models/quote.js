@@ -337,11 +337,12 @@ Quote = MVC.Model.extend('quote',
         }
         function fix_q_marks(text) {
             // fix apostrophies and quotation marks
-            text = text.replace(/‘([^‘“”]+?)’/g, '"$1"');
-            text = text.replace(/“([^“‘’]+?)”/g, '"$1"');
-            text = text.replace(/'{2,}(.+?)'{2,}/g, '"$1"');
-            text = text.replace(/(\S+)’/g, "$1'");
-            text = text.replace(/(\S+)’s/g, "$1's");
+            text = text.replace(/"([^"]+?)''/g, '"$1"'); // Mostly found in Letters
+            text = text.replace(/‘([^‘“”’]+?)’/g, '"$1"');
+            text = text.replace(/“([^“”‘’]+?)”/g, '"$1"');
+            text = text.replace(/'{2,}/g, '"');
+            text = text.replace(/(\w)’(\s)/g, "$1'$2");
+            text = text.replace(/(\w)’s/g, "$1's");
             return text;
         }
     }
