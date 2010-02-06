@@ -1,4 +1,5 @@
-.quote {
+
+div#bodyContent > div#compilation div.quote {
 	background: none;
 	border: 2px solid white;
 	padding: 4px;
@@ -8,34 +9,34 @@
     width: 97%;
     overflow: auto;
 }
-.quote:hover {
+div#bodyContent > div#compilation div.quote:hover {
 	background: #FFFEC6;
 	border: 2px solid #A68940;
 	padding: 4px;
 }
-.quote .highlight_terms {
+div#bodyContent > div#compilation div.quote .highlight_terms {
     background: #EEE8AA;
     padding: 0px 1px;
 }
-.quote:hover .highlight_terms {
+div#bodyContent > div#compilation div.quote:hover .highlight_terms {
  background: #D2C1F2;
  padding: 0px 1px;
 }
-.quote > div {
+div#bodyContent > div#compilation div.quote > div {
  margin: 6px 2px;
 }
 
-.heading, .trans, .link {
+div#bodyContent > div#compilation div.quote >.heading, div#bodyContent > div#compilation div.quote > .trans, div#bodyContent > div#compilation div.quote > .link {
  font-weight: bold;
 }
-.heading {
+div#bodyContent > div#compilation div.quote > .heading {
  color: #296F39;
 }
-.trans, .purport {
+div#bodyContent > div#compilation div.quote > .trans, div#bodyContent > div#compilation div.quote > .purport {
  margin: 8px 0px 0px 0px;
 }
 
-.quote .status_text {
+div#bodyContent > div#compilation div.quote .status_text {
 	display: none;
 	position: relative;
 	float: right;
@@ -43,29 +44,49 @@
 	font-style: italic;
 }
 
-.q_updated .status_text {
+div#bodyContent > div#compilation div.quote.q_updated div.status_text {
 	display: block;
 }
-.q_updated .status_text:after {
+div#bodyContent > div#compilation div.quote.q_updated div.status_text:after {
 	content: 'Updated!';
 }
 
-.q_updated .undo_quote {
+div#bodyContent > div#compilation div.quote.q_updated .undo_quote {
 	display: block;
 }
 
 /* q_menu section */
-.q_menu {
+div#bodyContent > div#compilation div.quote > div.q_menu {
  background: transparent;
  position: relative;
  float: right;
  border: 1px solid transparent;
  padding: 2px;
  margin: 2px;
- width: 100px;
+ visibility: hidden;
 }
 
-.quote:hover .q_menu {
+div#bodyContent > div#compilation div.quote > div.q_menu > div {
+  position: relative;
+  float: left;
+}
+
+div#bodyContent > div#compilation div.quote > div.q_menu > div.q_tools {
+  width: 18px;
+}
+
+div#bodyContent > div#compilation div.quote > div.q_menu > div.q_tips {
+  width: 100px;
+}
+
+div#bodyContent > div#compilation div.quote > div.q_menu > div.q_tips input {
+  width: 100%;
+  padding: 4px;
+  cursor: pointer;
+  font-size: 0.8em;
+}
+
+div#bodyContent > div#compilation div.quote:hover div.q_menu {
 	background: #D2C1F2;
   border: 1px solid #603F9D;
   padding: 2px;
@@ -73,20 +94,23 @@
   -moz-border-radius-bottomright:15px;
   -moz-border-radius-topright:15px;
   z-index: 2;
+  visibility: visible;
 }
-.quote:hover .q_tools, .quote:hover .tips {
+
+div#bodyContent > div#compilation div.quote:hover .q_tools, .quote:hover .tips {
  visibility: visible;
 }
 
-.undo_quote, .del_quote {
+
+/* undo_quote section */
+div#bodyContent > div#compilation div.quote > div.q_menu > div.q_tools > div.undo_quote, div#bodyContent > div#compilation div.quote > div.q_menu > div.q_tools > div.del_quote, div#bodyContent > div#compilation div.quote > div.q_menu > div.q_tools > div.candidate_quote {
  position: relative;
- float: right;
  padding: 2px;
  cursor:pointer;
  width: 18px;
  height: 18px;
 }
-.undo_quote:hover img, .del_quote:hover img {
+div#bodyContent > div#compilation div.quote > div.q_menu > div.q_tools > div.undo_quote:hover img, div#bodyContent > div#compilation div.quote > div.q_menu > div.q_tools > div.del_quote:hover img {
 	position: relative;
 	width: 18px;
 	height: 18px;
@@ -97,24 +121,9 @@
 .undo_quote {
 	display: none;
 }
-.q_tools, .q_tips .tips {
- visibility: hidden;
- margin: 2px 0px;
- padding: 2px;
-}
-.q_tips input {
- cursor: pointer;
- font-size: 0.8em;
-}
 
-.q_tips > div {
-  display: none;
-  margin-left: 10px;
-}
-.alert_tip {
-	display: none;
-}
-.building_quote, .building_quote:hover {
+/* Building_quote section */
+div#bodyContent > div#compilation div.quote.building_quote, div#bodyContent > div#compilation div.quote.building_quote:hover {
  background: white;
  border: 25px solid #3F4C9D;
  padding: 25px;
@@ -123,12 +132,12 @@
  position: relative;
  width: 85%;
  z-index: 2;
-background-image: url(/images/Vaniquotes-logo-small2.png);
+ background-image: url(/images/Vaniquotes-logo-small2.png);
  background-repeat: no-repeat;
  background-position: center;
 }
 
-.building_quote .q_menu {
+div#bodyContent > div#compilation div.quote.building_quote > div.q_menu {
     background: #D2C1F2;
     border: 1px solid #603F9D;
     padding: 2px;
@@ -138,45 +147,43 @@ background-image: url(/images/Vaniquotes-logo-small2.png);
     z-index: 2;
 }
 
-.building_quote .q_menu * {
+div#bodyContent > div#compilation div.quote.building_quote > div.q_menu {
  visibility: visible;
 }
 
-/* hide double background */
-.building_quote table {
- background: none;
-}
-.building_quote .status_text {
+div#bodyContent > div#compilation div.quote.building_quote div.status_text {
  display: block;
 }
-.q_new .status_text {
+
+div#bodyContent > div#compilation div.quote.q_new div.status_text {
 	display: block;
 }
-.q_new .status_text:after {
+div#bodyContent > div#compilation div.quote.q_new div.status_text:after {
 	content: 'Inserted!';
 }
-.building_quote .status_text:after {
+div#bodyContent > div#compilation div.quote.building_quote div.status_text:after {
   content: 'New!'
 }
-.q_bad_section .q_menu .tips {
+
+div#bodyContent > div#compilation div.quote.q_bad_section > div.q_menu input.tips {
  visibility: visible;
 }
 
 .q_bad_section .tips .edit_section_tip {
  background: url(/images/pulsating_red.gif);
 }
-#alert_tip > input {
-text-align: center;
-margin: 2px 0px;
-padding: 2px;
+
+/* alert_tip section */
+div#bodyContent > div#compilation div.quote div#alert_tip {
+	display: none;
 }
 
-#alert_tip > span {
+div#bodyContent > div#compilation div.quote div#alert_tip > span {
  font-weight: bold;
  color: #603F9D;
 }
 
-.quote .bad_link {
+div#bodyContent > div#compilation div.quote .bad_link {
 		background:url(images/red-alert.gif);
 		padding:2px 4px;
 }

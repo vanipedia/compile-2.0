@@ -14,6 +14,8 @@ CompileController = MVC.Controller.extend('compilation',
 
     saving: false,
 
+    compile_tools: '',
+
     compile_tools_menu_hover_options: {
         sensitivity: 2, // number = sensitivity threshold (must be 1 or higher)
         interval: 300, // number = milliseconds for onMouseOver polling interval
@@ -27,12 +29,12 @@ CompileController = MVC.Controller.extend('compilation',
     },
     // define hiding and show functions for compile_tools_menu
     hide_tools_menu: function() {
-        $('#compile_tools_menu').animate({
+        $('div#bodyContent > div#compilation > div#compile_tools_menu').animate({
             right: "-72px"
         }, 'slow');
     },
     show_tools_menu: function() {
-        $('#compile_tools_menu').animate({
+        $('div#bodyContent > div#compilation > div#compile_tools_menu').animate({
             right: "0px"
         }, 'fast');
     },
@@ -67,13 +69,12 @@ CompileController = MVC.Controller.extend('compilation',
 	 * onLoad handler to retrieve the data from the current Vaniquotes page
 	 * It will only retrieve if the page is in edit mode (wiki wgAction == 'edit' global)
 	 */
-
     load: function(params) {
         this._loading('init');
         var that, data;
         that = this;
         that.update_progressbar(10);
-        data = $('#wpTextbox1').val();
+        data = $('div#bodyContent > form#editform > textarea#wpTextbox1').val();
         // Check this page for existing compilation tags
         if(data !== '' && data.indexOf('<div id="compilation">') === -1) {
             if(window.console) { console.log('No compilation found in this page!' ); }
@@ -98,26 +99,26 @@ CompileController = MVC.Controller.extend('compilation',
         Compilation.build(data);
     },
 
-    "#compile_tools_hide click": function(params) {
+    "div#compile_tools span#compile_tools_hide click": function(params) {
         this.hide_compile_tools();
     },
-    "#transparent_background click": function() {
+    "div#transparent_background click": function() {
         this.hide_compile_tools();
     },
-    "#compile_tools_toggle click": function(params) {
+    "div#compile_tools_menu p#compile_tools_toggle click": function(params) {
         // calculate pos in page for callback to scroll page back to its current location
         var pos = params.event.pageY - 50;
         this.toggle_compile_tools(pos);
     //if(window.console) { console.log(pos); }
     },
-    "#compile_tools_save click": function(params) {
+    "div#compile_tools_menu p#compile_tools_save click": function(params) {
 								params.event.kill();
         this.save();
     },
-    "#compile_form .ui-state-default mouseover": function(params) {
+    "div#compile_tools div#compile_form .ui-state-default mouseover": function(params) {
         $(params.element).addClass('ui-state-hover');
     },
-    "#compile_form .ui-state-default mouseout": function(params) {
+    "div#compile_tools #compile_form .ui-state-default mouseout": function(params) {
         $(params.element).removeClass('ui-state-hover');
     },
     // Loading message while building compilation
@@ -138,7 +139,7 @@ CompileController = MVC.Controller.extend('compilation',
             $('#editform, #toolbar').hide();
             $('#mw-edit-longpagewarning').hide();
             this.loading = {};
-            $('#p-cactions').children().each(function() {
+            $('body div#column-one > div#p-cactions').children().each(function() {
                 $('li#ca-edit', this).removeClass('selected');
                 $('li#ca-compile', this).addClass('selected');
             });
@@ -148,15 +149,16 @@ CompileController = MVC.Controller.extend('compilation',
             if(window.console) { console.info('In CompilationController._loading ending gracefully...'); }
             that.update_progressbar(20);
             this.publish('progressbar_hide');
-            $('#editform, #toolbar').show();
+            $('body div#bodyContent > form#editform, body div#bodyContent > #toolbar').show();
         }
 
         if (now === 'end') {
             $(document).ready(function() {
+                CompileController.compile_tools = $('div#bodyContent > div#compilation > div#compile_tools');
                 // Attach jQuery bindings to elements
                 that.attach_events();
                 that.publish('progressbar_hide');
-                $('#compilation').fadeIn('slow').removeClass('hidden');
+                $('body div#bodyContent > div#compilation').fadeIn('slow').removeClass('hidden');
                 that.show_compile_tools();
             });
             this.Class.loading = false;
@@ -168,12 +170,12 @@ CompileController = MVC.Controller.extend('compilation',
         var that;
         that = this;
         // jQuery Event attachments
-        $('#compile_tools').tabs().draggable({ handle: '> ul' });
-        $('#compile_tools_menu').hoverIntent(that.Class.compile_tools_menu_hover_options);
+        CompileController.compile_tools.tabs().draggable({ handle: '> ul' });
+        $('div#bodyContent > div#compilation > div#compile_tools_menu').hoverIntent(that.Class.compile_tools_menu_hover_options);
         // SetTimeout to hide the tools_menu
         setTimeout( that.Class.hide_tools_menu, 5000);
 
-        $('#compile_tools_menu p').bind('mouseenter', function() {
+        $('div#bodyContent > div#compilation > div#compile_tools_menu > p').bind('mouseenter', function() {
             $(this).addClass('ui-state-hover');
         }).bind('mouseleave', function() {
             $(this).removeClass('ui-state-hover');
@@ -216,16 +218,16 @@ CompileController = MVC.Controller.extend('compilation',
     },
     // Sort an individual section's children
     sort_section: function(section) {
-        if($('#'+section).children().length > 1) {
-            $('#'+section).children('.section, .sub_section').tsort({
+        if($('div#compilation > div#'+section).children().length > 1) {
+            $('div#compilation > div#'+section).children('div.section, div.sub_section').tsort({
                 attr: "sec_index"
             });
         }
     },
     // Sort sections according to their index
     _sort_sections: function() {
-        var main_sec = $('.section');
-        var sub_sec  = $('.sub_section');
+        var main_sec = $('div#compilation > div.section');
+        var sub_sec  = $('div#compilation > div.section > div.sub_section');
         $(main_sec).tsort({
             attr: "sec_index"
         });
@@ -238,8 +240,8 @@ CompileController = MVC.Controller.extend('compilation',
         var secs, id;
         secs = [];
         // Loop through subsection first and then sections
-								find_and_remove($('.sub_section'));
-								find_and_remove($('.section'));
+								find_and_remove($('div#compilation > div.section > div.sub_section'));
+								find_and_remove($('div#compilation > div.section'));
 
 								function find_and_remove(elem) {
 												$(elem).each(function() {
@@ -260,21 +262,21 @@ CompileController = MVC.Controller.extend('compilation',
     },
 		// Sort quotes within their (sub_)section
     _sort_quotes: function() {
-        $('.quote').tsort({ attr: "index" });
+        $('div#bodyContent > div#compilation div.quote').tsort({ attr: "index" });
     },
     toggle_compile_tools: function(pos) {
-        $('#compile_tools').is(':hidden') ? this.show_compile_tools(pos) : this.hide_compile_tools(pos);
+        CompileController.compile_tools.is(':hidden') ? this.show_compile_tools(pos) : this.hide_compile_tools(pos);
     },
     show_compile_tools: function(pos) {
         var that;
         that = this;
         this.fix_z_indexes(true);
-        $('#compile_tools').css('opacity', 1).fadeIn('fast', function() {
+        CompileController.compile_tools.css('opacity', 1).fadeIn('fast', function() {
             if(pos) window.scrollTo(0, pos);
         });
-        $('#compile_tools textarea').focus();
-        $('#compile_tools_toggle #compile_tools_toggle_text').text('Hide Tools');
-        $('#transparent_background').show();
+        $('textarea', CompileController.compile_tools).focus();
+        $('div#compilation > div#compile_tools_menu > p#compile_tools_toggle span#compile_tools_toggle_text').text('Hide Tools');
+        $('div#compilation > div#transparent_background').show();
 
     },
 
@@ -282,17 +284,17 @@ CompileController = MVC.Controller.extend('compilation',
         var that;
         that = this;
         // Make transparent background dissapear. This bg is used to enable click on anywhere but inside compie_tools element to hide it.
-        $('#transparent_background').hide();
+        $('div#compilation > div#transparent_background').hide();
         this.fix_z_indexes(false);
         // Blind first => transfer effect => hide
-        $('#compile_tools').css('opacity', 0);
-        $('#compile_tools').effect('transfer', {
-            to: "#compile_tools_toggle",
+        CompileController.compile_tools.css('opacity', 0);
+        CompileController.compile_tools.effect('transfer', {
+            to: "div#compilation > div#compile_tools_menu > p#compile_tools_toggle",
             className: 'compile_tools_transfer'
         }, "medium");
-        $('#compile_tools').hide('fast');
+        CompileController.compile_tools.hide('fast');
 
-        $('#compile_tools_toggle > #compile_tools_toggle_text').text('Show Tools');
+        $('div#compilation > div#compile_tools_menu > p#compile_tools_toggle > span#compile_tools_toggle_text').text('Show Tools');
         setTimeout( that.Class.hide_tools_menu, 5000);
     },
     fix_z_indexes: function(fix) {
@@ -303,7 +305,7 @@ CompileController = MVC.Controller.extend('compilation',
     relogin: function() {
         var that, actionURL;
         that = this;
-        $("#progressbar").progressbar('disable');
+        $("body > div#progressbar").progressbar('disable');
         this.user = wgUserName;
         this.render({
             to: 'login_form',
@@ -321,7 +323,7 @@ CompileController = MVC.Controller.extend('compilation',
                 //data : dataString,
                 success : function( data ) {
                     if(window.console) { console.dir(data); }
-                    $("#progressbar").progressbar('enable');
+                    $("body > div#progressbar").progressbar('enable');
                     // if login succeded try to save again
                     that.save();
                 },
@@ -463,6 +465,7 @@ CompileController = MVC.Controller.extend('compilation',
             return;
 								}
         if(QuotesController.currently_editing) $(".edit_quote #Cancel_quote").click();
+
         that._do_save();
     },
     _do_save: function() {
@@ -486,6 +489,7 @@ CompileController = MVC.Controller.extend('compilation',
             p = q.attr('parent');
             l = q.attr('link').replace(/_/g, ' ');
             lt = $('.link a', q).text();
+            if( $('div.q_menu div.candidate_quote > span', q).hasClass('ui-state-highlight') ) { q.addClass('qod_candidate'); }
             $('.q_menu', q).remove();
             $('.link', q).html("[[Vanisource:"+l+"|"+lt+"]]: ");
             $('.cited_link', q).each(function() {
@@ -574,16 +578,16 @@ CompileController = MVC.Controller.extend('compilation',
         that = this;
         // set compile_tools to its visibility. If it's present we dont need to take care of z-indexes
         // since is being done already by show_compile_tools and hide_compile_tools
-        compile_tools = $("#compile_tools").is(':visible');
+        compile_tools = CompileController.compile_tools.is(':visible');
         this.warning = msg;
         this.fix_z_indexes(true);
         this.render({
             to: 'warning',
             action: 'warning'
         });
-        $('#warning:hidden, #warning_overlay:hidden').fadeIn()
+        $('div#bodyContent > div#compilation > div#warning:hidden, div#bodyContent > div#compilation > div#warning_overlay:hidden').fadeIn()
         $(window).click(function() {
-            $('#warning, #warning_overlay').fadeOut(function() { if(!compile_tools) { that.fix_z_indexes(false); } });
+            $('div#bodyContent > div#compilation > div#warning, div#bodyContent > div#compilation > div#warning_overlay').fadeOut(function() { if(!compile_tools) { that.fix_z_indexes(false); } });
             $(this).unbind('click');
         });
     },
@@ -594,7 +598,7 @@ CompileController = MVC.Controller.extend('compilation',
         var that;
         that = this;
         that.Class.progress_val = val === undefined ? that.Class.progress_val + 3 : that.Class.progress_val + val;
-        $('#progressbar').progressbar('value', that.Class.progress_val);
+        $('body > div#progressbar').progressbar('value', that.Class.progress_val);
         if(window.console) {
             //console.count('progressbar');
             //console.log('Updating progressbar to '+that.Class.progress_val)
@@ -640,7 +644,7 @@ CompileController = MVC.Controller.extend('compilation',
                 $('#ref_lookup_input > #link', this).val('');
             });
         }
-        if($('#compile_tools').is(':visible')) this.hide_compile_tools();
+        if(CompileController.compile_tools.is(':visible')) this.hide_compile_tools();
     },
     "compilation.quote_inserted subscribe": function(params) {
         this.show_compile_tools();
@@ -694,16 +698,16 @@ CompileController = MVC.Controller.extend('compilation',
         that = this;
         that.block_background(true);
         if(window.console) { console.info('Init progressbar'); }
-        if($("#compile_tools").is(':visible')) { that.hide_compile_tools(); }
-        $('#progressbar').progressbar({ value: 0 });
-        $('#progressbar > div').text(params.text);
+        if($("div#bodyContent > div#compilation > #compile_tools").is(':visible')) { that.hide_compile_tools(); }
+        $('body > div#progressbar').progressbar({ value: 0 });
+        $('body > div#progressbar > div').text(params.text);
     },
     "progressbar_hide subscribe": function(params) {
-        if(!$('#progressbar').hasClass('ui-progressbar')) { return; }
+        if(!$('body > div#progressbar').hasClass('ui-progressbar')) { return; }
         var that;
         that = this;
         if(window.console) { console.info('Closing progressbar'); }
-        $('#progressbar').progressbar('destroy');
+        $('body > div#progressbar').progressbar('destroy');
         that.block_background(false);
         that.Class.progress_val = 0;
     },
