@@ -489,7 +489,7 @@ CompileController = MVC.Controller.extend('compilation',
             p = q.attr('parent');
             l = q.attr('link').replace(/_/g, ' ');
             lt = $('.link a', q).text();
-            if( $('div.q_menu div.candidate_quote > span', q).hasClass('ui-state-highlight') ) { q.addClass('qod_candidate'); }
+            if( $('div.q_menu div.candidate_quote', q).hasClass('ui-state-error') ) { q.addClass('qod_candidate'); }
             $('.q_menu', q).remove();
             $('.link', q).html("[[Vanisource:"+l+"|"+lt+"]]: ");
             $('.cited_link', q).each(function() {

@@ -7,7 +7,7 @@
 Quote = MVC.Model.extend('quote',
 /* @Static */
 {
-    attr: ['id', 'parent', 'book', 'heading', 'link', 'link_text', 'text', 'trans', 'purport', 'index', 'type', 'tips', 'verses', 'bad_link'],
+    attr: ['id', 'parent', 'book', 'heading', 'link', 'link_text', 'text', 'trans', 'purport', 'index', 'type', 'tips', 'verses', 'bad_link', 'qod'],
     tips_db: {
         section:             {
             title:     "Set Section",
@@ -30,7 +30,7 @@ Quote = MVC.Model.extend('quote',
             id:         "edit_heading_tip"
         },
         edit_quote: {
-            title:    "Edit quote",
+            title:    "Edit Quote",
             desc:     "...by doubleClicking on it or clicking here",
             id:         "edit_quote_tip"
         },
@@ -378,8 +378,10 @@ Quote = MVC.Model.extend('quote',
 
 								// Check for missing (vital) attributes before building quote
         if(!check_missing_attr()) {
-												if(window.console) { console.error('Quote.init#check_missing_attr: \
-                                               Error creating quote, missing link attribute which is vital to build a quote'); }
+												if(window.console) {
+                console.error('Quote.init#check_missing_attr: \
+                    Error creating quote, missing link attribute which is vital to build a quote');
+            }
 												return;
 								}
 
