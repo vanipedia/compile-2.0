@@ -16,12 +16,12 @@
 	<%= label_tag('Text:') %><br/><%= text_area_tag('text', quote.text) %><br/>
 <% } %>
 <div id="edit_buttons">
-	<input type="button" id="Update_quote" class="ui-state-default ui-corner-all" value="Update">
-	<input type="button" id="Cancel_quote" class="ui-state-default ui-corner-all" value="Cancel">
+	<input type="button" id="Update_quote" class="ui-state-default ui-corner-all" value="Update" title="Click or press Shift+Enter to update this quote">
+	<input type="button" id="Cancel_quote" class="ui-state-default ui-corner-all" value="Cancel" title="Click or press Esc to cancel the editing of this quote">
 </div>
 
 <div id="diacritics">
-  <b id="diacritics_toggle">Diacritics</b>
+  <span id="diacritics_toggle">Diacritics</span>
   <p>
 		<a href="#">ā</a>
 		<a href="#">Ā</a>

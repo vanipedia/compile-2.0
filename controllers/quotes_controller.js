@@ -2,22 +2,47 @@ QuotesController = MVC.Controller.extend('quotes',
 /* @Static */
 {
     currently_editing: false,
-    focused_textarea: false
+    focused_textarea: false,
+    current_quote: '',
+    key: {
+        escape: 27, // esc
+        heading: 72, // h
+        section: 83, // s
+        trans: 84, // t
+        purport: 80, // p
+        trans_purport: 78, // n
+        edit_quote: 81, // q
+        insert: 73, // i
+        heading_create: 65, // a
+        heading_edit: 77, // m
+        heading_set: 69, // e
+        heading_append: 68,// d
+        heading_new: 78, // n
+        verse_select: 86, // v
+        enter: 13
+    },
+    enable_keybindings: function() {
+        var that = this;
+        $(document).bind('keyup', { that: that }, CompileController.keybindings);
+    },
+    disable_keybindings: function() {
+        var that = this;
+        $(document).unbind('keyup', CompileController.keybindings);
+    },
 
 },
 /* @Prototype */
 {
-    load: function() {
-        var that;
-        that = this;
-        // This should probably go into a MainController
-        $(document).keydown(function(e) {
-            if (e.keyCode === 27) {
-                that.cancel();
-            }
-        });
-    },
     /****** Events ******/
+    mouseenter: function(params) {
+        params.event.kill();
+        QuotesController.current_quote = params.element;
+        this.tip_alert_keybindings('enable');
+    },
+    mouseleave: function(params) {
+        params.event.kill();
+        this.tip_alert_keybindings('disable');
+    },
     // Problems handling mouseup and dblclick event confusion
     dblclick: function(params) {
         if (params.element.has_class('edit_quote') !== undefined) return;
@@ -30,7 +55,7 @@ QuotesController = MVC.Controller.extend('quotes',
             view: 'edit'
         });
     },
-    "#Update_quote click": function(params) {
+    "div#edit_buttons input#Update_quote click": function(params) {
         var quote;
         quote = $(params.element).parents('.quote');
         params.event.kill();
@@ -40,7 +65,7 @@ QuotesController = MVC.Controller.extend('quotes',
         });
     },
 
-    "#Cancel_quote click": function(params) {
+    "div#edit_buttons input#Cancel_quote click": function(params) {
         var quote;
         quote = $(params.element).parents('.quote');
         params.event.kill();
@@ -49,11 +74,11 @@ QuotesController = MVC.Controller.extend('quotes',
             action: 'cancel'
         });
     },
-    "#link_text click": function(params) {
+    "div#link_text click": function(params) {
         params.event.kill();
-        $(params.element).parents('.edit_quote').children('#fix_link').toggle().children('#fix_link_input').focus();
+        $(params.element).parents('div.edit_quote').children('div#fix_link').toggle().children('input#fix_link_input').focus();
     },
-    "#prabhupada_icon click": function(params) {
+    "div.edit_quote #prabhupada_icon click": function(params) {
         var edit_quote_text;
         params.event.kill();
         edit_quote_text = $(params.element).parents('.quote').children('#text')[0];
@@ -66,10 +91,10 @@ QuotesController = MVC.Controller.extend('quotes',
         }
         this.insert_prabhupada_speaker(edit_quote_text);
     },
-    "#diacritics b#diacritics_toggle click": function(params) {
+    "div#diacritics span#diacritics_toggle click": function(params) {
       $(params.element).siblings('p').toggle();
     },
-    "#diacritics a click": function(params) {
+    "div#diacritics p a click": function(params) {
         var edit_quote_text, diacritic;
         params.event.kill();
         edit_quote_text = this.Class.focused_textarea;
@@ -86,18 +111,23 @@ QuotesController = MVC.Controller.extend('quotes',
     "textarea focus": function(params) {
         this.Class.focused_textarea = params.element;
     },
-    ".undo_quote click": function(params) {
+    "div.undo_quote click": function(params) {
         if (params.element.has_class('edit_quote') !== undefined) return;
         var quote;
         params.event.kill();
         quote = $(params.element).parents('div.quote');
         this.undo(quote);
     },
-    ".del_quote click": function(params) {
+    "div.del_quote click": function(params) {
         var quote;
         params.event.kill();
         quote = $(params.element).parents('div.quote');
         this.delete_quote(quote);
+    },
+    "div.candidate_quote click": function(params) {
+      var qod_button;
+      params.event.kill();
+      $(params.element).hasClass('ui-state-error') ? $(params.element).removeClass('ui-state-error') : $(params.element).addClass('ui-state-error');
     },
     ".deleted_quote_msg .undo_del_quote click": function(params) {
         var quote;
@@ -105,7 +135,7 @@ QuotesController = MVC.Controller.extend('quotes',
         quote = $(params.element).parents('div.quote');
         this.undo(quote);
     },
-    ".text mouseup": function(params) {
+    "div.text mouseup": function(params) {
         if (window.getSelection().toString() === '') {
             return;
         }
@@ -116,13 +146,13 @@ QuotesController = MVC.Controller.extend('quotes',
         elem = params.element;
         this.check_selection(elem);
     },
-    ".tips click": function(params) {
+    "div.q_menu div.q_tips input.tips click": function(params) {
         var elem;
         elem = params.element;
         params.event.kill();
         this.tips_handler(elem);
     },
-    ".alert_tip_heading_or_verse click": function(params) {
+    "div.q_menu div.q_tips div#alert_tip input.alert_tip_heading_or_verse click": function(params) {
         var id, quote;
         params.event.kill();
         id = params.element.id;
@@ -140,7 +170,7 @@ QuotesController = MVC.Controller.extend('quotes',
         }
 
     },
-    ".alert_tip_heading_set click": function(params) {
+    "div.q_menu div.q_tips div#alert_tip input.alert_tip_heading_set click": function(params) {
         var id, quote;
         params.event.kill();
         id = params.element.id;
@@ -184,7 +214,7 @@ QuotesController = MVC.Controller.extend('quotes',
     },
 
     // Event handler for sections in the q_menu
-    "#alert_tip input click": function(params) {
+    "div.q_menu div.q_tips div#alert_tip input click": function(params) {
         var selected_section, elem;
         params.event.kill();
         elem = params.element
@@ -194,11 +224,19 @@ QuotesController = MVC.Controller.extend('quotes',
         }
         this._do_section(elem, selected_section)
     },
+
+    // custom buttons
     ".ui-state-default mouseover": function(params) {
         $(params.element).addClass('ui-state-hover');
     },
     ".ui-state-default mouseout": function(params) {
         $(params.element).removeClass('ui-state-hover');
+    },
+     ".ui-state-default mousedown": function(params) {
+        $(params.element).addClass('ui-state-active');
+    },
+    ".ui-state-default mouseup": function(params) {
+        $(params.element).removeClass('ui-state-active');
     },
 
     /****** Event responders ********/
@@ -220,6 +258,7 @@ QuotesController = MVC.Controller.extend('quotes',
             this.Class.focused_textarea = false;
             $('#' + id).removeClass('edit_quote');
             if (elem.type === 'new') $('#' + id).addClass('q_new building_quote');
+            this.Class.enable_keybindings();
         } else if (params['view'] === 'edit') {
             action = 'quote_edit';
             this.Class.currently_editing = {
@@ -228,6 +267,8 @@ QuotesController = MVC.Controller.extend('quotes',
             };
             $('#' + id).addClass('edit_quote');
             $(document).unbind('click');
+            this.Class.disable_keybindings();
+            this.edit_view_keybindings('enable');
         } else if (params['view'] === 'delete') {
             action = 'delete';
             $('#' + id).addClass('deleted_quote');
@@ -336,12 +377,12 @@ QuotesController = MVC.Controller.extend('quotes',
 		 */
     check_selection: function(text_elem) {
         var q = $(text_elem).parents('.quote');
-        if ($('#alert_tip', q).is(':visible')) return;
+        if ($('div#alert_tip', q).is(':visible')) return;
         var that, heading_selection, quote, tip_elem;
         that = this;
         heading_selection = $.trim(window.getSelection().toString());
         if (heading_selection === '') {
-            if ($('#alert_tip').is(':visible')) this.cancel_tip(quote);
+            if ($('div#alert_tip').is(':visible')) this.cancel_tip(quote);
             return;
         }
         quote = $(text_elem).parents('div.quote');
@@ -467,11 +508,12 @@ QuotesController = MVC.Controller.extend('quotes',
         // Hide tips and show alert_tip
         if ($(tip_elem).is(':hidden')) {
             $(tip_elem).siblings('.tips').slideUp('fast');
-            $(tip_elem).slideDown('fast'); //effect('highlight', {color: "#E14F1C"});
+            $(tip_elem).slideDown('fast');
         }
-        $(document).click(function() {
+        /*$(document).click(function() {
             if (window.getSelection().toString() === '') that.cancel_tip(params.elem);
-        });
+        });*/
+        this.tip_alert_keybindings('enable');
 
     },
     /**
@@ -516,7 +558,7 @@ QuotesController = MVC.Controller.extend('quotes',
             p = $(elem).parents('div.quote');
         }
         // return tip_element
-        tip = $('#alert_tip', p).get(0);
+        tip = $('div#alert_tip', p).get(0);
         return tip;
     },
     /**
@@ -566,6 +608,49 @@ QuotesController = MVC.Controller.extend('quotes',
             $(elem).highlight_sanskrit(term);
         });
     },
+    edit_view_keybindings: function(action) {
+        var that;
+        that = this;
+        action === 'enable' ?
+            $(this.params.element).bind('keydown', that.edit_view_keybindings_event) :
+            $(this.params.element).unbind('keydown', that.edit_view_keybindings_event);
+    },
+    edit_view_keybindings_event: function(e) {
+        var that, q;
+        that = this;
+        q = this;
+        if(e.keyCode === QuotesController.key['escape']) { $('div#edit_buttons > input#Cancel_quote', q).click(); }
+        if(e.shiftKey && e.keyCode === QuotesController.key['enter'] ) { $('div#edit_buttons > input#Update_quote', q).click(); }
+    },
+
+    tip_alert_keybindings: function(action) {
+        var that;
+        that = this;
+        action === 'enable' ?
+            $(document).bind('keydown', { quote: that }, that.tip_alert_keybindings_event) :
+            $(document).unbind('keydown', that.tip_alert_keybindings_event);
+    },
+    tip_alert_keybindings_event: function(e) {
+        var that, q, k, key, tips;
+        that = this;
+        q_obj = e.data.quote;
+        q = QuotesController.current_quote;
+        tips = $('div.q_menu > div.q_tips', q);
+        k = e.keyCode;
+        if(QuotesController.key['escape'] === k ) {
+            if( $(q).hasClass('edit_quote') ) { $('> div#edit_buttons > input[id="Cancel_quote"]', q).click(); }
+            if( $('div#alert_tip').is(':visible') ) { q_obj.cancel_tip(q); }
+            return;
+        }
+        // Try this better
+        $.each(QuotesController.key, function(name, kcode) {
+            if(kcode === e.keyCode) {
+                $('input[id*="'+name+'"]', tips).click();
+                return;
+            }
+        });
+    },
+
     // Event response to a cancel submited by CompileController
     cancel: function() {
         var that;

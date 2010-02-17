@@ -211,3 +211,6 @@
 #login_form form input {
     margin-left: 4.5em;
 }
+span.accesskey {
+  text-decoration: underline;
+}

@@ -15,14 +15,16 @@ Compilation = MVC.Model.extend('compilation',
     },
 
     _build_quotes: function(data) {
-        var that;
+        var that, new_q;
         that = this;
         if ($('div.quote', data).length > 0) {
             $('div.quote', data).each(function() {
                 // Skip quote if vital attr link is missing!
                 if(!$(this).attr('link').length) { return; }
                 // Create new quote
-                that.new_quote(this);
+                new_q = that.new_quote(this);
+                // if this quote is a quote of the day candidate, set is in the db
+                if($(this).hasClass('qod_candidate')) that.update_db(new_q.id, { qod: true}, 'q');
                 that.publish('progressbar_update', { val: 1 });
             });
         }
@@ -36,6 +38,7 @@ Compilation = MVC.Model.extend('compilation',
     new_quote: function(elem) {
         var q;
         q = new Quote(elem);
+        return q;
     },
 
     _build_sections: function(data) {

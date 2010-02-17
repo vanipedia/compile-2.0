@@ -1,4 +1,4 @@
-.edit_quote, .edit_quote:hover {
+div#bodyContent > div#compilation div.quote.edit_quote, div#bodyContent > div#compilation div.quote.edit_quote:hover {
   background: #C3C9F2;
   padding: 8px 4px;
   border: 2px solid #C3C9F2;
@@ -9,7 +9,7 @@
   -webkit-border-radius: 5px;
 
 }
-.edit_quote label {
+div#bodyContent > div#compilation .edit_quote label {
   color:#747184;
   font-family:tahoma;
   font-style:italic;
@@ -17,7 +17,7 @@
   position:relative;
   left:6px;
 }
-.edit_quote > #link_text {
+div#bodyContent > div#compilation .edit_quote > #link_text {
   position: relative;
   float: right;
   right: 5%;
@@ -25,31 +25,31 @@
   padding:4px;
 		cursor: pointer;
 }
-.edit_quote > #fix_link {
+div#bodyContent > div#compilation .edit_quote > #fix_link {
 		display: none;
 }
-.edit_quote #fix_link_input {
+div#bodyContent > div#compilation .edit_quote #fix_link_input {
     width: 500px;
 }
-.edit_quote > input#heading, .edit_quote > textarea {
+div#bodyContent > div#compilation .edit_quote > input#heading, div#bodyContent > div#compilation .edit_quote > textarea {
   color: #62326D;
   padding: 4px;
   margin: 4px;
   width: 95%;
   font-family: tahoma;
 }
-.edit_quote > input#heading {
+div#bodyContent > div#compilation .edit_quote > input#heading {
   font-size: small;
 }
-.edit_quote #edit_buttons {
+div#bodyContent > div#compilation .edit_quote #edit_buttons {
     float: left;
 }
-.edit_quote #Cancel_quote, .edit_quote #Update_quote {
+div#bodyContent > div#compilation .edit_quote #Cancel_quote, div#bodyContent > div#compilation .edit_quote #Update_quote {
  cursor: pointer;
  padding: 3px;
 }
 
-.edit_quote #prabhupada_icon {
+div#bodyContent > div#compilation .edit_quote #prabhupada_icon {
   background-image: url("images/prabhupada_icon.png");
   background-repeat: no-repeat;
   width: 36px;
@@ -61,26 +61,26 @@
   right: 1%;
   cursor: pointer;
 }
-.edit_quote #diacritics {
+div#bodyContent > div#compilation .edit_quote #diacritics {
     position: relative;
     float: right;
     right: 1%;
     margin: 0px 10px;
 }
-.edit_quote #diacritics #diacritics_toggle:hover {
+div#bodyContent > div#compilation .edit_quote #diacritics #diacritics_toggle:hover {
 	cursor: pointer;
 	text-decoration: underline;
 	color: #3F4C9D;
 }
-.edit_quote #diacritics p {
+div#bodyContent > div#compilation .edit_quote #diacritics p {
 	display: none;
 }
 
-.edit_quote #diacritics a {
+div#bodyContent > div#compilation .edit_quote #diacritics a {
 	border: 1px transparent solid;
 	padding: 2px;
 }
-.edit_quote #diacritics a:hover {
+div#bodyContent > div#compilation .edit_quote #diacritics a:hover {
 	text-decoration: none;
   border: #3F4C9D solid;
   border-width: 2px 1px;

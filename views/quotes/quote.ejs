@@ -1,25 +1,23 @@
-<table class="q_menu">
-  <tr>
-    <td><div class="status_text"></div></td>
-    <td class="q_tools">
-      <div class="del_quote"><span title="Remove quote from this compilation" class="ui-icon ui-icon-trash"/></div>
-      <div class="undo_quote"><span title="Undo last change" class="ui-icon ui-icon-arrowreturnthick-1-w"/></div>
-    </td>
-    </tr>
-  <tr>
+<div class="q_menu">
+  <div class="q_tips">
+    <div class="status_text"></div><br/>
     <% if(quote.tips) { %>
-    <td class="q_tips" colspan="2">
       <% for(tip in quote.tips) { %>
         <% if (quote.tips[tip].id) { %>
             <input type="button" value="<%= quote.tips[tip].title %>" id="<%= quote.tips[tip].id %>" class="tips ui-state-default ui-corner-all" title="<%= quote.tips[tip].desc %>" />
         <% } %>
       <% } %>
       <div id="alert_tip"></div>
-    </td>
     <% } %>
-  </tr>
-</table>
-<%if (quote.heading) { %>
+  </div>
+  <div class="q_tools">
+    <div class="del_quote ui-state-default" title="Remove quote from this compilation"><span class="ui-icon ui-icon-trash"/></div>
+    <div class="undo_quote ui-state-default" title="Undo last change"><span class="ui-icon ui-icon-arrowreturnthick-1-w"/></div>
+    <div class="candidate_quote ui-state-default<% if(quote.qod) { %> ui-state-error<% } %>" title="Quote of the Day candidate"><span class="ui-icon ui-icon-star"/></div>
+  </div>
+</div>
+
+    <%if (quote.heading) { %>
         <div class="heading"><%= quote.heading %></div>
 <% } %>
 <span class="link<% if(quote.bad_link) { %> bad_link<% } %>"><a href='http://vanisource.org/wiki/<%= quote.link %>'><%= quote.link_text %><% if (quote.section) { %>, <%= quote.section %><% } %></a>:</span>
