@@ -1,4 +1,4 @@
-<h3><a href="#">expressions</a></h3>
+<h3 title="Click or press e to see the expressions of this compilation"><a href="#"><span class="accesskey">e</span>xpressions</a></h3>
 <div id="terms" class="fact">
   <ul id="terms_list">
     <% for(i = 0; i < facts.terms.length; i++) { %>
@@ -17,7 +17,7 @@
     </div>
 </div>
 
-<h3><a href="#">categories</a></h3>
+<h3 title="Click or press c to see the categories of this compilation"><a href="#"><span class="accesskey">c</span>ategories</a></h3>
 <div id="categories" class="fact">
   <ul id="categories_list">
     <% for(i = 0; i < facts.categories.length; i++) { %>
@@ -31,10 +31,10 @@
     </div>
 </div>
 
-<h3><a href="#">goal</a></h3>
+<h3 title="Click or press g to see the goal of this compilation"><a href="#"><span class="accesskey">g</span>oal</a></h3>
 <div id="goal" class="fact"><%= facts.goal %></div>
 
-<h3><a href="#">completed sections</a></h3>
+<h3 title="Click or press s to see the completed sections of this compilation"><a href="#">completed <span class="accesskey">s</span>ections</a></h3>
 <div id="complete" class="fact">
     <% for(i = 0; i < facts.books.length; i++) { %>
         <div class="check_div">
@@ -44,10 +44,10 @@
     <div class="check_div"><label>ALL</label><input type="checkbox" class="complete_checks" id="complete_ALL"/></div>
 </div>
 
-<h3><a href="#">notes from the compiler</a></h3>
+<h3 title="Click or press n to see the notes from the compiler of this compilation"><a href="#"><span class="accesskey">n</span>otes from the compiler</a></h3>
 <div id="notes" class="fact"><%= facts.notes %></div>
 
-<h3><a href="#">compiler</a></h3>
+<h3 title="Click or press p to see the compilers of this compilation"><a href="#">com<span class="accesskey">p</span>iler</a></h3>
 <div id="compiler" class="fact">
   <ul id="compiler_list">
     <% for(i = 0; i < facts.compiler.length; i++) { %>
@@ -56,18 +56,18 @@
   </ul>
 </div>
 
-<h3><a href="#">first</a></h3>
+<h3 title="Click or press f to see the date this compilation was started"><a href="#"><span class="accesskey">f</span>irst</a></h3>
 <div id="first" class="fact"><%= facts.first %></div>
 
-<h3><a href="#">last</a></h3>
+<h3 title="Click or press l to see the last this compilation was edited"><a href="#"><span class="accesskey">l</span>ast</a></h3>
 <div id="last" class="fact"><%= facts.last %></div>
 
-<h3><a href="#">totals by section</a></h3>
+<h3 title="Click or press b to see the totals by sections of this compilation"><a href="#">totals <span class="accesskey">b</span>y section</a></h3>
 <div id="totals_by_section" class="fact">
     <% for(i = 0; i < facts.books.length; i++) { %>
         <div><%= facts.books[i] %>=<%= facts.totals_by_section[facts.books[i]] %></div>
     <% } %>
 </div>
 
-<h3><a href="#">total</a></h3>
+<h3 title="Click or press t to see the total of quotes in this compilation"><a href="#"><span class="accesskey">t</span>otal</a></h3>
 <div id="total" class="fact"><%= facts.total %></div>

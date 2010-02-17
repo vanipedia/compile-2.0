@@ -61,7 +61,55 @@ CompileController = MVC.Controller.extend('compilation',
             matchContains: true,
             selectFirst: false
 								});
-				}
+				},
+    enable_keybindings: function() {
+        $(document).bind('keyup', CompileController.keybindings);
+    },
+    disable_keybindings: function() {
+        $(document).unbind('keyup', CompileController.keybindings);
+    },
+
+    keybindings: function(e) {
+        var factsK, formK, $tools, selected;
+        factsK = 70;
+        formK = 67;
+        if(e.keyCode !== factsK && e.keyCode !== formK) return;
+        CompileController.show_compile_tools();
+        $tools = $('div#compilation > div#compile_tools');
+        selected = $tools.tabs('option', 'selected');
+        if(e.keyCode === formK) {
+            if(selected !== 0) $tools.tabs('select', 0);
+        }
+        if(e.keyCode === factsK) {
+            if(selected !== 1) $tools.tabs('select', 1);
+        }
+    },
+    show_compile_tools: function(pos) {
+        CompileController.fix_z_indexes(true);
+        CompileController.compile_tools.css('opacity', 1).fadeIn('fast', function() {
+            if(pos) window.scrollTo(0, pos);
+        });
+        $('textarea', CompileController.compile_tools).focus();
+        $('div#compilation > div#compile_tools_menu > p#compile_tools_toggle span#compile_tools_toggle_text').text('Hide Tools');
+        $('div#compilation > div#transparent_background').show();
+        CompileController.disable_keybindings();
+        FactsController.enable_keybindings();
+    },
+    hide_compile_tools: function() {
+        // Make transparent background dissapear. This bg is used to enable click on anywhere but inside compie_tools element to hide it.
+        $('div#compilation > div#transparent_background').hide();
+        CompileController.fix_z_indexes(false);
+        CompileController.compile_tools.hide('fast');
+
+        $('div#compilation > div#compile_tools_menu > p#compile_tools_toggle > span#compile_tools_toggle_text').text('Show Tools');
+        setTimeout( CompileController.hide_tools_menu, 5000);
+        FactsController.disable_keybindings();
+        CompileController.enable_keybindings();
+    },
+    fix_z_indexes: function(fix) {
+        // fix logo z-index for overlays in compile tools when passed true it will set it to 1 when false is reset to original
+        $('#p-logo, #p-cactions').css('z-index', fix ? 1 : '');
+    },
 },
 /* @Prototype */
 {
@@ -100,10 +148,10 @@ CompileController = MVC.Controller.extend('compilation',
     },
 
     "div#compile_tools span#compile_tools_hide click": function(params) {
-        this.hide_compile_tools();
+        CompileController.hide_compile_tools();
     },
     "div#transparent_background click": function() {
-        this.hide_compile_tools();
+        CompileController.hide_compile_tools();
     },
     "div#compile_tools_menu p#compile_tools_toggle click": function(params) {
         // calculate pos in page for callback to scroll page back to its current location
@@ -159,7 +207,7 @@ CompileController = MVC.Controller.extend('compilation',
                 that.attach_events();
                 that.publish('progressbar_hide');
                 $('body div#bodyContent > div#compilation').fadeIn('slow').removeClass('hidden');
-                that.show_compile_tools();
+                CompileController.show_compile_tools();
             });
             this.Class.loading = false;
         }
@@ -175,11 +223,16 @@ CompileController = MVC.Controller.extend('compilation',
         // SetTimeout to hide the tools_menu
         setTimeout( that.Class.hide_tools_menu, 5000);
 
+        // buttons effects
         $('div#bodyContent > div#compilation > div#compile_tools_menu > p').bind('mouseenter', function() {
             $(this).addClass('ui-state-hover');
         }).bind('mouseleave', function() {
             $(this).removeClass('ui-state-hover');
         });
+
+        // Key bindings will show the compile form or page facts depending on which key is typed by the user: f(acts) or c(ompile form)
+        CompileController.enable_keybindings();
+        this.enable_keybinding_save();
 
         // Safeguard for accidental navigation away from compilation
         window.onbeforeunload = function() {
@@ -188,6 +241,7 @@ CompileController = MVC.Controller.extend('compilation',
             }
         }
     },
+
     // Function to render sections
     _render_section: function(section) {
         var parent;
@@ -265,41 +319,7 @@ CompileController = MVC.Controller.extend('compilation',
         $('div#bodyContent > div#compilation div.quote').tsort({ attr: "index" });
     },
     toggle_compile_tools: function(pos) {
-        CompileController.compile_tools.is(':hidden') ? this.show_compile_tools(pos) : this.hide_compile_tools(pos);
-    },
-    show_compile_tools: function(pos) {
-        var that;
-        that = this;
-        this.fix_z_indexes(true);
-        CompileController.compile_tools.css('opacity', 1).fadeIn('fast', function() {
-            if(pos) window.scrollTo(0, pos);
-        });
-        $('textarea', CompileController.compile_tools).focus();
-        $('div#compilation > div#compile_tools_menu > p#compile_tools_toggle span#compile_tools_toggle_text').text('Hide Tools');
-        $('div#compilation > div#transparent_background').show();
-
-    },
-
-    hide_compile_tools: function() {
-        var that;
-        that = this;
-        // Make transparent background dissapear. This bg is used to enable click on anywhere but inside compie_tools element to hide it.
-        $('div#compilation > div#transparent_background').hide();
-        this.fix_z_indexes(false);
-        // Blind first => transfer effect => hide
-        CompileController.compile_tools.css('opacity', 0);
-        CompileController.compile_tools.effect('transfer', {
-            to: "div#compilation > div#compile_tools_menu > p#compile_tools_toggle",
-            className: 'compile_tools_transfer'
-        }, "medium");
-        CompileController.compile_tools.hide('fast');
-
-        $('div#compilation > div#compile_tools_menu > p#compile_tools_toggle > span#compile_tools_toggle_text').text('Show Tools');
-        setTimeout( that.Class.hide_tools_menu, 5000);
-    },
-    fix_z_indexes: function(fix) {
-        // fix logo z-index for overlays in compile tools when passed true it will set it to 1 when false is reset to original
-        $('#p-logo, #p-cactions').css('z-index', fix ? 1 : '');
+        CompileController.compile_tools.is(':hidden') ? CompileController.show_compile_tools(pos) : CompileController.hide_compile_tools(pos);
     },
 
     relogin: function() {
@@ -580,14 +600,14 @@ CompileController = MVC.Controller.extend('compilation',
         // since is being done already by show_compile_tools and hide_compile_tools
         compile_tools = CompileController.compile_tools.is(':visible');
         this.warning = msg;
-        this.fix_z_indexes(true);
+        CompileController.fix_z_indexes(true);
         this.render({
             to: 'warning',
             action: 'warning'
         });
         $('div#bodyContent > div#compilation > div#warning:hidden, div#bodyContent > div#compilation > div#warning_overlay:hidden').fadeIn()
         $(window).click(function() {
-            $('div#bodyContent > div#compilation > div#warning, div#bodyContent > div#compilation > div#warning_overlay').fadeOut(function() { if(!compile_tools) { that.fix_z_indexes(false); } });
+            $('div#bodyContent > div#compilation > div#warning, div#bodyContent > div#compilation > div#warning_overlay').fadeOut(function() { if(!compile_tools) { CompileController.fix_z_indexes(false); } });
             $(this).unbind('click');
         });
     },
@@ -612,10 +632,10 @@ CompileController = MVC.Controller.extend('compilation',
             console.info('In Compilation_controller.block_background with action: '+action);
         }
         if(action) {
-            that.fix_z_indexes(true);
+            CompileController.fix_z_indexes(true);
             $('#background_overlay').show();
         } else {
-            that.fix_z_indexes(false);
+            CompileController.fix_z_indexes(false);
             $('#background_overlay').fadeOut();
         }
     },
@@ -625,6 +645,19 @@ CompileController = MVC.Controller.extend('compilation',
         if(window.console) { console.log('Ajax error: '+params.ajax.text+' : '+params.ajax.error); }
         //that.publish('warning', { msg: "Connection error: Server is not responding. Check your internet connection or wait a minute and try again." });
         window.alert(params.msg);
+    },
+    enable_keybinding_save: function() {
+        var that;
+        that = this;
+        $(document).bind('keydown', function(e) {
+            var saveK = 83; // s
+            if(e.ctrlKey && e.keyCode === saveK) {
+                //alert('Saving!');
+                e.stopPropagation();
+                // Save Compilation
+                that.save();
+            }
+        });
     },
     /***** Subscriptions ******/
     "compilation.built subscribe": function() {
@@ -644,10 +677,10 @@ CompileController = MVC.Controller.extend('compilation',
                 $('#ref_lookup_input > #link', this).val('');
             });
         }
-        if(CompileController.compile_tools.is(':visible')) this.hide_compile_tools();
+        if(CompileController.compile_tools.is(':visible')) CompileController.hide_compile_tools();
     },
     "compilation.quote_inserted subscribe": function(params) {
-        this.show_compile_tools();
+        CompileController.show_compile_tools();
     },
 
     // Event response to a publish('created', new_section) from section model
@@ -656,7 +689,7 @@ CompileController = MVC.Controller.extend('compilation',
         this._render_section(section);
     },
     "hide_compile_tools subscribe": function() {
-        this.hide_compile_tools();
+        CompileController.hide_compile_tools();
     },
     "info subscribe": function(params) {
         if(window.console) { console.info('Info: '+params.msg); }
@@ -698,7 +731,7 @@ CompileController = MVC.Controller.extend('compilation',
         that = this;
         that.block_background(true);
         if(window.console) { console.info('Init progressbar'); }
-        if($("div#bodyContent > div#compilation > #compile_tools").is(':visible')) { that.hide_compile_tools(); }
+        if($("div#bodyContent > div#compilation > #compile_tools").is(':visible')) { CompileController.hide_compile_tools(); }
         $('body > div#progressbar').progressbar({ value: 0 });
         $('body > div#progressbar > div').text(params.text);
     },

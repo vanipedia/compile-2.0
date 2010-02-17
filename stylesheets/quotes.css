@@ -44,14 +44,14 @@ div#bodyContent > div#compilation div.quote .status_text {
 	font-style: italic;
 }
 
-div#bodyContent > div#compilation div.quote.q_updated div.status_text {
+div#bodyContent > div#compilation div.quote.q_updated > div.q_menu > div.q_tips > div.status_text {
 	display: block;
 }
-div#bodyContent > div#compilation div.quote.q_updated div.status_text:after {
+div#bodyContent > div#compilation div.quote.q_updated > div.q_menu > div.q_tips > div.status_text:after {
 	content: 'Updated!';
 }
 
-div#bodyContent > div#compilation div.quote.q_updated .undo_quote {
+div#bodyContent > div#compilation div.quote.q_updated > div.q_menu > div.q_tools > div.undo_quote {
 	display: block;
 }
 

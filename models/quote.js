@@ -10,27 +10,27 @@ Quote = MVC.Model.extend('quote',
     attr: ['id', 'parent', 'book', 'heading', 'link', 'link_text', 'text', 'trans', 'purport', 'index', 'type', 'tips', 'verses', 'bad_link', 'qod'],
     tips_db: {
         section:             {
-            title:     "Set Section",
+            title:     "set Section",
             desc:     "...this quote requires a section. Click here",
             id:         "set_section_tip"
         },
         edit_section: {
-            title:     "Edit Section",
+            title:     "edit Section",
             desc:     "...by clicking here!",
             id:         "edit_section_tip"
         },
         heading: {
-            title:     "Set Heading",
+            title:     "set Heading",
             desc:     "...by highlighting a part of the quote",
             id:         "set_heading_tip"
         },
         edit_heading: {
-            title:     "Edit Heading",
+            title:     "edit Heading",
             desc:     "...by highlighting a part of the quote",
             id:         "edit_heading_tip"
         },
         edit_quote: {
-            title:    "Edit Quote",
+            title:    "edit Quote",
             desc:     "...by doubleClicking on it or clicking here",
             id:         "edit_quote_tip"
         },
