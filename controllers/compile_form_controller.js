@@ -27,6 +27,7 @@ CompileFormController = MVC.Controller.extend('compile_form',
   // the event is triggered by onkeyup
   "textarea keyup": function(params) {
     params.event.kill();
+    if(!this.extract_veda_ref(params.element.value)) return;
     this.process_new_quote();
   },
   "textarea change": function(params) {
@@ -89,36 +90,52 @@ CompileFormController = MVC.Controller.extend('compile_form',
     }
     return true;
   },
-  submit_quote: function(attr) {
-    var re, text, new_quote, ref, temp_quote, submit;
-    re = new RegExp(">>> Ref. VedaBase => (.+)");
-    text = attr['text'];
-    if (re.test(text)) {
-      submit = {};
-      // Remove Ref from VedaBase
-      temp_quote = $.trim(text.replace(re, '').replace(/^[a-z]/, camel));
-      // Convert Balaram to Unicode encoding and diacritics
-      //temp_quote = BaltoUni(temp_quote); *** deprecated since we are doing the conversion inside the Quote.init
-      // Save quote text to Class variable temp_quote
-      this.Class.temp_quote = temp_quote;
-      // Extract the Vedabase reference.
-      // Check first if we are coming from a not found ref and if so,
-      // use the link provided in the form by the suggest link field
-      submit['ref'] = attr['ref'] ? attr['ref'] : $.trim(re.exec(text)[1]);
-      // Clean the extra-spacing we have found in some of the refs from Vedabase
-      submit['ref'] = submit['ref'].replace(/\s+/g, ' ');
-      // add type "title" to submission if this is a suggested reference
-      attr['ref'] ? submit['type'] = 'title': '';
-      // Submit the reference to the Quote.find_reference class method
-      Quote.find_reference(submit);
-    } else {
-      this.publish('warning', { msg: "No Vedabase Reference in pasted quote!\nPerhaps you forgot to use the \"Copy with Reference\" button in Vedabase"});
-      return;
-    }
-    function camel(first) {
-        return first.toUpperCase();
-    }
-  },
+    submit_quote: function(attr) {
+      var that, re, text, new_quote, quote, temp_quote, submit;
+      that = this;
+      //re = new RegExp(">>> Ref. VedaBase => (.+)");
+      text = attr['text'];
+      quote = that.extract_veda_ref(text);
+      if (quote) {
+          submit = {};
+          // Remove Ref from VedaBase
+          temp_quote = $.trim(quote.text.replace(/^[a-z]/, camel));
+          // Convert Balaram to Unicode encoding and diacritics
+          //temp_quote = BaltoUni(temp_quote); *** deprecated since we are doing the conversion inside the Quote.init
+          // Save quote text to Class variable temp_quote
+          this.Class.temp_quote = temp_quote;
+          // Extract the Vedabase reference.
+          // Check first if we are coming from a not found ref and if so,
+          // use the link provided in the form by the suggest link field
+          //submit['ref'] = attr['ref'] ? attr['ref'] : $.trim(re.exec(text)[1]);
+          submit['ref'] = attr['ref'] ? attr['ref'] : quote.ref;
+          // Clean the extra-spacing we have found in some of the refs from Vedabase
+          submit['ref'] = submit['ref'].replace(/\s+/g, ' ');
+          // add type "title" to submission if this is a suggested reference
+          attr['ref'] ? submit['type'] = 'title': '';
+          // Submit the reference to the Quote.find_reference class method
+          Quote.find_reference(submit);
+      } else {
+        this.publish('warning', { msg: "No Vedabase Reference in pasted quote!\nPerhaps you forgot to use the \"Copy with Reference\" button in Vedabase"});
+        return;
+      }
+      function camel(first) {
+          return first.toUpperCase();
+      }
+    },
+    extract_veda_ref: function(t) {
+        var re, ref, quote;
+        re = new RegExp(">>> Ref. VedaBase => (.+)");
+        ref = re.exec(t);
+        quote = {};
+        if(ref) {
+            quote.ref = $.trim(ref[1]);
+            quote.text = $.trim(t.replace(re, ''));
+        } else {
+            quote = false;
+        }
+        return quote;
+    },
 
   /***** Subscriptions *****/
   "quote.found_reference subscribe": function() {

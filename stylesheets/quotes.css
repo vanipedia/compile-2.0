@@ -46,6 +46,7 @@ div#bodyContent > div#compilation div.quote .status_text {
 
 div#bodyContent > div#compilation div.quote.q_updated > div.q_menu > div.q_tips > div.status_text {
 	display: block;
+  width: 100%;
 }
 div#bodyContent > div#compilation div.quote.q_updated > div.q_menu > div.q_tips > div.status_text:after {
 	content: 'Updated!';
@@ -73,6 +74,11 @@ div#bodyContent > div#compilation div.quote > div.q_menu > div {
 div#bodyContent > div#compilation div.quote > div.q_menu > div.q_tools {
   width: 18px;
   margin: 2px 4px;
+}
+
+div#bodyContent > div#compilation div.quote > div.q_menu > div.q_tools > div {
+  margin: 8px 0px;
+  cursor: pointer;
 }
 
 div#bodyContent > div#compilation div.quote > div.q_menu > div.q_tips {

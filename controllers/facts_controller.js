@@ -23,7 +23,7 @@ FactsController = MVC.Controller.extend('facts',
     },
     keybindings: function(e) {
         var index;
-        if(e.originalTarget.type === 'text') { return; }
+        if(e.originalTarget.type === 'text' || e.altKey) { return; }
         if(e.keyCode === FactsController.key['escape']) { CompileController.hide_compile_tools(); return; }
         index = 0;
         $.each(FactsController.key, function(tab, k) {
