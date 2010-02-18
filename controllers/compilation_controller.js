@@ -63,17 +63,21 @@ CompileController = MVC.Controller.extend('compilation',
 								});
 				},
     enable_keybindings: function() {
-        $(document).bind('keyup', CompileController.keybindings);
+        CompileController.disable_keybindings();
+        $(document).bind('keydown', CompileController.keybindings);
     },
     disable_keybindings: function() {
-        $(document).unbind('keyup', CompileController.keybindings);
+        $(document).unbind('keydown', CompileController.keybindings);
     },
 
     keybindings: function(e) {
         var factsK, formK, $tools, selected;
         factsK = 70;
         formK = 67;
+        if(!e.altKey) return;
         if(e.keyCode !== factsK && e.keyCode !== formK) return;
+        e.stopImmediatePropagation();
+        e.preventDefault();
         CompileController.show_compile_tools();
         $tools = $('div#compilation > div#compile_tools');
         selected = $tools.tabs('option', 'selected');
@@ -89,11 +93,11 @@ CompileController = MVC.Controller.extend('compilation',
         CompileController.compile_tools.css('opacity', 1).fadeIn('fast', function() {
             if(pos) window.scrollTo(0, pos);
         });
-        $('textarea', CompileController.compile_tools).focus();
         $('div#compilation > div#compile_tools_menu > p#compile_tools_toggle span#compile_tools_toggle_text').text('Hide Tools');
         $('div#compilation > div#transparent_background').show();
-        CompileController.disable_keybindings();
+        QuotesController.disable_keybindings();
         FactsController.enable_keybindings();
+        $('textarea', CompileController.compile_tools).focus();
     },
     hide_compile_tools: function() {
         // Make transparent background dissapear. This bg is used to enable click on anywhere but inside compie_tools element to hide it.
@@ -606,10 +610,15 @@ CompileController = MVC.Controller.extend('compilation',
             action: 'warning'
         });
         $('div#bodyContent > div#compilation > div#warning:hidden, div#bodyContent > div#compilation > div#warning_overlay:hidden').fadeIn()
-        $(window).click(function() {
+        $(window).click(hide_warning);
+        $(window).keydown(hide_warning);
+
+        function hide_warning(e) {
+            if( e.type !== 'click' && e.keyCode !== 27) { return; }
             $('div#bodyContent > div#compilation > div#warning, div#bodyContent > div#compilation > div#warning_overlay').fadeOut(function() { if(!compile_tools) { CompileController.fix_z_indexes(false); } });
-            $(this).unbind('click');
-        });
+            $(this).unbind('click', hide_warning);
+            $(this).unbind('keydown', hide_warning);
+        }
     },
     report_error: function(msg) {
         $.post('/php/report_error.php', { error: msg });
