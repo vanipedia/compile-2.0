@@ -50,6 +50,20 @@ QuotesController = MVC.Controller.extend('quotes',
             }
         });
     },
+    enable_edit_keybindings: function(q_obj) {
+        QuotesController.disable_keybindings(); // disable tips
+        //$(this.params.element).bind('keydown', that.edit_view_keybindings_event);
+        $(q_obj).bind('keydown', { q: q_obj }, QuotesController.edit_view_keybindings_event);
+    },
+    disable_edit_keybindings: function(q_obj) {
+        $(q_obj).unbind('keydown', QuotesController.edit_view_keybindings_event);
+        QuotesController.enable_keybindings(q_obj); // enable tips
+    },
+    edit_view_keybindings_event: function(e) {
+        q = e.data.quote;
+        if(e.keyCode === QuotesController.key['escape']) { $('div#edit_buttons > input#Cancel_quote', q).click(); }
+        if(e.shiftKey && e.keyCode === QuotesController.key['enter'] ) { $('div#edit_buttons > input#Update_quote', q).click(); }
+    },
 
 },
 /* @Prototype */
@@ -290,7 +304,7 @@ QuotesController = MVC.Controller.extend('quotes',
             $('#' + id).addClass('edit_quote');
             $(document).unbind('click');
             CompileController.disable_keybindings();
-            this.edit_view_keybindings('enable');
+            QuotesController.enable_edit_keybindings(elem);
         } else if (params['view'] === 'delete') {
             action = 'delete';
             $('#' + id).addClass('deleted_quote');
@@ -391,6 +405,7 @@ QuotesController = MVC.Controller.extend('quotes',
             $quote.fadeIn("slow");
             if (!$quote.hasClass('building_quote')) this._transition_hilite($quote, '#FFFEC6', 2);
         }
+        QuotesController.disable_edit_keybindings(params.elem);
     },
 
     /**
@@ -630,38 +645,7 @@ QuotesController = MVC.Controller.extend('quotes',
             $(elem).highlight_sanskrit(term);
         });
     },
-    edit_view_keybindings: function(action) {
-        var that;
-        that = this;
-        if(action === 'enable') {
-            QuotesController.disable_keybindings(); // disable tips
-            $(this.params.element).bind('keydown', that.edit_view_keybindings_event);
-        } else {
-            $(this.params.element).unbind('keydown', that.edit_view_keybindings_event);
-            QuotesController.enable_keybindings(this); // enable tips
-        }
-    },
-    edit_view_keybindings_event: function(e) {
-        var that, q;
-        that = this;
-        q = this;
-        if(e.keyCode === QuotesController.key['escape']) { $('div#edit_buttons > input#Cancel_quote', q).click(); }
-        if(e.shiftKey && e.keyCode === QuotesController.key['enter'] ) { $('div#edit_buttons > input#Update_quote', q).click(); }
-    },
 
-    // Event response to a cancel submited by CompileController
-    cancel: function() {
-        var that;
-        that = this;
-        if ($('.edit_quote').length) {
-            $('.edit_quote #Cancel_quote').click();
-        }
-        if ($('#alert_tip').is(':visible')) {
-            $('#alert_tip:visible').each(function() {
-                that.cancel_tip($(this).parents('.quote'));
-            });
-        }
-    },
     update: function(quote) {
         var id, attr, new_link;
         id = $(quote).attr('id');
