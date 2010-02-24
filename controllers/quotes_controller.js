@@ -29,7 +29,7 @@ QuotesController = MVC.Controller.extend('quotes',
         $(document).unbind('keydown', QuotesController.keybindings_event);
     },
     keybindings_event: function(e) {
-        var that, q, k, key, tips;
+        var that, q, q_obj, k, key, tips;
         that = this;
         e.stopImmediatePropagation();
         e.preventDefault();
@@ -37,9 +37,9 @@ QuotesController = MVC.Controller.extend('quotes',
         q = QuotesController.current_quote;
         tips = $('div#alert_tip').is(':visible') ? $('div.q_menu > div.q_tips > div#alert_tip', q) : $('div.q_menu > div.q_tips', q);
         k = e.keyCode;
-        if(QuotesController.key['escape'] === k ) {
+        if(QuotesController.key['escape'] === k) {
             if( $(q).hasClass('edit_quote') ) { $('> div#edit_buttons > input[id="Cancel_quote"]', q).click(); }
-            if( $('div#alert_tip').is(':visible') ) { q_obj.cancel_tip(q); }
+            if( $('div#alert_tip', q).is(':visible') ) { q_obj.cancel_tip(q); }
             return;
         }
         // Loop through the keys and click on the right button
@@ -50,6 +50,7 @@ QuotesController = MVC.Controller.extend('quotes',
             }
         });
     },
+    
     enable_edit_keybindings: function(q_obj) {
         QuotesController.disable_keybindings(); // disable tips
         //$(this.params.element).bind('keydown', that.edit_view_keybindings_event);
@@ -63,6 +64,17 @@ QuotesController = MVC.Controller.extend('quotes',
         q = e.data.quote;
         if(e.keyCode === QuotesController.key['escape']) { $('div#edit_buttons > input#Cancel_quote', q).click(); }
         if(e.shiftKey && e.keyCode === QuotesController.key['enter'] ) { $('div#edit_buttons > input#Update_quote', q).click(); }
+    },
+    /**
+		 * Insert Prabhupāda: as the speaker when button click in edit_quote
+		 * @param {object} quote_textarea is a reference to the textarea of the quote
+	 */
+    insert_prabhupada_speaker: function(quote_textarea) {
+        if (quote_textarea.selectionStart || quote_textarea.selectionStart == '0') {
+            var startPos = quote_textarea.selectionStart;
+            var endPos = quote_textarea.selectionEnd;
+            quote_textarea.value = quote_textarea.value.substring(0, startPos) + 'Prabhup&#257;da: ' + quote_textarea.value.substring(endPos, quote_textarea.value.length);
+        }
     },
 
 },
@@ -114,7 +126,7 @@ QuotesController = MVC.Controller.extend('quotes',
         params.event.kill();
         $(params.element).parents('div.edit_quote').children('div#fix_link').toggle().children('input#fix_link_input').focus();
     },
-    "div.edit_quote #prabhupada_icon click": function(params) {
+    "span#prabhupada_icon click": function(params) {
         var edit_quote_text;
         params.event.kill();
         edit_quote_text = $(params.element).parents('.quote').children('#text')[0];
@@ -125,7 +137,7 @@ QuotesController = MVC.Controller.extend('quotes',
             });
             return;
         }
-        this.insert_prabhupada_speaker(edit_quote_text);
+        QuotesController.insert_prabhupada_speaker(edit_quote_text);
     },
     "div#diacritics span#diacritics_toggle click": function(params) {
       $(params.element).siblings('p').toggle();
@@ -546,12 +558,8 @@ QuotesController = MVC.Controller.extend('quotes',
         if ($(tip_elem).is(':hidden')) {
             $(tip_elem).siblings('.tips').slideUp('fast');
             $(tip_elem).slideDown('fast');
+            QuotesController.enable_clickbinding(this);
         }
-        /*$(document).click(function() {
-            if (window.getSelection().toString() === '') that.cancel_tip(params.elem);
-        });*/
-        QuotesController.enable_keybindings(this);
-
     },
     /**
 		 * Cancel tip in given elem
@@ -563,9 +571,8 @@ QuotesController = MVC.Controller.extend('quotes',
                 console.log('Error in QuoteController.cancel_tip: missing elem argument');
             }
         }
-        if ($(elem).hasClass('edit_quote') || $(elem).parents('.edit_quote').length) return; // If we are in edit_quote form, exit!
+        if ($(elem).hasClass('edit_quote') || $(elem).parents('div.edit_quote').length) return; // If we are in edit_quote form, exit!
         var tip_elem;
-        $(document).unbind('click');
         tip_elem = this._find_alert_tip_elem(elem);
         //if(!tip_elem) return;
         if ($(tip_elem).is(':visible')) {
@@ -682,17 +689,7 @@ QuotesController = MVC.Controller.extend('quotes',
         //Quote.update_section(Compilation.find_in_db(id, 'q'));
         return;
     },
-    /**
-		 * Insert Prabhupāda: as the speaker when button click in edit_quote
-		 * @param {object} quote_textarea is a reference to the textarea of the quote
-	 */
-    insert_prabhupada_speaker: function(quote_textarea) {
-        if (quote_textarea.selectionStart || quote_textarea.selectionStart == '0') {
-            var startPos = quote_textarea.selectionStart;
-            var endPos = quote_textarea.selectionEnd;
-            quote_textarea.value = quote_textarea.value.substring(0, startPos) + 'Prabhup&#257;da: ' + quote_textarea.value.substring(endPos, quote_textarea.value.length);
-        }
-    },
+
     insert_diacritic: function(quote_textarea, diacritic) {
         if (quote_textarea.selectionStart || quote_textarea.selectionStart == '0') {
             var startPos = quote_textarea.selectionStart;

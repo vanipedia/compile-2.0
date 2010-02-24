@@ -60,21 +60,30 @@ CompileFormController = MVC.Controller.extend('compile_form',
     }
 				$('#ref_lookup_table').dialog('open');
 		},
-  process_new_quote: function() {
-    var that, elem, rl, attr;
-    that = this;
-				elem = $('#compile_tools > #compile_form > textarea')[0];
-				rl = $('#ref_lookup');
-    attr = {};
-    if(rl.not(':hidden')) {
-								if(window.console) { console.log('CompileformController In process_new_quote!'); }
-								attr['ref'] = $('input#link', rl).val();
-								$('#clear_form').click();
-				}
-    attr['text'] = elem.value;
-    if(this.action_name !== '#submit_quote click' && !attr['ref'] && !this.check_text(elem.value)) return;
-    this.submit_quote(attr);
-  },
+
+    "div#form_buttons span#prabhupada_icon click": function(params) {
+        var edit_quote_text;
+        params.event.kill();
+        compile_form_textarea = $("div#compilation > div#compile_tools > div#compile_form > textarea");
+        QuotesController.insert_prabhupada_speaker(compile_form_textarea[0]);
+        $(compile_form_textarea).focus();
+    },
+
+    process_new_quote: function() {
+        var that, elem, rl, attr;
+        that = this;
+        elem = $('#compile_tools > #compile_form > textarea')[0];
+        rl = $('#ref_lookup');
+        attr = {};
+        if(rl.not(':hidden')) {
+            if(window.console) { console.log('CompileformController In process_new_quote!'); }
+            attr['ref'] = $('input#link', rl).val();
+            $('#clear_form').click();
+        }
+        attr['text'] = elem.value;
+        if(this.action_name !== '#submit_quote click' && !attr['ref'] && !this.check_text(elem.value)) return;
+        this.submit_quote(attr);
+    },
   check_text: function(text) {
     text = $.trim(text);
     if(text === '' || text === this.Class.last_quote_value || !this.check_uninserted_quotes()) return false;

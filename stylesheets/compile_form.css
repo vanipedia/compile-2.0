@@ -1,56 +1,69 @@
-#compile_form {
+div#compile_form {
   background: #C3C9F2;
   padding:    20px;
   height:     200px;
   overflow:   hidden;
 }
 
-#compile_form #ref_lookup {
-		display: none;
-		float: left;
-		width: 98%;
+div#compile_form #ref_lookup {
+  display: none;
+  float: left;
+  width: 98%;
 }
-#compile_form #ref_lookup #ref {
-		width: 100%;
+div#compile_form #ref_lookup #ref {
+	width: 100%;
 }
-#compile_form #ref_lookup_input {
-		float: left;
-		width: 100%;
-		margin: 10px 0px;
-}
-
-#compile_form #ref_lookup #ref_lookup_input #link {
-    width: 89%;
-				float: left;
-}
-#compile_form #ref_lookup #ref_lookup_table_open {
-				float: left;
-				margin: 0px 10px;
-				cursor: pointer;
+div#compile_form #ref_lookup_input {
+  float: left;
+  width: 100%;
+  margin: 10px 0px;
 }
 
-#compile_form #form_buttons {
-		float: left;
-		width: 100%;
+div#compile_form #ref_lookup #ref_lookup_input #link {
+  width: 89%;
+  float: left;
 }
-#compile_form #form_buttons #copy_ref_button {
+div#compile_form #ref_lookup #ref_lookup_table_open {
+  float: left;
+  margin: 0px 10px;
+  cursor: pointer;
+}
+
+div#compile_form div#form_buttons {
+  float: left;
+  width: 100%;
+}
+div#compile_form div#form_buttons #copy_ref_button {
   background-image: url("images/copy_ref_button.png");
   background-repeat: no-repeat;
   width: 100%;
 }
-#compile_form textarea {
-		float: left;
+div#compile_form > div#form_buttons > span#prabhupada_icon {
+  background-image: url("images/prabhupada_icon.png");
+  background-repeat: no-repeat;
+  width: 36px;
+  height: 36px;
+  position: relative;
+  float: right;
+  border: #3F4C9D solid;
+  border-width: 1px 2px 2px 1px;
+  right: 1%;
+  cursor: pointer;
+}
+
+div#compile_form textarea {
+	float: left;
   height: 170px;
   width:  99%;
   background-image:     url("images/vaniquotes-logo-bg.png");
   background-repeat:    no-repeat;
   background-position:  center;
 }
-#compile_form #form_text * {
+div#compile_form #form_text * {
  float: left;
  margin: 0px 2px;
 }
-#compile_form #form_text #veda_img  {
+div#compile_form #form_text #veda_img  {
 	display: block;
 	width: 25px;
 	height: 24px;
@@ -58,22 +71,22 @@
 	position: relative;
 	top: -6px;
 }
-#compile_form #submit_quote, #compile_form #clear_form {
+div#compile_form #submit_quote, div#compile_form #clear_form {
   position: relative;
   float: right;
   margin: 0px 2px;
   cursor: pointer;
 }
 
-#compile_form #submit_quote {
+div#compile_form #submit_quote {
   padding: 2px 4px;
 }
 
-#compile_form #clear_form {
+div#compile_form #clear_form {
   padding: 1px;
 }
 
-#compile_form #version {
+div#compile_form #version {
   position: relative;
   float: right;
   font-size: 0.7em;
