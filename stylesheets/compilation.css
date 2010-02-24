@@ -1,49 +1,49 @@
-#compilation.hidden {
-    display: none;
+div#compilation.hidden {
+  display: none;
 }
-#compile_tools {
-    height: auto;
-    max-height:370px;
-    padding: 4px;
-    position:fixed;
-    left: 30%;
-    top: 25%;
-    width: 45%;
-    z-index:100;
-    font-size: 0.8em;
-    border: 2px solid #C3C9F2;
+div#compilation > div#compile_tools {
+  height: auto;
+  max-height:370px;
+  padding: 4px;
+  position:fixed;
+  left: 30%;
+  top: 25%;
+  width: 45%;
+  z-index:100;
+  font-size: 0.8em;
+  border: 2px solid #C3C9F2;
 }
 
-#compile_tools_buttons {
+div#compilation > div#compile_tools > ul > div#compile_tools_buttons {
 	position: relative;
 	float: right;
 }
-#compile_tools_buttons span {
+div#compilation > div#compile_tools > ul > div#compile_tools_buttons > span {
  position: relative;
 	float: left;
 	cursor: pointer;
 }
 
-#compile_tools_menu {
- width: 100px;
- height: 70px;
- position: fixed;
- right: 0px;
- top: 40px;
- z-index: 100;
- font-size: 0.8em;
- font-weight: bold;
+div#compilation > div#compile_tools_menu {
+  width: 100px;
+  height: 70px;
+  position: fixed;
+  right: 0px;
+  top: 40px;
+  z-index: 100;
+  font-size: 0.8em;
+  font-weight: bold;
 }
-#compile_tools_menu_bak {
-    width: 100%;
-    height: 100%;
-    background: black;
-    opacity: 0.75;
-    position: relative;
-    top: -73px;
-    z-index:-1;
+div#compilation > div#compile_tools_menu > div#compile_tools_menu_bak {
+  width: 100%;
+  height: 100%;
+  background: black;
+  opacity: 0.75;
+  position: relative;
+  top: -73px;
+  z-index:-1;
 }
-#compile_tools_menu p {
+div#compilation > div#compile_tools_menu > p {
     padding: 3px 0px;
     width: 90px;
     position: relative;
@@ -51,50 +51,14 @@
     cursor: pointer;
 }
 
-#compile_tools_menu p span.ui-icon {
+div#compilation > div#compile_tools_menu > p > span.ui-icon {
  position: relative;
  float: left;
  margin: 0px 4px;
  display: block;
 }
 
-#wait {
-  position: fixed;
-  width:  65%;
-  height: 200px;
-  left: 23%;
-  text-align: center;
-  z-index:201;
-}
-#wait_bak {
-  top: inherit;
-  height:   inherit;
-  opacity:  0.8;
-  background: black;
-  -moz-border-radius:    15px;
-  -webkit-border-radius: 15px;
-}
-#wait #wait_img{
-  background-image: url("images/loading.gif");
-  background-repeat: no-repeat;
-  position:   relative;
-  height: 25px;
-  width: 125px;
-  top: 45%;
-  margin-left: auto;
-  margin-right: auto;
-}
-#wait > #wait_msg {
-  color:      white;
-  display:    inline;
-  font-family:Georgia;
-  font-size:  1.5em;
-  position:   relative;
-  top:        40%;
-  z-index:    201;
-}
-
-#warning {
+div#compilation > div#warning {
   display:none;
   position: fixed;
   top: 35%;
@@ -106,17 +70,18 @@
   z-index:201;
 }
 
-#warning p {
+div#compilation > div#warning > p {
  padding: 5px;
 }
-#warning span {
+
+div#compilation > div#warning > p > span {
   float:left;
   margin:0 2px;
   position:relative;
   top:4px;
 }
 
-#info {
+div#compilation > div#info {
   display:none;
   position: fixed;
   top: 35%;
@@ -127,17 +92,19 @@
   text-align: center;
   z-index:201;
 }
-#info p {
+
+div#compilation > div#info p {
  padding: 5px;
 }
-#info span {
+
+div#compilation > div#info span {
   float:left;
   margin:0 2px;
   position:relative;
   top:4px;
 }
 
-#ajax {
+div#compilation > div#compile_tools > div#ajax {
   display: none;
   background-image: url("images/ajax-loader.gif");
   background-repeat: no-repeat;
@@ -146,17 +113,18 @@
   left: 55%;
   z-index: 200;
 }
-#verses {
+div#compilation > div#compile_tools > div#verses {
   display: none;
 }
 #p-search {
 	z-index: 1;
 }
-.compile_tools_transfer {
+div#compilation > div.compile_tools_transfer {
   border: 2px dotted gray;
   z-index: 200;
 }
-#background_overlay, #warning_overlay {
+
+body div#background_overlay, div#compilation > div#warning_overlay {
 	position:fixed;
 	top:0;
 	left:0;
@@ -166,13 +134,13 @@
 	z-index:199;
 	background:black;
 }
-#background_overlay {
+body div#background_overlay {
 	opacity: 0.8;
 }
-#warning_overlay {
+div#compilation > div#warning_overlay {
 	opacity: 0.7;
 }
-#transparent_background {
+div#compilation > div#transparent_background {
   position:fixed;
   height:100%;
   width:100%;
@@ -181,11 +149,9 @@
   z-index:99;
 }
 
-#ca-talk { display:none!important; }
-#ca-protect { display:none!important; }
-#ca-watch { display:none!important; }
+div.pBody > ul > li#ca-talk , div.pBody > ul > li#ca-protect, div.pBody > ul > li#ca-watch  { display:none!important; }
 
-#progressbar {
+body > div#progressbar {
 	position: fixed;
 	z-index: 200;
 	width: 30%;
@@ -194,23 +160,24 @@
 	background: none;
 }
 
-#progressbar > div {
+body > div#progressbar > div {
 	font-size: 1.5em;
 	text-align: left;
 	padding: 0px 10px;
 	white-space: nowrap;
 }
 
-#login_form form label {
+div#compilation > div#login_form form label {
     width: 4em;
     float: left;
     text-align: right;
     margin-right: 0.5em;
     display: block;
 }
-#login_form form input {
+div#compilation > div#login_form form input {
     margin-left: 4.5em;
 }
-span.accesskey {
+
+div#compilation span.accesskey {
   text-decoration: underline;
 }
