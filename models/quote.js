@@ -20,12 +20,12 @@ Quote = MVC.Model.extend('quote',
             id:         "edit_section_tip"
         },
         heading: {
-            title:     "set Heading",
+            title:     "set hEading",
             desc:     "...by highlighting a part of the quote",
             id:         "set_heading_tip"
         },
         edit_heading: {
-            title:     "edit Heading",
+            title:     "edit hEading",
             desc:     "...by highlighting a part of the quote",
             id:         "edit_heading_tip"
         },
@@ -35,7 +35,7 @@ Quote = MVC.Model.extend('quote',
             id:         "edit_quote_tip"
         },
         insert_new: {
-            title:    "Insert!",
+            title:    "inseRt!",
             desc:        "...this quote to the compilation by clicking here",
             id:            "set_insert_tip"
         }

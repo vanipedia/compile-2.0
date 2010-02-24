@@ -16,6 +16,8 @@ CompileController = MVC.Controller.extend('compilation',
 
     compile_tools: '',
 
+    save_keyCodes: [],
+
     compile_tools_menu_hover_options: {
         sensitivity: 2, // number = sensitivity threshold (must be 1 or higher)
         interval: 300, // number = milliseconds for onMouseOver polling interval
@@ -659,8 +661,9 @@ CompileController = MVC.Controller.extend('compilation',
         var that;
         that = this;
         $(document).bind('keydown', function(e) {
-            var saveK = 83; // s
-            if(e.ctrlKey && e.keyCode === saveK) {
+            var saveK, special_key;
+            saveK = 83; // s
+            if( e.ctrlKey && e.shiftKey && e.keyCode === saveK ) {
                 //alert('Saving!');
                 e.stopPropagation();
                 // Save Compilation
