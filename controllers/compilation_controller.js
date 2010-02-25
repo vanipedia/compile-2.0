@@ -18,6 +18,12 @@ CompileController = MVC.Controller.extend('compilation',
 
     save_keyCodes: [],
 
+    progressbar: {},
+
+    get_current_progress: function() {
+        return CompileController.progressbar.progressbar('option', 'value');
+    },
+
     compile_tools_menu_hover_options: {
         sensitivity: 2, // number = sensitivity threshold (must be 1 or higher)
         interval: 300, // number = milliseconds for onMouseOver polling interval
@@ -127,7 +133,7 @@ CompileController = MVC.Controller.extend('compilation',
         this._loading('init');
         var that, data;
         that = this;
-        that.update_progressbar(10);
+        that.update_progressbar(5, 'Fetching compilation...');
         data = $('div#bodyContent > form#editform > textarea#wpTextbox1').val();
         // Check this page for existing compilation tags
         if(data !== '' && data.indexOf('<div id="compilation">') === -1) {
@@ -135,7 +141,7 @@ CompileController = MVC.Controller.extend('compilation',
             this._loading('end_gracefully');
             return;
         }
-        that.update_progressbar(10);
+        that.update_progressbar(5, 'Bulding compilation...');
         if(data === '') {
             this.new_compilation_message();
             data = '<div id="compilation"></div>';
@@ -147,9 +153,7 @@ CompileController = MVC.Controller.extend('compilation',
         });
 
         // Start building the compilation
-        that.update_progressbar(10);
         Facts.build(data);
-        that.update_progressbar(10);
         Compilation.build(data);
     },
 
@@ -177,7 +181,8 @@ CompileController = MVC.Controller.extend('compilation',
     },
     // Loading message while building compilation
     _loading: function(now) {
-        var that = this;
+        var that, progress;
+        that = this;
         this.Class.loading = true;
         if (now === 'init') {
             if(wgUserName === null) {
@@ -188,7 +193,8 @@ CompileController = MVC.Controller.extend('compilation',
                 $(this).text($(this).text().replace(/Editing/, 'Compiling'));
             });
             $('<div id="background_overlay"></div>').appendTo('body');
-            $('<div id="progressbar"></div>').appendTo('body')
+            CompileController.progressbar = $('<div id="progressbar"></div>');
+            CompileController.progressbar.appendTo('body')
             that.publish('progressbar', { text: 'Loading Compilation...'});
             $('#editform, #toolbar').hide();
             $('#mw-edit-longpagewarning').hide();
@@ -201,7 +207,6 @@ CompileController = MVC.Controller.extend('compilation',
 
         if (now === 'end_gracefully') {
             if(window.console) { console.info('In CompilationController._loading ending gracefully...'); }
-            that.update_progressbar(20);
             this.publish('progressbar_hide');
             $('body div#bodyContent > form#editform, body div#bodyContent > #toolbar').show();
         }
@@ -395,7 +400,7 @@ CompileController = MVC.Controller.extend('compilation',
     save: function() {
         var that;
         that = this;
-        that.publish('progressbar', { text: 'Saving...'}); // init progresbar
+        that.publish('progressbar', { text: 'Begin saving...'}); // init progresbar
         // Checks before saving
         that.check_user_loggedin();
     },
@@ -469,7 +474,7 @@ CompileController = MVC.Controller.extend('compilation',
     _check_before_save: function() {
         var that;
         that = this;
-        that.update_progressbar();
+        that.update_progressbar(0, 'Checking compilation before save...');
         function cancel_save() {
             that.publish('progressbar_hide');
         }
@@ -495,20 +500,20 @@ CompileController = MVC.Controller.extend('compilation',
         that._do_save();
     },
     _do_save: function() {
-        var that, facts, sections, subs, quotes, new_compilation, final_html, upb, progress;
+        var that, facts, sections, subs, quotes, new_compilation, final_html, progress_unit;
         that = this;
         this.Class.saving = true;
-        upb = that.update_progressbar;
         new_compilation = $('<div id="compilation"></div>');
-        that.update_progressbar();
+        that.update_progressbar(0, 'Saving facts...');
         // Process facts
         facts   = Facts.save();
-         that.update_progressbar();
-        $('<div id="facts">'+facts+'</div>').appendTo(new_compilation);
         that.update_progressbar();
+        $('<div id="facts">'+facts+'</div>').appendTo(new_compilation);
+        that.update_progressbar(0, 'Saving quotes...');
         // Process quotes
         quotes = $('.quote').not('.deleted_quote').clone();
-        that.update_progressbar();
+        progress_unit = 40 / quotes.length;
+        if(window.console) console.log('q_count is '+quotes.length+', cur_progress is '+CompileController.progress_val+', progress_unit is '+progress_unit);
         quotes.each(function() {
             var q, p, l, lt, inline;
             q = $(this);
@@ -529,14 +534,24 @@ CompileController = MVC.Controller.extend('compilation',
             })
             q.removeClass('ui-corner-all q_new q_updated');
             q.removeAttr('style');
-             that.update_progressbar(1);
+            that.update_progressbar(progress_unit);
         });
         quotes.appendTo(new_compilation);
 
         // Process sections
-        sections = $('.section').clone();
+        // Clone them first
+        that.update_progressbar(0, 'Saving sections and subsections...');
         subs = $('.sub_section').clone();
+        sections = $('.section').clone();
+
+        // Calculate progress unit for progressbar and then process subsections
+        progress_unit = 10 / subs.length;
+        if(window.console) console.log('subs_count is '+subs.length+', cur_progress is '+CompileController.progress_val+', progress_unit is '+progress_unit);
         subs.each(insert_section);
+
+        // Calculate progress unit for progressbar and then process sections
+        progress_unit = 10 / sections.length;
+        if(window.console) console.log('sections_count is '+sections.length+', cur_progress is '+CompileController.progress_val+', progress_unit is '+progress_unit);
         sections.each(insert_section);
 
         function insert_section() {
@@ -550,12 +565,12 @@ CompileController = MVC.Controller.extend('compilation',
             $('<'+h+'>'+text+'</'+h+'></div>').appendTo(s);
             // Insert section before the first div with attr[parent] === this.id
             $('div[parent="'+id+'"]:first', new_compilation).before(s);
-             that.update_progressbar();
+             that.update_progressbar(progress_unit);
         }
 
         // Append all to new_compilation
         final_html = new_compilation.wrap('<div></div>').parent('div').html().replace(/^\s+/mg, '').replace(/<\/span>\n/g, '</span>').replace(/(<div[^>]+?(?:id="facts"|class="(?:quote|section|sub_section)"))/g, '\n$1').replace(/([^\n])<\/div>/g, '$1\n</div>');
-         that.update_progressbar();
+         that.update_progressbar(0, 'Finished processing compilation for save..');
         $('#wpTextbox1').val(final_html);
          that.update_progressbar();
         if(window.console) {
@@ -563,9 +578,8 @@ CompileController = MVC.Controller.extend('compilation',
             console.log(quotes);
             console.log(new_compilation);
         }
-         that.update_progressbar();
+         that.update_progressbar(100, 'Saving!');
         // Save!
-        that.update_progressbar();
         $('#wpSave').click();
         // Last check in case we are still here
         setTimeout(function() {
@@ -625,15 +639,16 @@ CompileController = MVC.Controller.extend('compilation',
     report_error: function(msg) {
         $.post('/php/report_error.php', { error: msg });
     },
-    update_progressbar: function(val) {
+    // Update progress and status
+    update_progressbar: function(val, status) {
         var that;
         that = this;
-        that.Class.progress_val = val === undefined ? that.Class.progress_val + 3 : that.Class.progress_val + val;
-        $('body > div#progressbar').progressbar('value', that.Class.progress_val);
+        that.Class.progress_val = val === undefined || val == 0 ? that.Class.progress_val + 2 : that.Class.progress_val + val;
+        // Update current status
+        if(status) $('body > div#progressbar > div').text(status);
+        CompileController.progressbar.progressbar('value', that.Class.progress_val);
         if(window.console) {
-            //console.count('progressbar');
-            //console.log('Updating progressbar to '+that.Class.progress_val)
-            //if(that.Class.progress_val > 100) { console.trace(); }
+            console.log('Updating progressbar to '+that.Class.progress_val+', status: '+status);
         }
     },
     block_background: function(action) {
@@ -654,7 +669,6 @@ CompileController = MVC.Controller.extend('compilation',
         var that;
         that = this;
         if(window.console) { console.log('Ajax error: '+params.ajax.text+' : '+params.ajax.error); }
-        //that.publish('warning', { msg: "Connection error: Server is not responding. Check your internet connection or wait a minute and try again." });
         window.alert(params.msg);
     },
     enable_keybinding_save: function() {
@@ -675,7 +689,6 @@ CompileController = MVC.Controller.extend('compilation',
     "compilation.built subscribe": function() {
         var that;
         that = this;
-        that.update_progressbar(20);
         this.clean_up(); // Clean sections for extra sections and unordered
         this._loading('end');
 
@@ -744,25 +757,32 @@ CompileController = MVC.Controller.extend('compilation',
         that.block_background(true);
         if(window.console) { console.info('Init progressbar'); }
         if($("div#bodyContent > div#compilation > #compile_tools").is(':visible')) { CompileController.hide_compile_tools(); }
-        $('body > div#progressbar').progressbar({ value: 0 });
+        CompileController.progressbar.progressbar({ value: 0 });
         $('body > div#progressbar > div').text(params.text);
     },
     "progressbar_hide subscribe": function(params) {
-        if(!$('body > div#progressbar').hasClass('ui-progressbar')) { return; }
+        if(!CompileController.progressbar.hasClass('ui-progressbar')) { return; }
         var that;
         that = this;
         if(window.console) { console.info('Closing progressbar'); }
-        $('body > div#progressbar').progressbar('destroy');
+        CompileController.progressbar.progressbar('destroy');
         that.block_background(false);
         that.Class.progress_val = 0;
     },
     "progressbar_update subscribe": function(params) {
         if(window.console) { console.count('Progressbar_update subscribe'); }
-        this.update_progressbar(params.val);
+        status = params.status ? params.status : false;
+        this.update_progressbar(params.val, status);
     },
     "compilation.progressbar_update subscribe": function(params) {
-        if(window.console) { console.count('Progressbar_update subscribe'); }
-        this.update_progressbar(params.val);
+        if(window.console) { console.count('Progressbar_update subscribe from Compilation'); }
+        status = params.status ? params.status : false;
+        this.update_progressbar(params.val, status);
+    },
+    "facts.progressbar_update subscribe": function(params) {
+        if(window.console) { console.count('Progressbar_update subscribe from Facts'); }
+        status = params.status ? params.status : false;
+        this.update_progressbar(params.val, status);
     },
     "quote.check_internet_connection subscribe": function(params) {
         this.check_internet_connection(params);
