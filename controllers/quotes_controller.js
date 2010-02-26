@@ -560,7 +560,6 @@ QuotesController = MVC.Controller.extend('quotes',
         if ($(tip_elem).is(':hidden')) {
             $(tip_elem).siblings('.tips').slideUp('fast');
             $(tip_elem).slideDown('fast');
-            QuotesController.enable_clickbinding(this);
         }
     },
     /**
