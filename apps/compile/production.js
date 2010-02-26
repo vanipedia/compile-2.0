@@ -12713,244 +12713,257 @@ Model=MVC.Model;
 include.next_function();
 include.set_path('models');
 Compilation=MVC.Model.extend("compilation",{build:function(_1){
+this.publish("progressbar_update",{val:0,status:"Bulding sections..."});
 this._build_sections(_1);
+this.publish("progressbar_update",{val:0,status:"Bulding quotes..."});
 this._build_quotes(_1);
+this.publish("progressbar_update",{val:0,status:"Ready!"});
 this.publish("built");
 },_build_quotes:function(_2){
-var _3,_4;
+var _3,_4,_5;
 _3=this;
-if($("div.quote",_2).length>0){
+_4=$("div.quote",_2).length;
+progress_unit=(99-CompileController.progress_val)/_4;
+if(window.console){
+console.log("q_count is "+_4+", cur_progress is "+CompileController.progress_val+", progress_unit is "+progress_unit);
+}
+if(_4>0){
 $("div.quote",_2).each(function(){
 if(!$(this).attr("link").length){
 return;
 }
-_4=_3.new_quote(this);
+_5=_3.new_quote(this);
 if($(this).hasClass("qod_candidate")){
-_3.update_db(_4.id,{qod:true},"q");
+_3.update_db(_5.id,{qod:true},"q");
 }
-_3.publish("progressbar_update",{val:1});
+_3.publish("progressbar_update",{val:progress_unit});
 });
 }
 if(window.console){
 console.dir(this.db);
 }
-},new_quote:function(_5){
+},new_quote:function(_6){
 var q;
-q=new Quote(_5);
+q=new Quote(_6);
 return q;
-},_build_sections:function(_7){
-var _8;
-_8=this;
-if($(".section, .sub_section",_7).length>0){
-$(".section, .sub_section",_7).each(function(){
-_8.create_new_section(this);
-_8.publish("progressbar_update",{val:1});
+},_build_sections:function(_8){
+var _9,_a,_b;
+_9=this;
+_a=$(".section, .sub_section",_8).length;
+_b=(50-CompileController.progress_val)/_a;
+if(window.console){
+console.log("s_count is "+_a+", cur_progress is "+CompileController.progress_val+", progress_unit is "+_b);
+}
+if(_a>0){
+$(".section, .sub_section",_8).each(function(){
+_9.create_new_section(this);
+_9.publish("progressbar_update",{val:_b});
 });
 }
-},create_new_section:function(_9){
-var _a,_b,s;
-_b=typeof _9==="string"?_9:$(_9).text();
-_a=this.find_in_db(_b,"s");
-if(!_a){
-s=new Section(_9);
+},create_new_section:function(_c){
+var _d,_e,s;
+_e=typeof _c==="string"?_c:$(_c).text();
+_d=this.find_in_db(_e,"s");
+if(!_d){
+s=new Section(_c);
 }
-},insert_new_quote:function(id,_e,_f,_10){
-var _11,_12,_13;
-_11=this;
-_13=_14(id,_e);
-if(_13.length===0){
-this.db.update(id,_f,_10);
+},insert_new_quote:function(id,_11,_12,_13){
+var _14,_15,_16;
+_14=this;
+_16=_17(id,_11);
+if(_16.length===0){
+this.db.update(id,_12,_13);
 this.publish("quote_inserted",{id:id});
 }else{
-this.publish("warning",{msg:"Missing "+_13.join(", ")});
+this.publish("warning",{msg:"Missing "+_16.join(", ")});
 }
-function _14(id,_16){
-var q,_18,_19;
-q=_11.find_in_db(id,"q");
+function _17(id,_19){
+var q,_1b,_1c;
+q=_14.find_in_db(id,"q");
 list=new Array("id","index","link","link_text","parent","tips","type");
-_19=new Array();
-if(Quote.need_section(_16)){
+_1c=new Array();
+if(Quote.need_section(_19)){
 if(!q.trans&&!q.purport){
-_19.push("section");
+_1c.push("section");
 }
 }else{
 list.push("text");
 }
 $.each(list,function(i,val){
 if(!q[val]){
-_19.push(val);
+_1c.push(val);
 }
 });
-return _19;
+return _1c;
 };
-},add_to_db:function(_1c,ref,_1e,_1f){
-var _20;
-if(_1f==="s"){
-if(_1e==="compilation"){
-this.db.add(_1c,ref,"s");
+},add_to_db:function(_1f,ref,_21,_22){
+var _23;
+if(_22==="s"){
+if(_21==="compilation"){
+this.db.add(_1f,ref,"s");
 }else{
-if(!this.find_in_db(_1e,"s")){
-this.create_new_section(_1e);
+if(!this.find_in_db(_21,"s")){
+this.create_new_section(_21);
 }
-this.db.add(_1c,ref,"s");
+this.db.add(_1f,ref,"s");
 }
 }
-if(_1f==="q"){
-var _20;
-_20=this.find_in_db(_1e,"s");
-if(!_20){
-if(_1e){
-this.create_new_section(_1e);
+if(_22==="q"){
+var _23;
+_23=this.find_in_db(_21,"s");
+if(!_23){
+if(_21){
+this.create_new_section(_21);
 }else{
 if(window.console){
 console.error("Error in Compilation.add_to_db: creating new section for "+ref+", missing parent");
 }
 }
 }
-this.db.add(_1c,ref,"q");
-this.publish("new_quote",{elem:_1c});
+this.db.add(_1f,ref,"q");
+this.publish("new_quote",{elem:_1f});
 }
-},update_q_section:function(id,_22,_23){
+},update_q_section:function(id,_25,_26){
 if(arguments.length!==3){
 if(window.console){
 console.log("missing arguments in udpate_q_section");
 }
 return;
 }
-if(Quote.need_section(_22)){
-var _24,q,_26;
-_24=new Object();
-_24.section=_23.section;
+if(Quote.need_section(_25)){
+var _27,q,_29;
+_27=new Object();
+_27.section=_26.section;
 q=this.find_in_db(id,"q");
-function _27(_28){
-var _29;
-_29=["trans","purport","text"];
-if(!q[_28]){
-$.each(_29,function(i,sec){
-if(sec===_28){
+function _2a(_2b){
+var _2c;
+_2c=["trans","purport","text"];
+if(!q[_2b]){
+$.each(_2c,function(i,sec){
+if(sec===_2b){
 return;
 }
 if(q[sec]){
-_24[_28]=q[sec];
-_24[sec]=false;
+_27[_2b]=q[sec];
+_27[sec]=false;
 }
 });
 }else{
-$.each(_29,function(i,sec){
-if(sec===_28){
+$.each(_2c,function(i,sec){
+if(sec===_2b){
 return;
 }
-_24[sec]=false;
+_27[sec]=false;
 });
 }
 };
-if(_23.section!=="Translation and Purport"){
-if(_23.section.match(/trans/i)){
-_27("trans");
+if(_26.section!=="Translation and Purport"){
+if(_26.section.match(/trans/i)){
+_2a("trans");
 }else{
-_27("purport");
+_2a("purport");
 }
 }else{
 if(!q.trans&&!q.purport){
-_27("purport");
+_2a("purport");
 }
 if(!q.trans){
-_26="Translation";
-_24.trans=" ";
+_29="Translation";
+_27.trans=" ";
 }else{
-_26="Purport";
-_24.purport=" ";
+_29="Purport";
+_27.purport=" ";
 }
-this.publish("warning",{msg:"You have chosen \"Translation and Purport\" but you are missing the "+_26+" text."});
+this.publish("warning",{msg:"You have chosen \"Translation and Purport\" but you are missing the "+_29+" text."});
 }
-this.update_db(id,_24,"q");
+this.update_db(id,_27,"q");
 }else{
 this.publish("warning",{msg:"This quote does not require a section"});
 }
-},process_verse:function(_2e){
-var _2f,_30,_31,_32,_33;
-_2f=this.find_in_db(_2e.quote,"q");
-_33={};
-_33["verses"]=_2f.verses;
-function _34(all){
+},process_verse:function(_31){
+var _32,_33,_34,_35,_36;
+_32=this.find_in_db(_31.quote,"q");
+_36={};
+_36["verses"]=_32.verses;
+function _37(all){
 var a=all.split("\n");
 for(i=0;i<a.length;i++){
 a[i]=":"+$.trim(a[i]);
 }
 return a.join("\n");
 };
-if(_2e.resp){
-if(_2f.text){
-_31=_2f.text;
-_32="text";
+if(_31.resp){
+if(_32.text){
+_34=_32.text;
+_35="text";
 }else{
-if(_2f.purport){
-_31=_2f.purport;
-_32="purport";
+if(_32.purport){
+_34=_32.purport;
+_35="purport";
 }
 }
-_30=_2f.verses[_2e.verse];
-_33[_32]=_31.replace(_30,_34);
+_33=_32.verses[_31.verse];
+_36[_35]=_34.replace(_33,_37);
 }
-_33.verses[_2e.verse]="done";
-this.update_db(_2f.id,_33,"q");
-},update_heading:function(_37){
-if(!_37&&window.console){
+_36.verses[_31.verse]="done";
+this.update_db(_32.id,_36,"q");
+},update_heading:function(_3a){
+if(!_3a&&window.console){
 console.log("Missing params in Compilation.update_heading");
 }
-var _38,_39;
-_39={};
-if(_37.action==="append"){
-_38=this.find_in_db(_37.id,"q");
-_39.heading=_38.heading?_38.heading+" "+_37.heading:_37.heading;
+var _3b,_3c;
+_3c={};
+if(_3a.action==="append"){
+_3b=this.find_in_db(_3a.id,"q");
+_3c.heading=_3b.heading?_3b.heading+" "+_3a.heading:_3a.heading;
 }
-if(_37.action==="set"){
-_39.heading=_37.heading;
-_39.heading=_39.heading.replace(/^[a-z]/,_3a);
-_39.heading=_39.heading.replace(/,$/,".");
-_39.heading=_39.heading.replace(/[^.?!"]$/,_3b);
+if(_3a.action==="set"){
+_3c.heading=_3a.heading;
+_3c.heading=_3c.heading.replace(/^[a-z]/,_3d);
+_3c.heading=_3c.heading.replace(/,$/,".");
+_3c.heading=_3c.heading.replace(/[^.?!"]$/,_3e);
 }
-if(_37.action==="new"){
-_39.heading=" ";
+if(_3a.action==="new"){
+_3c.heading=" ";
 }
-function _3a(_3c){
-return _3c.toUpperCase();
+function _3d(_3f){
+return _3f.toUpperCase();
 };
-function _3b(_3d){
-return _3d+".";
+function _3e(_40){
+return _40+".";
 };
-this.update_db(_37.id,_39,"q");
-},update_db:function(id,_3f,_40){
-if(!id||!_3f||!_40){
+this.update_db(_3a.id,_3c,"q");
+},update_db:function(id,_42,_43){
+if(!id||!_42||!_43){
 if(window.console){
 console.log("Missing parameters in udpate_db");
 }
 }
-this.db.update(id,_3f,_40);
+this.db.update(id,_42,_43);
 var q=this.find_in_db(id,"q");
 Quote.update_section(q);
 this.publish("updated",{id:id,quote:q});
-},del_from_db:function(id,_43){
-this.db.del(id,_43);
-if(_43==="q"){
+},del_from_db:function(id,_46){
+this.db.del(id,_46);
+if(_46==="q"){
 this.publish("deleted",{id:id});
 }
-},find_in_db:function(ref,_45){
-if(!ref||!_45){
+},find_in_db:function(ref,_48){
+if(!ref||!_48){
 if(window.console){
-console.error("Compilation#find_in_db: Missing parameters! ref: "+ref+", type: "+_45);
+console.error("Compilation#find_in_db: Missing parameters! ref: "+ref+", type: "+_48);
 }
 return;
 }
-if(_45==="s"){
+if(_48==="s"){
 ref=ref.replace(/[.,\(\)]/g,"");
 }
-var _46;
-_46=this.db.find(ref,_45);
-return _46;
+var _49;
+_49=this.db.find(ref,_48);
+return _49;
 },check_sec_consistency:function(id){
-var _48,q,sec;
-_48=this;
+var _4b,q,sec;
+_4b=this;
 q=this.find_in_db(id,"q");
 if(!q.section){
 return;
@@ -12959,30 +12972,30 @@ sec=q.section.match(/trans|purport/ig);
 if(sec){
 if(sec.length===2){
 if(!q.trans||!q.purport){
-_4b();
+_4e();
 return;
 }
 }
 if(sec.length===1){
 sec=sec[0].toLowerCase();
 if(!q[sec]){
-_4b();
+_4e();
 return;
 }
 }
-_48.publish("section_checked",{id:id,result:"good"});
+_4b.publish("section_checked",{id:id,result:"good"});
 }
-function _4b(){
-_48.publish("section_checked",{id:id,result:"bad"});
-_48.publish("warning",{warning:"You have set \""+q.section+"\" as your section but this quote appears to be missing the corresponding text(s)!"});
+function _4e(){
+_4b.publish("section_checked",{id:id,result:"bad"});
+_4b.publish("warning",{warning:"You have set \""+q.section+"\" as your section but this quote appears to be missing the corresponding text(s)!"});
 };
-},undo:function(id,_4d){
-this.db.undo(id,_4d);
+},undo:function(id,_50){
+this.db.undo(id,_50);
 this.publish("undone",{id:id});
-},db:{sections:new Object(),undo_sections:new Object(),sec_count:new Object(),quotes:new Object(),undo_quotes:new Object(),quote_count:new Object(),add:function(obj,id,_50){
-var _51;
-_51=this._where(_50);
-if(_50==="q"){
+},db:{sections:new Object(),undo_sections:new Object(),sec_count:new Object(),quotes:new Object(),undo_quotes:new Object(),quote_count:new Object(),add:function(obj,id,_53){
+var _54;
+_54=this._where(_53);
+if(_53==="q"){
 if(this.quote_count[obj.parent]===undefined){
 this.quote_count[obj.parent]=0;
 }
@@ -12990,69 +13003,69 @@ this.quote_count[obj.parent]++;
 }else{
 this.sec_count++;
 }
-this[_51][id]=obj;
-},find:function(id,_53){
-var _54;
-_54=this._where(_53);
-for(var obj in this[_54]){
+this[_54][id]=obj;
+},find:function(id,_56){
+var _57;
+_57=this._where(_56);
+for(var obj in this[_57]){
 if(obj==id){
-return this[_54][obj];
+return this[_57][obj];
 }
 }
 return false;
-},update:function(id,_57,_58){
-var _59,_5a;
-_59=this._where(_58);
-this._backup(id,_59);
-from=_57;
-to=this[_59][id];
+},update:function(id,_5a,_5b){
+var _5c,_5d;
+_5c=this._where(_5b);
+this._backup(id,_5c);
+from=_5a;
+to=this[_5c][id];
 this._clone(from,to);
-if(_58==="q"){
-Quote.update_tips(this[_59][id]);
+if(_5b==="q"){
+Quote.update_tips(this[_5c][id]);
 }
-},del:function(id,_5c){
-var _5d;
-_5d=this._where(_5c);
-if(_5c==="q"){
-this._backup(id,_5d);
-}
-this[_5d][id]=false;
-},undo:function(id,_5f){
-var _60,_61,_62,to;
+},del:function(id,_5f){
+var _60;
 _60=this._where(_5f);
-_61="undo_"+_60;
-if(this[_61][id]===undefined){
+if(_5f==="q"){
+this._backup(id,_60);
+}
+this[_60][id]=false;
+},undo:function(id,_62){
+var _63,_64,_65,to;
+_63=this._where(_62);
+_64="undo_"+_63;
+if(this[_64][id]===undefined){
 return;
 }
-if(this[_60][id]===false){
-this[_60][id]=new Object();
+if(this[_63][id]===false){
+this[_63][id]=new Object();
 }
-_62=this[_61][id];
-to=this[_60][id];
-this._clone(_62,to);
+_65=this[_64][id];
+to=this[_63][id];
+this._clone(_65,to);
 return;
-},_backup:function(id,_65){
-var _66,_67,to;
-_66="undo_"+_65;
-if(this[_66][id]===undefined){
-this[_66][id]=new Object();
+},_backup:function(id,_68){
+var _69,_6a,to;
+_69="undo_"+_68;
+if(this[_69][id]===undefined){
+this[_69][id]=new Object();
 }
-_67=this[_65][id];
-to=this[_66][id];
-this._clone(this[_65][id],this[_66][id]);
-},_clone:function(_69,to){
-for(var _6b in _69){
-if(typeof _69[_6b]!=="function"&&to[_6b]!==_69[_6b]){
-to[_6b]=_69[_6b];
+_6a=this[_68][id];
+to=this[_69][id];
+this._clone(this[_68][id],this[_69][id]);
+},_clone:function(_6c,to){
+for(var _6e in _6c){
+if(typeof _6c[_6e]!=="function"&&to[_6e]!==_6c[_6e]){
+to[_6e]=_6c[_6e];
 }
 }
-},_where:function(_6c){
-return _6c==="s"?"sections":_6c==="q"?"quotes":"undo_quotes";
+},_where:function(_6f){
+return _6f==="s"?"sections":_6f==="q"?"quotes":"undo_quotes";
 }}},{});
 ;
 include.set_path('models');
 ﻿;
-Quote=MVC.Model.extend("quote",{attr:["id","parent","book","heading","link","link_text","text","trans","purport","index","type","tips","verses","bad_link","qod"],tips_db:{section:{title:"set Section",desc:"...this quote requires a section. Click here",id:"set_section_tip"},edit_section:{title:"edit Section",desc:"...by clicking here!",id:"edit_section_tip"},heading:{title:"set Heading",desc:"...by highlighting a part of the quote",id:"set_heading_tip"},edit_heading:{title:"edit Heading",desc:"...by highlighting a part of the quote",id:"edit_heading_tip"},edit_quote:{title:"edit Quote",desc:"...by doubleClicking on it or clicking here",id:"edit_quote_tip"},insert_new:{title:"Insert!",desc:"...this quote to the compilation by clicking here",id:"set_insert_tip"}},link_text_db:{"NOD":"Nectar of Devotion","ISO":"Sri Isopanisad","TLC":"Teachings of Lord Caitanya, Chapter","RTW":"Renunciation Through Wisdom","NOI":"Nectar of Instruction","KB":"Krsna Book","EJ":"Easy Journey to Other Planets","LOB":"Light of the Bhagavata","MOG":"Message of Godhead","NBS":"Narada Bhakti Sutra","MM":"Mukunda-mala-stotra mantra"},cache:{},find_reference:function(_1){
+Quote=MVC.Model.extend("quote",{attr:["id","parent","book","heading","link","link_text","text","trans","purport","index","type","tips","verses","bad_link","qod"],tips_db:{section:{title:"set Section",desc:"...this quote requires a section. Click here or press S",id:"set_section_tip"},edit_section:{title:"edit Section",desc:"...by clicking here or press S",id:"edit_section_tip"},heading:{title:"set hEading",desc:"...by highlighting a part of the quote and click here or press E",id:"set_heading_tip"},edit_heading:{title:"edit hEading",desc:"...by highlighting a part of the quote and click here or press E",id:"edit_heading_tip"},edit_quote:{title:"edit Quote",desc:"...by doubleClicking on it, clicking here or pressing Q",id:"edit_quote_tip"},insert_new:{title:"inseRt!",desc:"...this quote to the compilation by clicking here or press R",id:"set_insert_tip"}},link_text_db:{"NOD":"Nectar of Devotion","ISO":"Sri Isopanisad","TLC":"Teachings of Lord Caitanya, Chapter","RTW":"Renunciation Through Wisdom","NOI":"Nectar of Instruction","KB":"Krsna Book","EJ":"Easy Journey to Other Planets","LOB":"Light of the Bhagavata","MOG":"Message of Godhead","NBS":"Narada Bhakti Sutra","MM":"Mukunda-mala-stotra mantra"},cache:{},find_reference:function(_1){
 var _2,_3,_4,_5;
 _2=this;
 _3={};
@@ -13570,100 +13583,104 @@ include.set_path('models');
 Facts=MVC.Model.extend("facts",{build:function(_1){
 var _2;
 _2=$("div#facts",_1).html();
+this.publish("progressbar_update",{val:0,status:"Bulding facts..."});
 _2?this.build_with(_2):this.build_new();
 this.publish("created",{facts:this.db});
 },build_new:function(){
-var _3;
+var _3,_4;
 _3=this;
-$.each(_3.db,function(_4,_5){
-if(_4==="first"||_4==="last"){
-_3.set(_4,_3.get_date());
+_4=1;
+$.each(_3.db,function(_5,_6){
+if(_5==="first"||_5==="last"){
+_3.set(_5,_3.get_date());
 }
-if(_4==="compiler"){
-var _6=_3.check_user();
-if(_6){
-_3.set(_4,new Array(_6));
+if(_5==="compiler"){
+var _7=_3.check_user();
+if(_7){
+_3.set(_5,new Array(_7));
 }
 }
+_3.publish("progressbar_update",{val:_4});
 });
-},build_with:function(_7){
-var _8,_9,_a,_b,_c,_d;
-_8=this;
-_9=new Object();
-_a=new Array();
+},build_with:function(_8){
+var _9,_a,_b,_c,_d,_e,_f;
+_9=this;
+_a=new Object();
 _b=new Array();
-_c=/\[\[Category:\s?(.+?)\s?\]\]/ig;
-if(!_7){
+_c=new Array();
+_d=/\[\[Category:\s?(.+?)\s?\]\]/ig;
+if(!_8){
 if(window.console){
 console.log("Missing facts data in Facts.build_manually!");
 }
 return;
 }
-_a=_7.split("{{");
-_a.shift();
-if(!_a.length){
+_b=_8.split("{{");
+_b.shift();
+if(!_b.length){
 if(window.console){
 console.error("Error creating facts array");
 }
 }
-$.each(_a,function(i,_f){
-var _10,_11;
-_f=_12(_f);
-if(_f.indexOf("toc")===0){
-_9["toc"]=$.trim(_f.substr(_f.indexOf(" ")+1));
+$.each(_b,function(i,val){
+var _12,_13;
+val=_14(val);
+if(val.indexOf("toc")===0){
+_a["toc"]=$.trim(val.substr(val.indexOf(" ")+1));
 return true;
 }
-if(_f.indexOf("|")===-1||_f.indexOf("false")>-1){
+if(val.indexOf("|")===-1||val.indexOf("false")>-1){
 return true;
 }
-_10=$.trim(_f.substring(0,_f.indexOf("|")));
-_11=$.trim(_f.substr(_f.indexOf("|")+1));
+_12=$.trim(val.substring(0,val.indexOf("|")));
+_13=$.trim(val.substr(val.indexOf("|")+1));
 if(window.console){
-console.log("Setting "+_10+" to "+_11);
+console.log("Setting "+_12+" to "+_13);
 }
-_9[_10]=_11;
-_8.publish("progressbar_update",{val:1});
+_a[_12]=_13;
 });
-$.each(_8.db,function(_13,val){
+_f=1;
+$.each(_9.db,function(_15,val){
 if(window.console){
-console.log(_13+" is "+typeof _9[_13]+" in current_facts");
+console.log(_15+" is "+typeof _a[_15]+" in current_facts");
 }
-if(typeof _9[_13]!=="undefined"){
-_15(_13,_9[_13]);
+if(typeof _a[_15]!=="undefined"){
+_17(_15,_a[_15]);
 }else{
 if(window.console){
-console.log("In Facts.build_with: "+_13+" was not found in extracted facts db");
+console.log("In Facts.build_with: "+_15+" was not found in extracted facts db");
 }
 }
+_9.publish("progressbar_update",{val:_f});
 });
-function _15(_16,_17){
-if(!_17){
+function _17(_18,_19){
+if(!_19){
 return;
 }
-if((_16==="terms"&&!/^Copy /.test(_17))||_16==="compiler"||_16==="complete"){
-_17=_18(_17);
+if((_18==="terms"&&!/^Copy /.test(_19))||_18==="compiler"||_18==="complete"){
+_19=_1a(_19);
 }
-if(_16==="total"){
-_17=Number(_17)||0;
+if(_18==="total"){
+_19=Number(_19)||0;
 }
-if(_16==="last"||(_16==="first"&&_17==="")){
-_17=_8.get_date();
+if(_18==="last"||(_18==="first"&&_19==="")){
+_19=_9.get_date();
 }
-if(_16==="totals_by_section"){
-var _19,re,_1b,val;
-_19={};
+if(_18==="totals_by_section"){
+var _1b,re,_1d,val;
+_1b={};
 re=/(.+?)\s?=\s?(\d+)/;
-_17=_18(_17);
-$.each(_17,function(i,sec){
-_1b=sec.match(re)[1];
+_19=_1a(_19);
+$.each(_19,function(i,sec){
+_1d=sec.match(re)[1];
 val=Number(sec.match(re)[2]);
-_19[_1b]=val;
+_1b[_1d]=val;
 });
-_17=_19;
+_19=_1b;
 }
-_8.set(_16,_17);
+_9.set(_18,_19);
 };
-function _12(str){
+function _14(str){
 var now;
 now=str.replace(/"/g,"\"");
 now=now.replace(/<.+/,"");
@@ -13672,242 +13689,242 @@ now=now.replace(/^(.+?)\}\}.*/,"$1");
 now=$.trim(now);
 return now;
 };
-function _18(str){
-var _22,_23;
-_22=str;
-_22=_22.replace(/"/g,"");
-_22=_22.replace(/ +\||\| +/g,"|");
-_22=_22.replace(/^ +| +$/g,"");
-_23=_22.split("|")||_22;
-return _23;
+function _1a(str){
+var _24,_25;
+_24=str;
+_24=_24.replace(/"/g,"");
+_24=_24.replace(/ +\||\| +/g,"|");
+_24=_24.replace(/^ +| +$/g,"");
+_25=_24.split("|")||_24;
+return _25;
 };
-_b=_7.match(_c);
-if(_b!==null){
-_b=$.map(_b,function(val){
-return val.replace(_c,"$1");
+_c=_8.match(_d);
+if(_c!==null){
+_c=$.map(_c,function(val){
+return val.replace(_d,"$1");
 });
-this.set("categories",_b);
+this.set("categories",_c);
 }
 this.add_user();
 if(window.console){
 console.log(this.db);
 }
-},update:function(_25,_26,_27){
-_27=$.trim(_27);
-if(this.db[_25]===undefined){
+},update:function(_27,_28,_29){
+_29=$.trim(_29);
+if(this.db[_27]===undefined){
 if(window.console){
-console.log("Error updating Facts.db in "+_25+" with "+_27);
+console.log("Error updating Facts.db in "+_27+" with "+_29);
 }
 return false;
 }
-if(_27===""){
-if(_25==="goal"){
+if(_29===""){
+if(_27==="goal"){
 this.publish("warning",{msg:"Wrong goal setting. You must calculate your goal based on the amount of matches for your expressions search in Vedabase"});
 return 0;
 }
-if(_26!==null){
-this.publish("deleted",{fact:_25,index:_26,old:this.db[_25][_26]});
+if(_28!==null){
+this.publish("deleted",{fact:_27,index:_28,old:this.db[_27][_28]});
 }
 }
-if(_25==="goal"&&isNaN(_27)){
+if(_27==="goal"&&isNaN(_29)){
 this.publish("warning",{msg:"Goal must be number"});
 return 0;
 }
-_26===null?this.db[_25]=_27:this.db[_25][_26]=_27;
+_28===null?this.db[_27]=_29:this.db[_27][_28]=_29;
 this.publish("updated");
-if(_25==="terms"&&_27!==""){
-this.publish("updated_term",{term:_27});
+if(_27==="terms"&&_29!==""){
+this.publish("updated_term",{term:_29});
 }
-return _27;
-},set:function(_28,_29){
-var _2a;
-_2a=this;
-if(!_28||!_29){
+return _29;
+},set:function(_2a,_2b){
+var _2c;
+_2c=this;
+if(!_2a||!_2b){
 if(window.console){
-console.log("Parameters missing in Facts.set(). name: "+_28+" value: "+_29);
+console.log("Parameters missing in Facts.set(). name: "+_2a+" value: "+_2b);
 }
 }
-_2a.db[_28]=_29;
-},add:function(_2b,_2c){
-if(this.db[_2b]===undefined||_2c===""){
+_2c.db[_2a]=_2b;
+},add:function(_2d,_2e){
+if(this.db[_2d]===undefined||_2e===""){
 if(window.console){
-console.log("Bad fact in Facts.add "+_2b+" val "+_2c);
+console.log("Bad fact in Facts.add "+_2d+" val "+_2e);
 }
 return;
 }
-this.db[_2b].push($.trim(UniToASCII(BaltoUni(_2c))));
-this.publish("added",{fact:_2b,index:this.db[_2b].length-1});
-},get:function(_2d,_2e){
-return _2e===undefined?this.db[_2d]:this.db[_2d][_2e];
+this.db[_2d].push($.trim(UniToASCII(BaltoUni(_2e))));
+this.publish("added",{fact:_2d,index:this.db[_2d].length-1});
+},get:function(_2f,_30){
+return _30===undefined?this.db[_2f]:this.db[_2f][_30];
 },get_all_terms:function(){
-var _2f;
-_2f=this.db.terms;
-_2f=$.map(_2f,function(t){
+var _31;
+_31=this.db.terms;
+_31=$.map(_31,function(t){
 if(t!==""){
 return "\""+t+"\"";
 }
 });
-return _2f.sort().join("|");
+return _31.sort().join("|");
 },check_user:function(){
-var _31,_32;
-_31=this;
-_32=wgUserName||false;
-if(!_32){
+var _33,_34;
+_33=this;
+_34=wgUserName||false;
+if(!_34){
 this.publish("warning",{msg:"You are not logged in"});
 return false;
 }else{
-return _32;
+return _34;
 }
 },add_user:function(){
-var _33,_34,_35;
-_33=this;
-_34=this.check_user();
-_35=_33.db.compiler;
-if(_34&&$.inArray(_34,_35)===-1){
-_33.add("compiler",_34);
+var _35,_36,_37;
+_35=this;
+_36=this.check_user();
+_37=_35.db.compiler;
+if(_36&&$.inArray(_36,_37)===-1){
+_35.add("compiler",_36);
 }
 },get_date:function(){
-var _36=new Array("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec");
+var _38=new Array("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec");
 var d=new Date();
 var day=d.getDate().toString();
-var _39=_36[d.getMonth()];
-var _3a=d.getYear().toString().substring(1,3);
+var _3b=_38[d.getMonth()];
+var _3c=d.getYear().toString().substring(1,3);
 if(day.length==1){
 day="0"+day;
 }
-var _3b=day+_39+_3a;
-return _3b;
-},complete:function(_3c,_3d){
-var _3e;
-_3e=this.db.complete;
-if(_3d==="add"){
-if(_3c==="ALL"){
-_3e.splice(0);
-_3e.push(_3c);
+var _3d=day+_3b+_3c;
+return _3d;
+},complete:function(_3e,_3f){
+var _40;
+_40=this.db.complete;
+if(_3f==="add"){
+if(_3e==="ALL"){
+_40.splice(0);
+_40.push(_3e);
 }else{
-if($.inArray("ALL",_3e)>-1){
-_3e.splice($.inArray("ALL",_3e),1);
+if($.inArray("ALL",_40)>-1){
+_40.splice($.inArray("ALL",_40),1);
 }
-_3e.push(_3c);
+_40.push(_3e);
 }
 }else{
-_3e.splice($.inArray(_3c,_3e),1);
+_40.splice($.inArray(_3e,_40),1);
 }
-},update_totals:function(_3f){
-var q,_41;
-q=Compilation.find_in_db(_3f.id,"q");
+},update_totals:function(_41){
+var q,_43;
+q=Compilation.find_in_db(_41.id,"q");
 if(q){
-_41=q.book;
-this.db.totals_by_section[_41]++;
+_43=q.book;
+this.db.totals_by_section[_43]++;
 this.db.total++;
 }else{
-_41=Compilation.find_in_db(_3f.id,"u").book;
-this.db.totals_by_section[_41]--;
+_43=Compilation.find_in_db(_41.id,"u").book;
+this.db.totals_by_section[_43]--;
 this.db.total--;
 }
 this.publish("totals_updated");
 },check_totals:function(){
-var _42,_43,_44,_45;
-_42=this;
-_44=0;
-_43={};
+var _44,_45,_46,_47;
+_44=this;
+_46=0;
+_45={};
 if(window.console){
 console.info("In Facts#check_totals");
 }
-$.each(Compilation.db.quotes,function(_46,_47){
-var _48=Compilation.db.quotes[_46]["book"];
-_43[_48]?_43[_48]++:_43[_48]=1;
+$.each(Compilation.db.quotes,function(_48,_49){
+var _4a=Compilation.db.quotes[_48]["book"];
+_45[_4a]?_45[_4a]++:_45[_4a]=1;
 if(window.console){
-console.log("Facts#check_totals: In quote: "+_46+" count for "+_48+" is: "+_43[_48]);
+console.log("Facts#check_totals: In quote: "+_48+" count for "+_4a+" is: "+_45[_4a]);
 }
 });
-$.each(Facts.db.totals_by_section,function(_49,val){
-if(!_43[_49]){
+$.each(Facts.db.totals_by_section,function(_4b,val){
+if(!_45[_4b]){
 if(window.console){
-console.warn("Facts#check_totals: No book_count for "+_49+" => "+_43[_49]);
+console.warn("Facts#check_totals: No book_count for "+_4b+" => "+_45[_4b]);
 }
-_43[_49]=0;
+_45[_4b]=0;
 }
-if(val!==_43[_49]){
+if(val!==_45[_4b]){
 if(window.console){
-console.warn("Facts#check_totals: Facts.db totals_by_section doesn't match totals in Compilation.quotes.db for "+_49+" totals: "+val+" => "+_43[_49]);
+console.warn("Facts#check_totals: Facts.db totals_by_section doesn't match totals in Compilation.quotes.db for "+_4b+" totals: "+val+" => "+_45[_4b]);
 }
-Facts.db.totals_by_section[_49]=_43[_49];
-_45=true;
+Facts.db.totals_by_section[_4b]=_45[_4b];
+_47=true;
 }
-_44+=_43[_49];
+_46+=_45[_4b];
 });
-if(_45){
+if(_47){
 if(window.console){
-console.info("Updating Facts.db with quotes total "+_44);
+console.info("Updating Facts.db with quotes total "+_46);
 }
-this.db.total=_44;
+this.db.total=_46;
 this.publish("totals_updated");
 }
 },save:function(){
-var _4b,_4c,all;
-_4b=this;
+var _4d,_4e,all;
+_4d=this;
 all=false;
-_4c="";
-$.each(_4b.db,function(f,_4f){
+_4e="";
+$.each(_4d.db,function(f,_51){
 if(f==="books"){
 return true;
 }
 if(f==="terms"){
-_4c+=_50(f,_51(_4f));
+_4e+=_52(f,_53(_51));
 }
 if(f==="notes"||f==="goal"||f==="first"||f==="last"||f==="total"){
-_4c+=_50(f,_4f);
+_4e+=_52(f,_51);
 }
 if(f==="compiler"||f==="complete"){
-_4c+=_50(f,_4f.join("|"));
+_4e+=_52(f,_51.join("|"));
 }
 if(f==="totals_by_section"){
-_4c+=_50(f,_52(_4f));
+_4e+=_52(f,_54(_51));
 }
 if(f==="toc"){
-_4c+="\n{{toc right}}";
+_4e+="\n{{toc right}}";
 }
 if(f==="categories"){
-_4c+=_53(_4f);
+_4e+=_55(_51);
 }
 });
-return _4c;
-function _50(_54,val){
-if(_54==="complete"&&val==="ALL"){
+return _4e;
+function _52(_56,val){
+if(_56==="complete"&&val==="ALL"){
 all=true;
 }
-if(_54==="goal"&&all){
+if(_56==="goal"&&all){
 return "";
 }
-return "\n{{"+_54+"|"+val+"}}";
+return "\n{{"+_56+"|"+val+"}}";
 };
-function _51(_56){
+function _53(_58){
 var t;
-t=$.map(_56,function(_58){
-if(_58!==""){
-return "\""+_58+"\"";
+t=$.map(_58,function(_5a){
+if(_5a!==""){
+return "\""+_5a+"\"";
 }
 }).sort();
 return t.join("|");
 };
-function _52(_59){
+function _54(_5b){
 var t;
 t=new Array();
-$.each(_59,function(_5b,_5c){
-t.push(_5b+"="+_5c);
+$.each(_5b,function(_5d,_5e){
+t.push(_5d+"="+_5e);
 });
 return t.join("|");
 };
-function _53(_5d){
-var c,_5f,_60;
-_5f=$("#categories_list").sortable("toArray");
-_60=$.map(_5f,function(val,i){
+function _55(_5f){
+var c,_61,_62;
+_61=$("#categories_list").sortable("toArray");
+_62=$.map(_61,function(val,i){
 var n=/\d+/.exec(val);
-return _5d[n];
+return _5f[n];
 });
 c="";
-$.each(_60,function(i,cat){
+$.each(_62,function(i,cat){
 if(cat===""){
 return true;
 }
@@ -13918,7 +13935,9 @@ return c;
 },db:{terms:new Array(),notes:new String(),compiler:new Array(),complete:new Array(),goal:new Number(0),first:new String(),last:new String(),totals_by_section:{"BG":0,"SB":0,"CC":0,"OB":0,"Lec":0,"Con":0,"Let":0},total:new Number(0),toc:new String("right"),categories:new Array(),books:new Array("BG","SB","CC","OB","Lec","Con","Let")},terms:new Array()},{});
 ;
 include.set_path('controllers');
-CompileController=MVC.Controller.extend("compilation",{progress_val:0,loading:false,saving:false,compile_tools:"",compile_tools_menu_hover_options:{sensitivity:2,interval:300,over:function(){
+CompileController=MVC.Controller.extend("compilation",{progress_val:0,loading:false,saving:false,compile_tools:"",save_keyCodes:[],progressbar:{},get_current_progress:function(){
+return CompileController.progressbar.progressbar("option","value");
+},compile_tools_menu_hover_options:{sensitivity:2,interval:300,over:function(){
 CompileController.show_tools_menu();
 },timeout:500,out:function(){
 CompileController.hide_tools_menu();
@@ -13986,7 +14005,7 @@ $("#p-logo, #p-cactions").css("z-index",_b?1:"");
 this._loading("init");
 var _d,_e;
 _d=this;
-_d.update_progressbar(10);
+_d.update_progressbar(5,"Fetching compilation...");
 _e=$("div#bodyContent > form#editform > textarea#wpTextbox1").val();
 if(_e!==""&&_e.indexOf("<div id=\"compilation\">")===-1){
 if(window.console){
@@ -13995,15 +14014,13 @@ console.log("No compilation found in this page!");
 this._loading("end_gracefully");
 return;
 }
-_d.update_progressbar(10);
+_d.update_progressbar(5,"Bulding compilation...");
 if(_e===""){
 this.new_compilation_message();
 _e="<div id=\"compilation\"></div>";
 }
 this.render({after:"wikiPreview",action:"compilation"});
-_d.update_progressbar(10);
 Facts.build(_e);
-_d.update_progressbar(10);
 Compilation.build(_e);
 },"div#compile_tools span#compile_tools_hide click":function(_f){
 CompileController.hide_compile_tools();
@@ -14020,7 +14037,8 @@ $(_13.element).addClass("ui-state-hover");
 },"div#compile_tools #compile_form .ui-state-default mouseout":function(_14){
 $(_14.element).removeClass("ui-state-hover");
 },_loading:function(now){
-var _16=this;
+var _16,_17;
+_16=this;
 this.Class.loading=true;
 if(now==="init"){
 if(wgUserName===null){
@@ -14031,7 +14049,8 @@ $("title, #firstHeading").each(function(){
 $(this).text($(this).text().replace(/Editing/,"Compiling"));
 });
 $("<div id=\"background_overlay\"></div>").appendTo("body");
-$("<div id=\"progressbar\"></div>").appendTo("body");
+CompileController.progressbar=$("<div id=\"progressbar\"></div>");
+CompileController.progressbar.appendTo("body");
 _16.publish("progressbar",{text:"Loading Compilation..."});
 $("#editform, #toolbar").hide();
 $("#mw-edit-longpagewarning").hide();
@@ -14045,7 +14064,6 @@ if(now==="end_gracefully"){
 if(window.console){
 console.info("In CompilationController._loading ending gracefully...");
 }
-_16.update_progressbar(20);
 this.publish("progressbar_hide");
 $("body div#bodyContent > form#editform, body div#bodyContent > #toolbar").show();
 }
@@ -14061,11 +14079,11 @@ this.Class.loading=false;
 }
 return;
 },attach_events:function(){
-var _17;
-_17=this;
+var _18;
+_18=this;
 CompileController.compile_tools.tabs().draggable({handle:"> ul"});
-$("div#bodyContent > div#compilation > div#compile_tools_menu").hoverIntent(_17.Class.compile_tools_menu_hover_options);
-setTimeout(_17.Class.hide_tools_menu,5000);
+$("div#bodyContent > div#compilation > div#compile_tools_menu").hoverIntent(_18.Class.compile_tools_menu_hover_options);
+setTimeout(_18.Class.hide_tools_menu,5000);
 $("div#bodyContent > div#compilation > div#compile_tools_menu > p").bind("mouseenter",function(){
 $(this).addClass("ui-state-hover");
 }).bind("mouseleave",function(){
@@ -14074,99 +14092,99 @@ $(this).removeClass("ui-state-hover");
 CompileController.enable_keybindings();
 this.enable_keybinding_save();
 window.onbeforeunload=function(){
-if(!_17.Class.saving){
+if(!_18.Class.saving){
 return "";
 }
 };
-},_render_section:function(_18){
-var _19;
-this.section=_18;
-_19=this.section.parent;
+},_render_section:function(_19){
+var _1a;
+this.section=_19;
+_1a=this.section.parent;
 if(window.console){
-console.assert(_19);
+console.assert(_1a);
 }
-if(_19!=="compilation"&&$("#"+_19).length!==1){
-this._render_section(Compilation.find_in_db(_19,"s"));
+if(_1a!=="compilation"&&$("#"+_1a).length!==1){
+this._render_section(Compilation.find_in_db(_1a,"s"));
 }
 if(window.console){
-console.info("CompileController#_render_section: rendering "+this.section.id+" to "+_19);
+console.info("CompileController#_render_section: rendering "+this.section.id+" to "+_1a);
 }
-this.render({bottom:_19,action:"sections"});
-this.sort_section(_19);
+this.render({bottom:_1a,action:"sections"});
+this.sort_section(_1a);
 },clean_up:function(){
 this._sort_sections();
 this._remove_empty_secs();
 this._sort_quotes();
-},sort_section:function(_1a){
-if($("div#compilation > div#"+_1a).children().length>1){
-$("div#compilation > div#"+_1a).children("div.section, div.sub_section").tsort({attr:"sec_index"});
+},sort_section:function(_1b){
+if($("div#compilation > div#"+_1b).children().length>1){
+$("div#compilation > div#"+_1b).children("div.section, div.sub_section").tsort({attr:"sec_index"});
 }
 },_sort_sections:function(){
-var _1b=$("div#compilation > div.section");
-var _1c=$("div#compilation > div.section > div.sub_section");
-$(_1b).tsort({attr:"sec_index"});
+var _1c=$("div#compilation > div.section");
+var _1d=$("div#compilation > div.section > div.sub_section");
 $(_1c).tsort({attr:"sec_index"});
+$(_1d).tsort({attr:"sec_index"});
 },_remove_empty_secs:function(){
-var _1d,id;
-_1d=[];
-_1f($("div#compilation > div.section > div.sub_section"));
-_1f($("div#compilation > div.section"));
-function _1f(_20){
-$(_20).each(function(){
+var _1e,id;
+_1e=[];
+_20($("div#compilation > div.section > div.sub_section"));
+_20($("div#compilation > div.section"));
+function _20(_21){
+$(_21).each(function(){
 id=$(this).attr("id");
-$.inArray(id,_1d)>-1?_21(this):_1d.push(id);
+$.inArray(id,_1e)>-1?_22(this):_1e.push(id);
 if($(this).children("div").length===0){
-_21(this);
+_22(this);
 }
 });
 };
-function _21(_22){
+function _22(_23){
 if(window.console){
-console.info("CompilationController#_remove_empty_secs: removing duplicate or empty section: "+$(_22).attr("id"));
+console.info("CompilationController#_remove_empty_secs: removing duplicate or empty section: "+$(_23).attr("id"));
 }
-$(_22).remove();
-Compilation.del_from_db($(_22).attr("id"),"s");
+$(_23).remove();
+Compilation.del_from_db($(_23).attr("id"),"s");
 };
 },_sort_quotes:function(){
 $("div#bodyContent > div#compilation div.quote").tsort({attr:"index"});
 },toggle_compile_tools:function(pos){
 CompileController.compile_tools.is(":hidden")?CompileController.show_compile_tools(pos):CompileController.hide_compile_tools(pos);
 },relogin:function(){
-var _24,_25;
-_24=this;
+var _25,_26;
+_25=this;
 $("body > div#progressbar").progressbar("disable");
 this.user=wgUserName;
 this.render({to:"login_form",action:"login_form"});
 if(window.console){
 console.info(wgUserName+" needs to relogin");
 }
-_26();
-function _27(_28){
-_25=wgServer+wgScriptPath+"/api.php?action=login&format=json&"+_28;
-$.ajax({type:"POST",url:_25,dataType:"json",success:function(_29){
+_27();
+function _28(_29){
+_26=wgServer+wgScriptPath+"/api.php?action=login&format=json&"+_29;
+$.ajax({type:"POST",url:_26,dataType:"json",success:function(_2a){
 if(window.console){
-console.dir(_29);
+console.dir(_2a);
 }
 $("body > div#progressbar").progressbar("enable");
-_24.save();
-},error:function(_2a,_2b,_2c){
+_25.save();
+},error:function(_2b,_2c,_2d){
 if(window.console){
 console.log("Error in AjaxLogin.js!");
 }
 return false;
 }});
 };
-function _2d(){
+function _2e(){
 $("#login_form").dialog("close");
-_27($("#login_form form").serialize());
+_28($("#login_form form").serialize());
 };
-function _26(){
+function _27(){
 if(!$("#login_form").hasClass("ui-dialog-content")){
-$("#login_form").dialog({modal:true,title:"Log-in to save",modal:true,open:function(_2e,ui){
+$("#login_form").dialog({modal:true,title:"Log-in to save",modal:true,open:function(_2f,ui){
 $("#login_form #lgpassword").focus();
-},buttons:{"Login":_2d}}).keydown(function(e){
+},buttons:{"Login":_2e}}).keydown(function(e){
 if(e.keyCode===13){
-_2d();
+_2e();
 }
 });
 }else{
@@ -14174,87 +14192,87 @@ $("#login_form").dialog("open");
 }
 };
 },save:function(){
-var _31;
-_31=this;
-_31.publish("progressbar",{text:"Saving..."});
-_31.check_user_loggedin();
-},check_internet_connection:function(){
-var _32,_33,_34;
+var _32;
 _32=this;
-_33=false;
-_34=new XMLHttpRequest();
-_34.onreadystatechange=_35;
-_34.open("HEAD","http://www.google.com",true);
-_34.send(null);
+_32.publish("progressbar",{text:"Begin saving..."});
+_32.check_user_loggedin();
+},check_internet_connection:function(){
+var _33,_34,_35;
+_33=this;
+_34=false;
+_35=new XMLHttpRequest();
+_35.onreadystatechange=_36;
+_35.open("HEAD","http://www.google.com",true);
+_35.send(null);
 setTimeout(function(){
-if(_34.readyState==4&&!_33){
-_36();
+if(_35.readyState==4&&!_34){
+_37();
 }
 },3000);
-function _35(){
+function _36(){
 if(window.console){
-console.log(_34.readyState);
+console.log(_35.readyState);
 }
-if(_34.readyState==4){
-if(_34.statusText&&_34.statusText!=""){
+if(_35.readyState==4){
+if(_35.statusText&&_35.statusText!=""){
 if(window.console){
 console.log("Connected");
 }
-_33=true;
-_32.publish("progressbar_hide");
-_32.publish("connection_error",{ajax:_34,msg:"Vaniquotes server is unreachable, please wait a minute and try again."});
+_34=true;
+_33.publish("progressbar_hide");
+_33.publish("connection_error",{ajax:_35,msg:"Vaniquotes server is unreachable, please wait a minute and try again."});
 }
 }
 };
-function _36(){
-_32.publish("progressbar_hide");
-_32.publish("connection_error",{ajax:_34,msg:"You appear to be offline! Check your internet connection and try again."});
+function _37(){
+_33.publish("progressbar_hide");
+_33.publish("connection_error",{ajax:_35,msg:"You appear to be offline! Check your internet connection and try again."});
 };
 },check_user_loggedin:function(){
-var _37,_38;
-_37=this;
-_38=false;
-sajax_do_call("isUserLoggedIn",[],_39);
+var _38,_39;
+_38=this;
+_39=false;
+sajax_do_call("isUserLoggedIn",[],_3a);
 setTimeout(function(){
-if(!_38){
+if(!_39){
 if(navigator.platform=="MacIntel"){
-_37.check_internet_connection();
+_38.check_internet_connection();
 }else{
-_37.publish("progressbar_hide");
-_37.publish("connection_error",{ajax:{},msg:"Vaniquotes server is unreachable, please wait a minute and try to save again."});
+_38.publish("progressbar_hide");
+_38.publish("connection_error",{ajax:{},msg:"Vaniquotes server is unreachable, please wait a minute and try to save again."});
 }
 }
 },3000);
-function _39(_3a){
-_38=true;
-if(_3a.status!=200){
-_37.publish("connection_error",{ajax:_3a,msg:"Vaniquotes server is unreachable, please wait a minute and try to save again."});
+function _3a(_3b){
+_39=true;
+if(_3b.status!=200){
+_38.publish("connection_error",{ajax:_3b,msg:"Vaniquotes server is unreachable, please wait a minute and try to save again."});
 }else{
 if(window.console){
-console.log("Success: "+_3a.responseText);
+console.log("Success: "+_3b.responseText);
 }
 }
-if(_3a.responseText==="no"){
-_37.relogin();
+if(_3b.responseText==="no"){
+_38.relogin();
 }else{
-_37._check_before_save();
+_38._check_before_save();
 }
 };
 },_check_before_save:function(){
-var _3b;
-_3b=this;
-_3b.update_progressbar();
-function _3c(){
-_3b.publish("progressbar_hide");
+var _3c;
+_3c=this;
+_3c.update_progressbar(0,"Checking compilation before save...");
+function _3d(){
+_3c.publish("progressbar_hide");
 };
 if($(".building_quote").not(".deleted_quote").length){
-_3c();
+_3d();
 this.publish("warning",{msg:"You must insert all quotes before saving!"});
 $.scrollTo(".building_quote","fast");
 return;
 }
 if($(".bad_link").length){
-_3c();
+_3d();
 this.publish("warning",{msg:"You must fix bad links in page before saving!"});
 $.scrollTo(".bad_link","fast",{offset:-50});
 return;
@@ -14262,21 +14280,23 @@ return;
 if(QuotesController.currently_editing){
 $(".edit_quote #Cancel_quote").click();
 }
-_3b._do_save();
+_3c._do_save();
 },_do_save:function(){
-var _3d,_3e,_3f,_40,_41,_42,_43,upb,_45;
-_3d=this;
+var _3e,_3f,_40,_41,_42,_43,_44,_45;
+_3e=this;
 this.Class.saving=true;
-upb=_3d.update_progressbar;
-_42=$("<div id=\"compilation\"></div>");
-_3d.update_progressbar();
-_3e=Facts.save();
-_3d.update_progressbar();
-$("<div id=\"facts\">"+_3e+"</div>").appendTo(_42);
-_3d.update_progressbar();
-_41=$(".quote").not(".deleted_quote").clone();
-_3d.update_progressbar();
-_41.each(function(){
+_43=$("<div id=\"compilation\"></div>");
+_3e.update_progressbar(0,"Saving facts...");
+_3f=Facts.save();
+_3e.update_progressbar();
+$("<div id=\"facts\">"+_3f+"</div>").appendTo(_43);
+_3e.update_progressbar(0,"Saving quotes...");
+_42=$(".quote").not(".deleted_quote").clone();
+_45=40/_42.length;
+if(window.console){
+console.log("q_count is "+_42.length+", cur_progress is "+CompileController.progress_val+", progress_unit is "+_45);
+}
+_42.each(function(){
 var q,p,l,lt,_4a;
 q=$(this);
 p=q.attr("parent");
@@ -14298,13 +14318,22 @@ $(this).replaceWith($(this).text());
 });
 q.removeClass("ui-corner-all q_new q_updated");
 q.removeAttr("style");
-_3d.update_progressbar(1);
+_3e.update_progressbar(_45);
 });
-_41.appendTo(_42);
-_3f=$(".section").clone();
-_40=$(".sub_section").clone();
+_42.appendTo(_43);
+_3e.update_progressbar(0,"Saving sections and subsections...");
+_41=$(".sub_section").clone();
+_40=$(".section").clone();
+_45=10/_41.length;
+if(window.console){
+console.log("subs_count is "+_41.length+", cur_progress is "+CompileController.progress_val+", progress_unit is "+_45);
+}
+_41.each(_4b);
+_45=10/_40.length;
+if(window.console){
+console.log("sections_count is "+_40.length+", cur_progress is "+CompileController.progress_val+", progress_unit is "+_45);
+}
 _40.each(_4b);
-_3f.each(_4b);
 function _4b(){
 var s,l,h,id,_50;
 s=$(this);
@@ -14314,24 +14343,23 @@ _50=s.attr("text");
 id=_50.replace(/ /g,"_");
 s.empty();
 $("<"+h+">"+_50+"</"+h+"></div>").appendTo(s);
-$("div[parent=\""+id+"\"]:first",_42).before(s);
-_3d.update_progressbar();
+$("div[parent=\""+id+"\"]:first",_43).before(s);
+_3e.update_progressbar(_45);
 };
-_43=_42.wrap("<div></div>").parent("div").html().replace(/^\s+/mg,"").replace(/<\/span>\n/g,"</span>").replace(/(<div[^>]+?(?:id="facts"|class="(?:quote|section|sub_section)"))/g,"\n$1").replace(/([^\n])<\/div>/g,"$1\n</div>");
-_3d.update_progressbar();
-$("#wpTextbox1").val(_43);
-_3d.update_progressbar();
+_44=_43.wrap("<div></div>").parent("div").html().replace(/^\s+/mg,"").replace(/<\/span>\n/g,"</span>").replace(/(<div[^>]+?(?:id="facts"|class="(?:quote|section|sub_section)"))/g,"\n$1").replace(/([^\n])<\/div>/g,"$1\n</div>");
+_3e.update_progressbar(0,"Finished processing compilation for save..");
+$("#wpTextbox1").val(_44);
+_3e.update_progressbar();
 if(window.console){
-console.log(_3e);
-console.log(_41);
+console.log(_3f);
 console.log(_42);
+console.log(_43);
 }
-_3d.update_progressbar();
-_3d.update_progressbar();
+_3e.update_progressbar(100,"Saving!");
 $("#wpSave").click();
 setTimeout(function(){
-if(_3d.Class.saving){
-_3d.check_internet_connection();
+if(_3e.Class.saving){
+_3e.check_internet_connection();
 }
 },15000);
 },new_compilation_message:function(){
@@ -14370,50 +14398,54 @@ $(this).unbind("keydown",_55);
 };
 },report_error:function(msg){
 $.post("/php/report_error.php",{error:msg});
-},update_progressbar:function(val){
-var _59;
-_59=this;
-_59.Class.progress_val=val===undefined?_59.Class.progress_val+3:_59.Class.progress_val+val;
-$("body > div#progressbar").progressbar("value",_59.Class.progress_val);
-if(window.console){
+},update_progressbar:function(val,_59){
+var _5a;
+_5a=this;
+_5a.Class.progress_val=val===undefined||val==0?_5a.Class.progress_val+2:_5a.Class.progress_val+val;
+if(_59){
+$("body > div#progressbar > div").text(_59);
 }
-},block_background:function(_5a){
-var _5b;
-_5b=this;
+CompileController.progressbar.progressbar("value",_5a.Class.progress_val);
 if(window.console){
-console.info("In Compilation_controller.block_background with action: "+_5a);
+console.log("Updating progressbar to "+_5a.Class.progress_val+", status: "+_59);
 }
-if(_5a){
+},block_background:function(_5b){
+var _5c;
+_5c=this;
+if(window.console){
+console.info("In Compilation_controller.block_background with action: "+_5b);
+}
+if(_5b){
 CompileController.fix_z_indexes(true);
 $("#background_overlay").show();
 }else{
 CompileController.fix_z_indexes(false);
 $("#background_overlay").fadeOut();
 }
-},connection_error:function(_5c){
-var _5d;
-_5d=this;
-if(window.console){
-console.log("Ajax error: "+_5c.ajax.text+" : "+_5c.ajax.error);
-}
-window.alert(_5c.msg);
-},enable_keybinding_save:function(){
+},connection_error:function(_5d){
 var _5e;
 _5e=this;
+if(window.console){
+console.log("Ajax error: "+_5d.ajax.text+" : "+_5d.ajax.error);
+}
+window.alert(_5d.msg);
+},enable_keybinding_save:function(){
+var _5f;
+_5f=this;
 $(document).bind("keydown",function(e){
-var _60=83;
-if(e.ctrlKey&&e.keyCode===_60){
+var _61,_62;
+_61=83;
+if(e.ctrlKey&&e.shiftKey&&e.keyCode===_61){
 e.stopPropagation();
-_5e.save();
+_5f.save();
 }
 });
 },"compilation.built subscribe":function(){
-var _61;
-_61=this;
-_61.update_progressbar(20);
+var _63;
+_63=this;
 this.clean_up();
 this._loading("end");
-},"quote.found_reference subscribe":function(_62){
+},"quote.found_reference subscribe":function(_64){
 if($("#compile_form #ref_lookup").is(":visible")){
 $("#compile_form #ref_lookup").each(function(){
 $(this).hide();
@@ -14424,92 +14456,100 @@ $("#ref_lookup_input > #link",this).val("");
 if(CompileController.compile_tools.is(":visible")){
 CompileController.hide_compile_tools();
 }
-},"compilation.quote_inserted subscribe":function(_63){
+},"compilation.quote_inserted subscribe":function(_65){
 CompileController.show_compile_tools();
-},"section.created subscribe":function(_64){
-Compilation.add_to_db(_64,_64.id,_64.parent,"s");
-this._render_section(_64);
+},"section.created subscribe":function(_66){
+Compilation.add_to_db(_66,_66.id,_66.parent,"s");
+this._render_section(_66);
 },"hide_compile_tools subscribe":function(){
 CompileController.hide_compile_tools();
-},"info subscribe":function(_65){
+},"info subscribe":function(_67){
 if(window.console){
-console.info("Info: "+_65.msg);
+console.info("Info: "+_67.msg);
 }
-this.info(_65.msg);
-},"warning subscribe":function(_66){
-if(window.console){
-console.log("Warning: "+_66.msg);
-}
-this.warning(_66.msg);
-},"quote.warning subscribe":function(_67){
-if(window.console){
-console.log("Warning: "+_67.msg);
-}
-this.warning(_67.msg);
-},"facts.warning subscribe":function(_68){
+this.info(_67.msg);
+},"warning subscribe":function(_68){
 if(window.console){
 console.log("Warning: "+_68.msg);
 }
 this.warning(_68.msg);
-},"compilation.warning subscribe":function(_69){
+},"quote.warning subscribe":function(_69){
 if(window.console){
 console.log("Warning: "+_69.msg);
 }
 this.warning(_69.msg);
-},"section.warning subscribe":function(_6a){
+},"facts.warning subscribe":function(_6a){
 if(window.console){
 console.log("Warning: "+_6a.msg);
 }
 this.warning(_6a.msg);
-},"report_error subscribe":function(_6b){
+},"compilation.warning subscribe":function(_6b){
 if(window.console){
-console.log("Reporting error to developers/maintainers: "+_6b.msg);
+console.log("Warning: "+_6b.msg);
 }
-this.report_error(_6b.msg);
-},"connection_error subscribe":function(_6c){
-this.connection_error(_6c);
-},"quote.connection_error subscribe":function(_6d){
-this.connection_error(_6d);
-},"progressbar subscribe":function(_6e){
-var _6f;
-_6f=this;
-_6f.block_background(true);
+this.warning(_6b.msg);
+},"section.warning subscribe":function(_6c){
+if(window.console){
+console.log("Warning: "+_6c.msg);
+}
+this.warning(_6c.msg);
+},"report_error subscribe":function(_6d){
+if(window.console){
+console.log("Reporting error to developers/maintainers: "+_6d.msg);
+}
+this.report_error(_6d.msg);
+},"connection_error subscribe":function(_6e){
+this.connection_error(_6e);
+},"quote.connection_error subscribe":function(_6f){
+this.connection_error(_6f);
+},"progressbar subscribe":function(_70){
+var _71;
+_71=this;
+_71.block_background(true);
 if(window.console){
 console.info("Init progressbar");
 }
 if($("div#bodyContent > div#compilation > #compile_tools").is(":visible")){
 CompileController.hide_compile_tools();
 }
-$("body > div#progressbar").progressbar({value:0});
-$("body > div#progressbar > div").text(_6e.text);
-},"progressbar_hide subscribe":function(_70){
-if(!$("body > div#progressbar").hasClass("ui-progressbar")){
+CompileController.progressbar.progressbar({value:0});
+$("body > div#progressbar > div").text(_70.text);
+},"progressbar_hide subscribe":function(_72){
+if(!CompileController.progressbar.hasClass("ui-progressbar")){
 return;
 }
-var _71;
-_71=this;
+var _73;
+_73=this;
 if(window.console){
 console.info("Closing progressbar");
 }
-$("body > div#progressbar").progressbar("destroy");
-_71.block_background(false);
-_71.Class.progress_val=0;
-},"progressbar_update subscribe":function(_72){
+CompileController.progressbar.progressbar("destroy");
+_73.block_background(false);
+_73.Class.progress_val=0;
+},"progressbar_update subscribe":function(_74){
 if(window.console){
 console.count("Progressbar_update subscribe");
 }
-this.update_progressbar(_72.val);
-},"compilation.progressbar_update subscribe":function(_73){
+status=_74.status?_74.status:false;
+this.update_progressbar(_74.val,status);
+},"compilation.progressbar_update subscribe":function(_75){
 if(window.console){
-console.count("Progressbar_update subscribe");
+console.count("Progressbar_update subscribe from Compilation");
 }
-this.update_progressbar(_73.val);
-},"quote.check_internet_connection subscribe":function(_74){
-this.check_internet_connection(_74);
+status=_75.status?_75.status:false;
+this.update_progressbar(_75.val,status);
+},"facts.progressbar_update subscribe":function(_76){
+if(window.console){
+console.count("Progressbar_update subscribe from Facts");
+}
+status=_76.status?_76.status:false;
+this.update_progressbar(_76.val,status);
+},"quote.check_internet_connection subscribe":function(_77){
+this.check_internet_connection(_77);
 }});
 ;
 include.set_path('controllers');
-QuotesController=MVC.Controller.extend("quotes",{currently_editing:false,focused_textarea:false,current_quote:"",key:{escape:27,heading:72,section:83,trans:84,purport:80,trans_purport:78,edit_quote:81,insert:73,heading_create:65,heading_edit:77,heading_set:69,heading_append:68,heading_new:78,verse_select:86,enter:13},enable_keybindings:function(_1){
+QuotesController=MVC.Controller.extend("quotes",{currently_editing:false,focused_textarea:false,current_quote:"",key:{escape:27,heading:69,section:83,trans:84,purport:80,trans_purport:78,edit_quote:81,insert:82,heading_create:65,heading_edit:77,heading_set:69,heading_append:68,heading_new:78,verse_select:86,enter:13},enable_keybindings:function(_1){
 $(document).bind("keydown",{quote:_1},QuotesController.keybindings_event);
 },disable_keybindings:function(){
 $(document).unbind("keydown",QuotesController.keybindings_event);
@@ -14899,7 +14939,6 @@ this.render({to:_62,action:_60.type});
 if($(_62).is(":hidden")){
 $(_62).siblings(".tips").slideUp("fast");
 $(_62).slideDown("fast");
-QuotesController.enable_clickbinding(this);
 }
 },cancel_tip:function(_63){
 if(!_63){
