@@ -11,32 +11,32 @@ Quote = MVC.Model.extend('quote',
     tips_db: {
         section:             {
             title:     "set Section",
-            desc:     "...this quote requires a section. Click here",
+            desc:     "...this quote requires a section. Click here or press S",
             id:         "set_section_tip"
         },
         edit_section: {
             title:     "edit Section",
-            desc:     "...by clicking here!",
+            desc:     "...by clicking here or press S",
             id:         "edit_section_tip"
         },
         heading: {
-            title:     "set Heading",
-            desc:     "...by highlighting a part of the quote",
+            title:     "set hEading",
+            desc:     "...by highlighting a part of the quote and click here or press E",
             id:         "set_heading_tip"
         },
         edit_heading: {
-            title:     "edit Heading",
-            desc:     "...by highlighting a part of the quote",
+            title:     "edit hEading",
+            desc:     "...by highlighting a part of the quote and click here or press E",
             id:         "edit_heading_tip"
         },
         edit_quote: {
             title:    "edit Quote",
-            desc:     "...by doubleClicking on it or clicking here",
+            desc:     "...by doubleClicking on it, clicking here or pressing Q",
             id:         "edit_quote_tip"
         },
         insert_new: {
-            title:    "Insert!",
-            desc:        "...this quote to the compilation by clicking here",
+            title:    "inseRt!",
+            desc:        "...this quote to the compilation by clicking here or press R",
             id:            "set_insert_tip"
         }
     },

@@ -9,15 +9,21 @@ Compilation = MVC.Model.extend('compilation',
     * This method gets the original data from the current Vaniquotes page
     */
     build: function(data) {
+        this.publish('progressbar_update', { val: 0, status: 'Bulding sections...' });
         this._build_sections(data);
+        this.publish('progressbar_update', { val: 0, status: 'Bulding quotes...' });
         this._build_quotes(data);
+        this.publish('progressbar_update', { val: 0, status: 'Ready!' });
         this.publish('built');
     },
 
     _build_quotes: function(data) {
-        var that, new_q;
+        var that, q_count, new_q;
         that = this;
-        if ($('div.quote', data).length > 0) {
+        q_count = $('div.quote', data).length;
+        progress_unit = (99 -  CompileController.progress_val) / q_count;
+        if(window.console) console.log('q_count is '+q_count+', cur_progress is '+CompileController.progress_val+', progress_unit is '+progress_unit);
+        if ( q_count > 0) {
             $('div.quote', data).each(function() {
                 // Skip quote if vital attr link is missing!
                 if(!$(this).attr('link').length) { return; }
@@ -25,7 +31,7 @@ Compilation = MVC.Model.extend('compilation',
                 new_q = that.new_quote(this);
                 // if this quote is a quote of the day candidate, set is in the db
                 if($(this).hasClass('qod_candidate')) that.update_db(new_q.id, { qod: true}, 'q');
-                that.publish('progressbar_update', { val: 1 });
+                that.publish('progressbar_update', { val: progress_unit });
             });
         }
         if(window.console) { console.dir(this.db); }
@@ -42,13 +48,16 @@ Compilation = MVC.Model.extend('compilation',
     },
 
     _build_sections: function(data) {
-        var that;
+        var that, s_count, progress_unit;
         that = this;
-        if ($('.section, .sub_section', data).length > 0) {
+        s_count = $('.section, .sub_section', data).length;
+        progress_unit = (50 -  CompileController.progress_val) / s_count;
+        if(window.console) console.log('s_count is '+s_count+', cur_progress is '+CompileController.progress_val+', progress_unit is '+progress_unit);
+        if ( s_count > 0) {
             $('.section, .sub_section', data).each(function() {
                 //if(window.console) { console.log('Creating section with element: '+this); }
                 that.create_new_section(this);
-                that.publish('progressbar_update', { val: 1 });
+                that.publish('progressbar_update', { val: progress_unit });
             });
         }
     },

@@ -7,6 +7,7 @@ Facts = MVC.Model.extend('facts',
   build: function(compilation) {
     var facts;
     facts = $('div#facts', compilation).html();
+    this.publish('progressbar_update', { val: 0, status: 'Bulding facts...' });
     facts ? this.build_with(facts) : this.build_new();
     this.publish('created', {facts: this.db});
   },
@@ -16,8 +17,9 @@ Facts = MVC.Model.extend('facts',
    * we only need to set a few
    */
   build_new: function() {
-    var that;
+    var that, progress_unit;
     that = this;
+    progress_unit = 1;
     $.each(that.db, function(name, val) {
       if(name === 'first' || name === 'last') that.set(name, that.get_date());
       if(name === 'compiler') {
@@ -25,6 +27,7 @@ Facts = MVC.Model.extend('facts',
         // compiler is an array
         if(compiler) that.set(name, new Array(compiler));
       }
+        that.publish('progressbar_update', { val: progress_unit });
     });
   },
   /**
@@ -32,7 +35,7 @@ Facts = MVC.Model.extend('facts',
    * @param {string} data contains all the data found within the <div id="facts"> in the compilation.
    */
   build_with: function(data) {
-    var that, facts, current_facts, categories, re_categories, facts_array;
+    var that, facts, current_facts, categories, re_categories, facts_array, progress_unit;
     that        = this;
     facts       = new Object();
     current_facts = new Array();
@@ -64,13 +67,13 @@ Facts = MVC.Model.extend('facts',
         if(val.indexOf('|') === -1 || val.indexOf('false') > -1) { return true; } // If no pipe in fact, is some strange fact, continue
         name = $.trim(val.substring(0, val.indexOf('|')));
         value = $.trim(val.substr(val.indexOf('|') + 1));
-        
+
         if(window.console) { console.log('Setting '+name+' to '+value); }
         facts[name] = value;
-        that.publish('progressbar_update', { val: 1 });
     });
 
     // set the Facts.db to with the values found and saved in the facts obj
+    progress_unit = 1;
     $.each(that.db, function(name, val) {
         if(window.console) { console.log(name+' is '+typeof facts[name]+' in current_facts'); }
         if(typeof facts[name] !== 'undefined') {
@@ -78,6 +81,7 @@ Facts = MVC.Model.extend('facts',
         } else {
           if(window.console) { console.log('In Facts.build_with: '+name+' was not found in extracted facts db'); }
         }
+        that.publish('progressbar_update', { val: progress_unit });
     });
 
     // process (reformat) fact according to its own requirements (e.g.: string, array or obj)

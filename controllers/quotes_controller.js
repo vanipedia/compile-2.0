@@ -6,13 +6,15 @@ QuotesController = MVC.Controller.extend('quotes',
     current_quote: '',
     key: {
         escape: 27, // esc
-        heading: 72, // h
+        //heading: 72, // h
+        heading: 69, // e
         section: 83, // s
         trans: 84, // t
         purport: 80, // p
         trans_purport: 78, // n
         edit_quote: 81, // q
-        insert: 73, // i
+        //insert: 73, // i
+        insert: 82, // r
         heading_create: 65, // a
         heading_edit: 77, // m
         heading_set: 69, // e
@@ -50,7 +52,7 @@ QuotesController = MVC.Controller.extend('quotes',
             }
         });
     },
-    
+
     enable_edit_keybindings: function(q_obj) {
         QuotesController.disable_keybindings(); // disable tips
         //$(this.params.element).bind('keydown', that.edit_view_keybindings_event);
@@ -558,7 +560,6 @@ QuotesController = MVC.Controller.extend('quotes',
         if ($(tip_elem).is(':hidden')) {
             $(tip_elem).siblings('.tips').slideUp('fast');
             $(tip_elem).slideDown('fast');
-            QuotesController.enable_clickbinding(this);
         }
     },
     /**
