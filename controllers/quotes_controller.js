@@ -33,6 +33,7 @@ QuotesController = MVC.Controller.extend('quotes',
     keybindings_event: function(e) {
         var that, q, q_obj, k, key, tips;
         that = this;
+        if(e.originalTarget.type === 'text' || e.altKey || e.ctrlKey || e.shiftKey) { return; }
         e.stopImmediatePropagation();
         e.preventDefault();
         q_obj = e.data.quote;
@@ -48,7 +49,7 @@ QuotesController = MVC.Controller.extend('quotes',
         $.each(QuotesController.key, function(name, kcode) {
             if(kcode === e.keyCode) {
                 $('input[id*="'+name+'"]', tips).click();
-                return;
+                return false;
             }
         });
     },
@@ -202,6 +203,7 @@ QuotesController = MVC.Controller.extend('quotes',
         params.event.kill();
         this.tips_handler(elem);
     },
+
     "div.q_menu div.q_tips div#alert_tip input.alert_tip_heading_or_verse click": function(params) {
         var id, quote;
         params.event.kill();

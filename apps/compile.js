@@ -1,6 +1,6 @@
 include.resources(
     'jquery.min',
-    'jquery.tinysort.packed', 'jquery.autogrow','jquery.easing', 'jquery.scrollTo',
+    'jquery.tinysort.min', 'jquery.autogrow','jquery.easing', 'jquery.scrollTo',
     'jquery.jeditable', 'jquery.hoverIntent', 'jquery-autocomplete/jquery.autocomplete',
     'jquery-ui-1.7.2.custom.min',
     'BaltoUni.min', 'UniToASCII', 'jquery.highlight_sanskrit', 'RegExp.escape'
