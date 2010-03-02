@@ -1,13 +1,12 @@
-
 div#bodyContent > div#compilation div.quote {
 	background: none;
 	border: 2px solid white;
 	padding: 4px;
-    margin: 10px 0px;
-    position: relative;
-    left: -6px;
-    width: 97%;
-    overflow: auto;
+  margin: 10px 0px;
+  position: relative;
+  left: -6px;
+  width: 97%;
+  overflow: auto;
 }
 div#bodyContent > div#compilation div.quote:hover {
 	background: #FFFEC6;
@@ -25,7 +24,6 @@ div#bodyContent > div#compilation div.quote:hover .highlight_terms {
 div#bodyContent > div#compilation div.quote > div {
  margin: 6px 2px;
 }
-
 div#bodyContent > div#compilation div.quote >.heading, div#bodyContent > div#compilation div.quote > .trans, div#bodyContent > div#compilation div.quote > .link {
  font-weight: bold;
 }
@@ -35,7 +33,6 @@ div#bodyContent > div#compilation div.quote > .heading {
 div#bodyContent > div#compilation div.quote > .trans, div#bodyContent > div#compilation div.quote > .purport {
  margin: 8px 0px 0px 0px;
 }
-
 div#bodyContent > div#compilation div.quote .status_text {
 	display: none;
 	position: relative;
@@ -43,7 +40,6 @@ div#bodyContent > div#compilation div.quote .status_text {
 	color: red;
 	font-style: italic;
 }
-
 div#bodyContent > div#compilation div.quote.q_updated > div.q_menu > div.q_tips > div.status_text {
 	display: block;
   width: 100%;
@@ -51,7 +47,6 @@ div#bodyContent > div#compilation div.quote.q_updated > div.q_menu > div.q_tips 
 div#bodyContent > div#compilation div.quote.q_updated > div.q_menu > div.q_tips > div.status_text:after {
 	content: 'Updated!';
 }
-
 div#bodyContent > div#compilation div.quote.q_updated > div.q_menu > div.q_tools > div.undo_quote {
 	display: block;
 }
@@ -65,33 +60,27 @@ div#bodyContent > div#compilation div.quote > div.q_menu {
  padding: 2px;
  visibility: hidden;
 }
-
 div#bodyContent > div#compilation div.quote > div.q_menu > div {
   position: relative;
   float: left;
 }
-
 div#bodyContent > div#compilation div.quote > div.q_menu > div.q_tools {
   width: 18px;
   margin: 2px 4px;
 }
-
 div#bodyContent > div#compilation div.quote > div.q_menu > div.q_tools > div {
   margin: 8px 0px;
   cursor: pointer;
 }
-
 div#bodyContent > div#compilation div.quote > div.q_menu > div.q_tips {
   width: 100px;
 }
-
 div#bodyContent > div#compilation div.quote > div.q_menu > div.q_tips input {
   width: 100%;
   padding: 4px;
   cursor: pointer;
   font-size: 0.8em;
 }
-
 div#bodyContent > div#compilation div.quote:hover div.q_menu {
 	background: #D2C1F2;
   border: 1px solid #603F9D;
@@ -102,51 +91,44 @@ div#bodyContent > div#compilation div.quote:hover div.q_menu {
   z-index: 2;
   visibility: visible;
 }
-
 div#bodyContent > div#compilation div.quote:hover > div.q_menu *{
  visibility: visible;
 }
 
-
 /* undo_quote section */
-
 div#bodyContent > div#compilation div.quote > div.q_menu > div.q_tools > div.undo_quote {
 	display: none;
 }
 
 /* Building_quote section */
 div#bodyContent > div#compilation div.quote.building_quote, div#bodyContent > div#compilation div.quote.building_quote:hover {
- background: white;
- border: 25px solid #3F4C9D;
- padding: 25px;
--moz-border-radius: 5px;
--webkit-border-radius: 5px;
- position: relative;
- width: 85%;
- z-index: 2;
- background-image: url(/images/Vaniquotes-logo-small2.png);
- background-repeat: no-repeat;
- background-position: center;
+  background: white;
+  border: 25px solid #3F4C9D;
+  padding: 25px;
+ -moz-border-radius: 5px;
+ -webkit-border-radius: 5px;
+  position: relative;
+  width: 85%;
+  z-index: 2;
+  background-image: url(/images/Vaniquotes-logo-small2.png);
+  background-repeat: no-repeat;
+  background-position: center;
 }
-
 div#bodyContent > div#compilation div.quote.building_quote > div.q_menu {
-    background: #D2C1F2;
-    border: 1px solid #603F9D;
-    padding: 2px;
-    text-align: left;
-    -moz-border-radius-bottomright:15px;
-    -moz-border-radius-topright:15px;
-    z-index: 2;
+  background: #D2C1F2;
+  border: 1px solid #603F9D;
+  padding: 2px;
+  text-align: left;
+  -moz-border-radius-bottomright:15px;
+  -moz-border-radius-topright:15px;
+  z-index: 2;
 }
-
 div#bodyContent > div#compilation div.quote.building_quote > div.q_menu {
- visibility: visible;
+  visibility: visible;
 }
-
 div#bodyContent > div#compilation div.quote.building_quote div.status_text {
  display: block;
 }
-
 div#bodyContent > div#compilation div.quote.q_new div.status_text {
 	display: block;
 }
@@ -156,12 +138,17 @@ div#bodyContent > div#compilation div.quote.q_new div.status_text:after {
 div#bodyContent > div#compilation div.quote.building_quote div.status_text:after {
   content: 'New!'
 }
+div#bodyContent > div#compilation div.quote.building_quote.deleted_quote {
+	background: none;
+	border: none;
+  padding: 4px;
+}
 
+/* quote_bad_section */
 div#bodyContent > div#compilation div.quote.q_bad_section > div.q_menu input.tips {
  visibility: visible;
 }
-
-.q_bad_section .tips .edit_section_tip {
+div#bodyContent > div#compilation div.q_bad_section input.tips input.edit_section_tip {
  background: url(/images/pulsating_red.gif);
 }
 
@@ -169,12 +156,10 @@ div#bodyContent > div#compilation div.quote.q_bad_section > div.q_menu input.tip
 div#bodyContent > div#compilation div.quote div#alert_tip {
 	display: none;
 }
-
 div#bodyContent > div#compilation div.quote div#alert_tip > span {
  font-weight: bold;
  color: #603F9D;
 }
-
 div#bodyContent > div#compilation div.quote .bad_link {
 		background:url(images/red-alert.gif);
 		padding:2px 4px;
