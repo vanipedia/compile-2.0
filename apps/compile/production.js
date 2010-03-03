@@ -1,5 +1,5 @@
 include.set_path('apps');
-include.resources("jquery-1.3.2.min","jquery.tinysort","jquery.autogrow","jquery.easing","jquery.scrollTo","jquery.jeditable","jquery.hoverIntent","jquery-autocomplete/jquery.autocomplete","jquery-ui-1.7.2.custom.min","BaltoUni.min","UniToASCII","jquery.highlight_sanskrit","RegExp.escape");
+include.resources("jquery-1.3.2.min","jquery.tinysort.min","jquery.autogrow","jquery.easing","jquery.scrollTo","jquery.jeditable","jquery.hoverIntent","jquery-autocomplete/jquery.autocomplete","jquery-ui-1.7.2.custom.min","BaltoUni.min","UniToASCII","jquery.highlight_sanskrit","RegExp.escape");
 include.engines();
 include.plugins("controller","controller/hover","controller/view","view","view/helpers","model");
 include(function(){
@@ -2797,91 +2797,92 @@ return this[0]==l?document.compatMode=="CSS1Compat"&&document.documentElement["c
 })();
 ;
 include.set_path('resources');
-(function($){
-$.tinysort={id:"TinySort",version:"1.0.2",defaults:{order:"asc",attr:"",place:"start",returns:false}};
-$.fn.extend({tinysort:function(_2,_3){
-if(_2&&typeof (_2)!="string"){
-_3=_2;
-_2=null;
+(function(B){
+B.tinysort={id:"TinySort",version:"1.0.3",defaults:{order:"asc",attr:"",place:"start",returns:false}};
+B.fn.extend({tinysort:function(H,I){
+if(H&&typeof (H)!="string"){
+I=H;
+H=null;
 }
-var _4=$.extend({},$.tinysort.defaults,_3);
-var _5={};
-this.each(function(i){
-var _7=(!_2||_2=="")?$(this):$(this).find(_2);
-var _8=_4.order=="rand"?""+Math.random():(_4.attr==""?_7.text():_7.attr(_4.attr));
-var _9=$(this).parent();
-if(!_5[_9]){
-_5[_9]={s:[],n:[]};
+var E=B.extend({},B.tinysort.defaults,I);
+var O={};
+this.each(function(S){
+var U=(!H||H=="")?B(this):B(this).find(H);
+var T=E.order=="rand"?""+Math.random():(E.attr==""?U.text():U.attr(E.attr));
+var R=B(this).parent();
+if(!O[R]){
+O[R]={s:[],n:[]};
 }
-if(_7.length>0){
-_5[_9].s.push({s:_8,e:$(this),n:i});
+if(U.length>0){
+O[R].s.push({s:T,e:B(this),n:S});
 }else{
-_5[_9].n.push({e:$(this),n:i});
+O[R].n.push({e:B(this),n:S});
 }
 });
-for(var _a in _5){
-var _b=_5[_a];
-_b.s.sort(function zeSort(a,b){
-var x=a.s.toLowerCase?a.s.toLowerCase():a.s;
-var y=b.s.toLowerCase?b.s.toLowerCase():b.s;
-if(isNum(a.s)&&isNum(b.s)){
-x=parseFloat(a.s);
-y=parseFloat(b.s);
+for(var G in O){
+var D=O[G];
+D.s.sort(function J(T,S){
+var R=T.s.toLowerCase?T.s.toLowerCase():T.s;
+var U=S.s.toLowerCase?S.s.toLowerCase():S.s;
+if(C(T.s)&&C(S.s)){
+R=parseFloat(T.s);
+U=parseFloat(S.s);
 }
-return (_4.order=="asc"?1:-1)*(x<y?-1:(x>y?1:0));
+return (E.order=="asc"?1:-1)*(R<U?-1:(R>U?1:0));
 });
 }
-var _10=[];
-for(var _a in _5){
-var _b=_5[_a];
-var _11=[];
-var _12=$(this).length;
-switch(_4.place){
+var L=[];
+for(var G in O){
+var D=O[G];
+var M=[];
+var F=B(this).length;
+switch(E.place){
 case "first":
-$.each(_b.s,function(i,obj){
-_12=Math.min(_12,obj.n);
+B.each(D.s,function(R,S){
+F=Math.min(F,S.n);
 });
 break;
 case "org":
-$.each(_b.s,function(i,obj){
-_11.push(obj.n);
+B.each(D.s,function(R,S){
+M.push(S.n);
 });
 break;
 case "end":
-_12=_b.n.length;
+F=D.n.length;
 break;
 default:
-_12=0;
+F=0;
 }
-var _17=[0,0];
-for(var i=0;i<$(this).length;i++){
-var _19=i>=_12&&i<_12+_b.s.length;
-if(_1a(_11,i)){
-_19=true;
+var P=[0,0];
+for(var K=0;K<B(this).length;K++){
+var N=K>=F&&K<F+D.s.length;
+if(A(M,K)){
+N=true;
 }
-var mEl=(_19?_b.s:_b.n)[_17[_19?0:1]].e;
-mEl.parent().append(mEl);
-if(_19||!_4.returns){
-_10.push(mEl.get(0));
+var Q=(N?D.s:D.n)[P[N?0:1]].e;
+Q.parent().append(Q);
+if(N||!E.returns){
+L.push(Q.get(0));
 }
-_17[_19?0:1]++;
+P[N?0:1]++;
 }
 }
-return this.pushStack(_10);
+return this.setArray(L);
 }});
-function _1c(n){
-return /^[\+-]?\d*\.?\d*$/.exec(n);
+function C(E){
+var D=/^\s*?[\+-]?(\d*\.?\d*?)\s*?$/.exec(E);
+return D&&D.length>0?D[1]:false;
 };
-function _1a(a,n){
-var _20=false;
-$.each(a,function(i,m){
-if(!_20){
-_20=m==n;
+function A(E,F){
+var D=false;
+B.each(E,function(H,G){
+if(!D){
+D=G==F;
 }
 });
-return _20;
+return D;
 };
-$.fn.TinySort=$.fn.Tinysort=$.fn.tsort=$.fn.tinysort;
+B.fn.TinySort=B.fn.Tinysort=B.fn.tsort=B.fn.tinysort;
 })(jQuery);
 ;
 include.set_path('resources');
