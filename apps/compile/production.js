@@ -1,5 +1,5 @@
 include.set_path('apps');
-include.resources("jquery-1.3.2.min","jquery.tinysort.min","jquery.autogrow","jquery.easing","jquery.scrollTo","jquery.jeditable","jquery.hoverIntent","jquery-autocomplete/jquery.autocomplete","jquery-ui-1.7.2.custom.min","BaltoUni.min","UniToASCII","jquery.highlight_sanskrit","RegExp.escape");
+include.resources("jquery-1.3.2.min","jquery.tinysort.packed","jquery.autogrow","jquery.easing","jquery.scrollTo","jquery.jeditable","jquery.hoverIntent","jquery-autocomplete/jquery.autocomplete","jquery-ui-1.7.2.custom.min","BaltoUni.min","UniToASCII","jquery.highlight_sanskrit","RegExp.escape");
 include.engines();
 include.plugins("controller","controller/hover","controller/view","view","view/helpers","model");
 include(function(){
@@ -2797,93 +2797,29 @@ return this[0]==l?document.compatMode=="CSS1Compat"&&document.documentElement["c
 })();
 ;
 include.set_path('resources');
-(function(B){
-B.tinysort={id:"TinySort",version:"1.0.3",defaults:{order:"asc",attr:"",place:"start",returns:false}};
-B.fn.extend({tinysort:function(H,I){
-if(H&&typeof (H)!="string"){
-I=H;
-H=null;
-}
-var E=B.extend({},B.tinysort.defaults,I);
-var O={};
-this.each(function(S){
-var U=(!H||H=="")?B(this):B(this).find(H);
-var T=E.order=="rand"?""+Math.random():(E.attr==""?U.text():U.attr(E.attr));
-var R=B(this).parent();
-if(!O[R]){
-O[R]={s:[],n:[]};
-}
-if(U.length>0){
-O[R].s.push({s:T,e:B(this),n:S});
-}else{
-O[R].n.push({e:B(this),n:S});
-}
-});
-for(var G in O){
-var D=O[G];
-D.s.sort(function J(T,S){
-var R=T.s.toLowerCase?T.s.toLowerCase():T.s;
-var U=S.s.toLowerCase?S.s.toLowerCase():S.s;
-if(C(T.s)&&C(S.s)){
-R=parseFloat(T.s);
-U=parseFloat(S.s);
-}
-return (E.order=="asc"?1:-1)*(R<U?-1:(R>U?1:0));
-});
-}
-var L=[];
-for(var G in O){
-var D=O[G];
-var M=[];
-var F=B(this).length;
-switch(E.place){
-case "first":
-B.each(D.s,function(R,S){
-F=Math.min(F,S.n);
-});
-break;
-case "org":
-B.each(D.s,function(R,S){
-M.push(S.n);
-});
-break;
-case "end":
-F=D.n.length;
-break;
-default:
-F=0;
-}
-var P=[0,0];
-for(var K=0;K<B(this).length;K++){
-var N=K>=F&&K<F+D.s.length;
-if(A(M,K)){
-N=true;
-}
-var Q=(N?D.s:D.n)[P[N?0:1]].e;
-Q.parent().append(Q);
-if(N||!E.returns){
-L.push(Q.get(0));
-}
-P[N?0:1]++;
-}
-}
-return this.setArray(L);
-}});
-function C(E){
-var D=/^\s*?[\+-]?(\d*\.?\d*?)\s*?$/.exec(E);
-return D&&D.length>0?D[1]:false;
+eval(function(p,a,c,k,e,r){
+e=function(c){
+return (c<a?"":e(parseInt(c/a)))+((c=c%a)>35?String.fromCharCode(c+29):c.toString(36));
 };
-function A(E,F){
-var D=false;
-B.each(E,function(H,G){
-if(!D){
-D=G==F;
+if(!"".replace(/^/,String)){
+while(c--){
+r[e(c)]=k[c]||e(c);
 }
-});
-return D;
+k=[function(e){
+return r[e];
+}];
+e=function(){
+return "\\w+";
 };
-B.fn.TinySort=B.fn.Tinysort=B.fn.tsort=B.fn.tinysort;
-})(jQuery);
+c=1;
+}
+while(c--){
+if(k[c]){
+p=p.replace(new RegExp("\\b"+e(c)+"\\b","g"),k[c]);
+}
+}
+return p;
+}(";(5($){$.r={Q:\"G\",1f:\"1.0.2\",M:{z:\"H\",9:\"\",D:\"X\",E:O}};$.8.K({r:5(d,e){6(d&&S(d)!=\"T\"){e=d;d=U}3 f=$.K({},$.r.M,e);3 g={};4.v(5(i){3 a=(!d||d==\"\")?$(4):$(4).V(d);3 b=f.z==\"Z\"?\"\"+I.15():(f.9==\"\"?a.P():a.9(f.9));3 c=$(4).L();6(!g[c])g[c]={s:[],n:[]};6(a.7>0)g[c].s.q({s:b,e:$(4),n:i});W g[c].n.q({e:$(4),n:i})});w(3 h J g){3 j=g[h];j.s.16(5 18(a,b){3 x=a.s.t?a.s.t():a.s;3 y=b.s.t?b.s.t():b.s;6(B(a.s)&&B(b.s)){x=F(a.s);y=F(b.s)}u(f.z==\"H\"?1:-1)*(x<y?-1:(x>y?1:0))})}3 k=[];w(3 h J g){3 j=g[h];3 l=[];3 m=$(4).7;Y(f.D){A\"10\":$.v(j.s,5(i,a){m=I.11(m,a.n)});C;A\"12\":$.v(j.s,5(i,a){l.q(a.n)});C;A\"13\":m=j.n.7;C;14:m=0}3 n=[0,0];w(3 i=0;i<$(4).7;i++){3 o=i>=m&&i<m+j.s.7;6(N(l,i))o=17;3 p=(o?j.s:j.n)[n[o?0:1]].e;p.L().19(p);6(o||!f.E)k.q(p.1a(0));n[o?0:1]++}}u 4.1b(k)}});5 B(n){u/^[\\+-]?\\d*\\.?\\d*$/.1c(n)};5 N(a,n){3 b=O;$.v(a,5(i,m){6(!b)b=m==n});u b};$.8.G=$.8.1d=$.8.1e=$.8.r})(R);",62,78,"|||var|this|function|if|length|fn|attr|||||||||||||||||push|tinysort||toLowerCase|return|each|for|||order|case|isNum|break|place|returns|parseFloat|TinySort|asc|Math|in|extend|parent|defaults|contains|false|text|id|jQuery|typeof|string|null|find|else|start|switch|rand|first|min|org|end|default|random|sort|true|zeSort|append|get|setArray|exec|Tinysort|tsort|version".split("|"),0,{}));
 ;
 include.set_path('resources');
 (function(_1){
@@ -9951,41 +9887,41 @@ f.dequeue();
 ;
 include.set_path('resources');
 function BaltoUni(_1){
-_1=_1.replace(/ä/g,"\u0192\xc5");
-_1=_1.replace(/é/g,"\u0192\xb4");
-_1=_1.replace(/ü/g,"\u2248\xb4");
-_1=_1.replace(/å/g,"\xb7\u03c0\xf5");
-_1=_1.replace(/è/g,"\xb7\u03c0\xfc");
-_1=_1.replace(/ì/g,"\xb7\u03c0\xd6");
-_1=_1.replace(/ṣ/,"&#241;");
-_1=_1.replace(/ñ/g,"\xb7\u03c0\xa3");
-_1=_1.replace(/&#241;/g,"\u221a\xb1");
-_1=_1.replace(/ï/g,"\u221a\xb1");
-_1=_1.replace(/ö/g,"\xb7\u03c0\u2260");
-_1=_1.replace(/ò/g,"\xb7\u220f\xe7");
-_1=_1.replace(/ë/g,"\xb7\u03c0\xe1");
-_1=_1.replace(/ç/g,"\u2248\xf5");
-_1=_1.replace(/à/g,"\xb7\u03c0\xc5");
-_1=_1.replace(/ù/g,"\xb7\u220f\u2022");
-_1=_1.replace(/ÿ/g,"\xb7\u220f\u2211");
-_1=_1.replace(/û/g,"\xb7\u220f\xaa");
-_1=_1.replace(/Ä/g,"\u0192\xc4");
-_1=_1.replace(/É/g,"\u0192\u2122");
-_1=_1.replace(/Ü/g,"\u2248\u2122");
-_1=_1.replace(/Å/g,"\xb7\u03c0\xf6");
-_1=_1.replace(/È/g,"\xb7\u03c0\xfb");
-_1=_1.replace(/Ì/g,"\xb7\u03c0\xd1");
-_1=_1.replace(/Ṣ/g,"&#209;");
-_1=_1.replace(/Ñ/g,"\xb7\u03c0\xa2");
-_1=_1.replace(/&#209;/g,"\u221a\xeb");
-_1=_1.replace(/Ï/g,"\u221a\xeb");
-_1=_1.replace(/Ö/g,"\xb7\u03c0\xa8");
-_1=_1.replace(/Ò/g,"\xb7\u220f\xe5");
-_1=_1.replace(/Ë/g,"\xb7\u03c0\xdc");
-_1=_1.replace(/Ç/g,"\u2248\xf6");
-_1=_1.replace(/À/g,"\xb7\u03c0\xc4");
-_1=_1.replace(/Ù/g,"\xb7\u220f\xa7");
-_1=_1.replace(/ß/g,"\xb7\u220f\u2202");
+_1=_1.replace(/ä/g, "ā");
+_1=_1.replace(/é/g, "ī");
+_1=_1.replace(/ü/g, "ū");
+_1=_1.replace(/å/g, "ṛ");
+_1=_1.replace(/è/g, "ṟ");
+_1=_1.replace(/ì/g, "ṅ");
+_1=_1.replace(/ṣ/, "&#241;");
+_1=_1.replace(/ñ/g, "ṣ");
+_1=_1.replace(/&#241;/g, "ñ");
+_1=_1.replace(/ï/g, "ñ");
+_1=_1.replace(/ö/g, "ṭ");
+_1=_1.replace(/ò/g, "ḍ");
+_1=_1.replace(/ë/g, "ṇ");
+_1=_1.replace(/ç/g, "ś");
+_1=_1.replace(/à/g, "ṁ");
+_1=_1.replace(/ù/g, "ḥ");
+_1=_1.replace(/ÿ/g, "ḷ");
+_1=_1.replace(/û/g, "ḻ");
+_1=_1.replace(/Ä/g, "Ā");
+_1=_1.replace(/É/g, "Ī");
+_1=_1.replace(/Ü/g, "Ū");
+_1=_1.replace(/Å/g, "Ṛ");
+_1=_1.replace(/È/g, "Ṟ");
+_1=_1.replace(/Ì/g, "Ṅ");
+_1=_1.replace(/Ṣ/g, "&#209;");
+_1=_1.replace(/Ñ/g, "Ṣ");
+_1=_1.replace(/&#209;/g, "Ñ");
+_1=_1.replace(/Ï/g, "Ñ");
+_1=_1.replace(/Ö/g, "Ṭ");
+_1=_1.replace(/Ò/g, "Ḍ");
+_1=_1.replace(/Ë/g, "Ṇ");
+_1=_1.replace(/Ç/g, "Ś");
+_1=_1.replace(/À/g, "Ṁ");
+_1=_1.replace(/Ù/g, "Ḥ");
+_1=_1.replace(/ß/g, "Ḷ");
 return _1;
 };
 ;
