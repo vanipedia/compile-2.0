@@ -529,9 +529,10 @@ CompileController = MVC.Controller.extend('compilation',
             $('.verse_in_q', q).each(function() {
                 $(this).replaceWith($(this).text().replace(/^([^\n])/mg, ':$1'));
             });
-            $('.highlight_terms', q).each(function() {
-                $(this).replaceWith($(this).text());
-            })
+            $('span.highlight_terms', q).each(function() {
+                var t = $(this).text();
+                $(this).replaceWith(t);
+            });
             q.removeClass('ui-corner-all q_new q_updated');
             q.removeAttr('style');
             that.update_progressbar(progress_unit);
@@ -647,9 +648,9 @@ CompileController = MVC.Controller.extend('compilation',
         // Update current status
         if(status) $('body > div#progressbar > div').text(status);
         CompileController.progressbar.progressbar('value', that.Class.progress_val);
-        if(window.console) {
+        /*if(window.console) {
             console.log('Updating progressbar to '+that.Class.progress_val+', status: '+status);
-        }
+        }*/
     },
     block_background: function(action) {
         var that;
