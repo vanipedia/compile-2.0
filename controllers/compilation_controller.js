@@ -141,7 +141,7 @@ CompileController = MVC.Controller.extend('compilation',
             this._loading('end_gracefully');
             return;
         }
-        that.update_progressbar(5, 'Bulding compilation...');
+        that.update_progressbar(5, 'Building compilation...');
         if(data === '') {
             this.new_compilation_message();
             data = '<div id="compilation"></div>';

@@ -9,9 +9,9 @@ Compilation = MVC.Model.extend('compilation',
     * This method gets the original data from the current Vaniquotes page
     */
     build: function(data) {
-        this.publish('progressbar_update', { val: 0, status: 'Bulding sections...' });
+        this.publish('progressbar_update', { val: 0, status: 'Building sections...' });
         this._build_sections(data);
-        this.publish('progressbar_update', { val: 0, status: 'Bulding quotes...' });
+        this.publish('progressbar_update', { val: 0, status: 'Building quotes...' });
         this._build_quotes(data);
         this.publish('progressbar_update', { val: 0, status: 'Ready!' });
         this.publish('built');

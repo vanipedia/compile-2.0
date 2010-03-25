@@ -7,7 +7,7 @@ Facts = MVC.Model.extend('facts',
   build: function(compilation) {
     var facts;
     facts = $('div#facts', compilation).html();
-    this.publish('progressbar_update', { val: 0, status: 'Bulding facts...' });
+    this.publish('progressbar_update', { val: 0, status: 'Building facts...' });
     facts ? this.build_with(facts) : this.build_new();
     this.publish('created', {facts: this.db});
   },
