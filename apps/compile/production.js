@@ -14554,7 +14554,7 @@ $(document).unbind("keydown",QuotesController.keybindings_event);
 },keybindings_event:function(e){
 var _3,q,_5,k,_7,_8;
 _3=this;
-if(e.originalTarget.type==="text"||e.altKey||e.ctrlKey||e.shiftKey){
+if(e.originalTarget.type==="text"||e.altKey||e.ctrlKey||e.shiftKey||e.metaKey){
 return;
 }
 e.stopImmediatePropagation();
@@ -15305,7 +15305,7 @@ _11=_e["text"];
 _13=_f.extract_veda_ref(_11);
 if(_13){
 _15={};
-_14=$.trim(_13.text.replace(/^[a-z]/,_16));
+_14=$.trim(_13.text);
 this.Class.temp_quote=_14;
 _15["ref"]=_e["ref"]?_e["ref"]:_13.ref;
 _15["ref"]=_15["ref"].replace(/\s+/g," ");

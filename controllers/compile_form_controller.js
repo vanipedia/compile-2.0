@@ -108,7 +108,10 @@ CompileFormController = MVC.Controller.extend('compile_form',
       if (quote) {
           submit = {};
           // Remove Ref from VedaBase
-          temp_quote = $.trim(quote.text.replace(/^[a-z]/, camel));
+          // Camelizing (now deprecated) has become counterproductive since compilers might copy the
+          // quote incorrectly and camelizing makes that error hard to spot
+          //temp_quote = $.trim(quote.text.replace(/^[a-z]/, camel));
+          temp_quote = $.trim(quote.text);
           // Convert Balaram to Unicode encoding and diacritics
           //temp_quote = BaltoUni(temp_quote); *** deprecated since we are doing the conversion inside the Quote.init
           // Save quote text to Class variable temp_quote
