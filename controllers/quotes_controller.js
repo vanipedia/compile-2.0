@@ -33,7 +33,7 @@ QuotesController = MVC.Controller.extend('quotes',
     keybindings_event: function(e) {
         var that, q, q_obj, k, key, tips;
         that = this;
-        if(e.originalTarget.type === 'text' || e.altKey || e.ctrlKey || e.shiftKey) { return; }
+        if(e.originalTarget.type === 'text' || e.altKey || e.ctrlKey || e.shiftKey || e.metaKey) { return; }
         e.stopImmediatePropagation();
         e.preventDefault();
         q_obj = e.data.quote;
