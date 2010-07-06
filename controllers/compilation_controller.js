@@ -772,6 +772,7 @@ CompileController = MVC.Controller.extend('compilation',
     },
     "progressbar_update subscribe": function(params) {
         if(window.console) { console.count('Progressbar_update subscribe'); }
+        var status;
         status = params.status ? params.status : false;
         this.update_progressbar(params.val, status);
     },
