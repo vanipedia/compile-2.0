@@ -7,21 +7,26 @@ QuotesController = MVC.Controller.extend('quotes',
     key: {
         escape: 27, // esc
         //heading: 72, // h
-        heading: 69, // e
+        //heading: 69, // e
+	heading: 68, // d
         section: 83, // s
         trans: 84, // t
-        purport: 80, // p
+        //purport: 80, // p
+	purport: 82, //r
         trans_purport: 78, // n
         edit_quote: 81, // q
+	update_quote: 81, // q same as edit but will work with Alt+
         //insert: 73, // i
-        insert: 82, // r
+        //insert: 82, // r
+	insert_prabhupada: 65, // a
+	insert: 69, // e
         heading_create: 65, // a
         heading_edit: 77, // m
         heading_set: 69, // e
         heading_append: 68,// d
         heading_new: 78, // n
         verse_select: 86, // v
-        enter: 13
+        enter: 13,
     },
 
     enable_keybindings: function(q_obj) {
@@ -64,9 +69,24 @@ QuotesController = MVC.Controller.extend('quotes',
         QuotesController.enable_keybindings(q_obj); // enable tips
     },
     edit_view_keybindings_event: function(e) {
-        q = e.data.quote;
-        if(e.keyCode === QuotesController.key['escape']) { $('div#edit_buttons > input#Cancel_quote', q).click(); }
-        if(e.shiftKey && e.keyCode === QuotesController.key['enter'] ) { $('div#edit_buttons > input#Update_quote', q).click(); }
+	if( typeof(e.keyCode) == 'undefined') return;
+        var q = e.data.q;
+	// enable escape key to exist edit_quote view
+        if(e.keyCode === QuotesController.key['escape']) {
+	    $('div#edit_buttons > input#Cancel_quote', q).click();
+	    return false; // so the char doesn't get printed
+	}
+	// enable Alt+q to upate quote
+        if(e.altKey && e.keyCode === QuotesController.key['update_quote'] ) {
+	    $('div#edit_buttons > input#Update_quote', q).click();
+	    return false; // so the char doesn't (attempt to) get printed
+	}
+	// enable Alt+a to insert Prabhupada as the speaker
+	if(e.altKey && e.keyCode === QuotesController.key['insert_prabhupada']) {
+	    $('input#prabhupada_icon', q).click();
+	    return false; // so the char doesn't get printed
+	}
+
     },
     /**
      * Insert Prabhupāda: as the speaker when button click in edit_quote
@@ -129,7 +149,7 @@ QuotesController = MVC.Controller.extend('quotes',
 	    params.event.kill();
 	    $(params.element).parents('div.edit_quote').children('div#fix_link').toggle().children('input#fix_link_input').focus();
 	},
-	"span#prabhupada_icon click": function(params) {
+	"input#prabhupada_icon click": function(params) {
 	    var edit_quote_text;
 	    params.event.kill();
 	    edit_quote_text = $(params.element).parents('.quote').children('#text')[0];
@@ -300,7 +320,7 @@ QuotesController = MVC.Controller.extend('quotes',
 	 **/
 	render_quote: function(params) {
             //if(window.console) { console.log('in render_quote'); }
-            var id, elem, action;
+            var id, elem, action, textarea;
             elem = params['elem'];
             // check for id in elem depending whether is an custom object or a dom object
             elem.id ? id = elem.id: id = $(elem).attr('id');
@@ -370,6 +390,11 @@ QuotesController = MVC.Controller.extend('quotes',
 		if (this.quote.bad_link) {
                     $('#' + id + ' #fix_link').show().children('#fix_link_input').focus();
 		}
+		textarea = $('#' + id).children('textarea');
+		textarea.focus();
+		textarea[0].selectionStart = 0;
+                textarea[0].selectionEnd = 0;
+		
             }
 
             this.publish('rendered', $('#' + id));
