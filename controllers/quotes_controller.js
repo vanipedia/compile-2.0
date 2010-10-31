@@ -3,30 +3,42 @@ QuotesController = MVC.Controller.extend('quotes',
 {
     currently_editing: false,
     focused_textarea: false,
-    current_quote: '',
+    current_quote: '', 
+    
+    /** 
+	Keybindings keys. These keys are used by keybindings_event
+	function in order to click on the proper button based
+	on the key pressed 
+    **/
     key: {
+	main: {
+	    heading: 68, // d
+	    section: 83, // s
+	    edit_quote: 81, // 
+	    insert: 69, // e
+	},
+	section: {
+            trans: 84, // t
+	    purport: 82, //r
+            trans_purport: 78, // n    
+	},
+	edit_heading: {
+	heading_create: 65, // a
+        heading_edit: 77, // m    
+	},
+	heading: {
+            heading_set: 69, // e
+            heading_append: 68,// d
+            heading_new: 78, // n	    
+	},
+	heading_or_verse: {
+	    heading: 68, // d
+            verse_select: 86, // v	    
+	},
         escape: 27, // esc
-        //heading: 72, // h
-        //heading: 69, // e
-	heading: 68, // d
-        section: 83, // s
-        trans: 84, // t
-        //purport: 80, // p
-	purport: 82, //r
-        trans_purport: 78, // n
-        edit_quote: 81, // q
 	update_quote: 81, // q same as edit but will work with Alt+
-        //insert: 73, // i
-        //insert: 82, // r
 	insert_prabhupada: 65, // a
-	insert: 69, // e
-        heading_create: 65, // a
-        heading_edit: 77, // m
-        heading_set: 69, // e
-        heading_append: 68,// d
-        heading_new: 78, // n
-        verse_select: 86, // v
-        enter: 13,
+        //enter: 13,
     },
 
     enable_keybindings: function(q_obj) {
@@ -43,7 +55,7 @@ QuotesController = MVC.Controller.extend('quotes',
         e.preventDefault();
         q_obj = e.data.quote;
         q = QuotesController.current_quote;
-        tips = $('div#alert_tip').is(':visible') ? $('div.q_menu > div.q_tips > div#alert_tip', q) : $('div.q_menu > div.q_tips', q);
+        $tips = $('div#alert_tip').is(':visible') ? $('div.q_menu > div.q_tips > div#alert_tip', q) : $('div.q_menu > div.q_tips', q);
         k = e.keyCode;
         if(QuotesController.key['escape'] === k) {
             if( $(q).hasClass('edit_quote') ) { $('> div#edit_buttons > input[id="Cancel_quote"]', q).click(); }
@@ -51,9 +63,12 @@ QuotesController = MVC.Controller.extend('quotes',
             return;
         }
         // Loop through the keys and click on the right button
-        $.each(QuotesController.key, function(name, kcode) {
-            if(kcode === e.keyCode) {
-                $('input[id*="'+name+'"]', tips).click();
+	// get context to loop through corresponding keys for the current tip only
+	key = $tips.hasClass('q_tips') ? $tips.attr('context') : $tips.parent('div.q_tips').attr('context');
+        $.each(QuotesController.key[key], function(name, kcode) {
+	    //if(window.console) console.log('Comparing '+k+' to code '+kcode+' for '+name);
+            if(kcode === k) {
+                $('input[id*="'+name+'"]', $tips).click();
                 return false;
             }
         });
@@ -578,6 +593,7 @@ QuotesController = MVC.Controller.extend('quotes',
             that = this;
             tip_elem = this._find_alert_tip_elem(params.elem);
             if (!tip_elem) return;
+	    this._set_tip_context(tip_elem, params.type);
             if (params.type === 'heading') this.message = $.trim(window.getSelection().toString()) === '' ? 'Highlight text and:': 'Set heading:';
             if (params.type === 'edit_heading') this.message = 'Set heading:';
             this.render({
@@ -604,6 +620,7 @@ QuotesController = MVC.Controller.extend('quotes',
             var tip_elem;
             tip_elem = this._find_alert_tip_elem(elem);
             //if(!tip_elem) return;
+	    this._set_tip_context(tip_elem, 'main');
             if ($(tip_elem).is(':visible')) {
 		// Always hide first
 		$(tip_elem).slideUp('slow');
@@ -634,6 +651,17 @@ QuotesController = MVC.Controller.extend('quotes',
             tip = $('div#alert_tip', p).get(0);
             return tip;
 	},
+
+	/**
+	 * Set the context of the q_menu based on the displayed tip
+	 * in order to enable the proper keybindings
+	 * @param {object} tip_elem current tip displayed
+	 * @param {string} context string to apply to q_menu
+	 **/
+	_set_tip_context: function(tip_elem, context) {
+	    $(tip_elem).parent('.q_tips').attr('context', context);
+	},
+
 	/**
 	 * Bind to the escape key and execute callback
 	 * @param {function} callback Callback function to be executed on Esc keypress
