@@ -192,7 +192,7 @@ CompileController = MVC.Controller.extend('compilation',
             $('title, #firstHeading').each(function() {
                 $(this).text($(this).text().replace(/Editing/, 'Compiling'));
             });
-            $('<div id="background_overlay"></div>').appendTo('body');
+            $('<div id="background_overlay" class="ui-corner-bl"></div>').appendTo('body');
             CompileController.progressbar = $('<div id="progressbar"></div>');
             CompileController.progressbar.appendTo('body')
             that.publish('progressbar', { text: 'Loading Compilation...'});
@@ -582,6 +582,10 @@ CompileController = MVC.Controller.extend('compilation',
          that.update_progressbar(100, 'Saving!');
         // Save!
         $('#wpSave').click();
+		// Return to wiki view (Fix had to be done for Internet conn problems)
+        $('#editform, #toolbar').show();
+        that.publish('progressbar_hide');
+		
         // Last check in case we are still here
         setTimeout(function() {
             if(that.Class.saving) {

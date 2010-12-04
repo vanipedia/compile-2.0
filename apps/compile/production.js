@@ -14053,7 +14053,7 @@ return;
 $("title, #firstHeading").each(function(){
 $(this).text($(this).text().replace(/Editing/,"Compiling"));
 });
-$("<div id=\"background_overlay\"></div>").appendTo("body");
+$("<div id=\"background_overlay\" class=\"ui-corner-bl\"></div>").appendTo("body");
 CompileController.progressbar=$("<div id=\"progressbar\"></div>");
 CompileController.progressbar.appendTo("body");
 _16.publish("progressbar",{text:"Loading Compilation..."});
@@ -14363,6 +14363,8 @@ console.log(_43);
 }
 _3e.update_progressbar(100,"Saving!");
 $("#wpSave").click();
+$("#editform, #toolbar").show();
+_3e.publish("progressbar_hide");
 setTimeout(function(){
 if(_3e.Class.saving){
 _3e.check_internet_connection();
