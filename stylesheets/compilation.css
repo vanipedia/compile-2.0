@@ -11,7 +11,9 @@ div#compilation > div#compile_tools {
   width: 45%;
   z-index:100;
   font-size: 0.8em;
-  border: 2px solid #C3C9F2;
+	-webkit-box-shadow: rgba(0, 0, 0, 0.8) 0px 4px 12px; -moz-box-shadow: rgba(0, 0, 0, 0.8) 0px 4px 12px;
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#666), color-stop(0.02, #1F1F1F), color-stop(0.5, #212121), color-stop(0.51, #1A1A1A), to(black));
+  background-image: -moz-radial-gradient(0% 0%, 0% 100%, from(#666), color-stop(0.02, #1F1F1F), color-stop(0.5, #212121), color-stop(0.51, #1A1A1A), to(black));
 }
 
 div#compilation > div#compile_tools > ul > div#compile_tools_buttons {
@@ -22,6 +24,12 @@ div#compilation > div#compile_tools > ul > div#compile_tools_buttons > span {
  position: relative;
 	float: left;
 	cursor: pointer;
+}
+
+div#compilation > div#compile_tools #compile_help {
+	padding:    20px;
+	height:     220px;
+	overflow:   hidden;
 }
 
 div#compilation > div#compile_tools_menu {
@@ -42,6 +50,9 @@ div#compilation > div#compile_tools_menu > div#compile_tools_menu_bak {
   position: relative;
   top: -73px;
   z-index:-1;
+	-webkit-box-shadow: rgba(0, 0, 0, 0.8) 0px 4px 6px; -moz-box-shadow: rgba(0, 0, 0, 0.8) 0px 4px 6px;
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#666), color-stop(0.02, #1F1F1F), color-stop(0.5, #212121), color-stop(0.51, #1A1A1A), to(black));
+  background-image: -moz-radial-gradient(0% 0%, 0% 100%, from(#666), color-stop(0.02, #1F1F1F), color-stop(0.5, #212121), color-stop(0.51, #1A1A1A), to(black));
 }
 div#compilation > div#compile_tools_menu > p {
     padding: 3px 0px;
@@ -129,7 +140,7 @@ body div#background_overlay, div#compilation > div#warning_overlay {
 	top:0;
 	right:0;
 	width:40%;
-	height:80px;
+	height:100px;
 	display:none;
 	z-index:199;
 	background:black;
@@ -137,6 +148,9 @@ body div#background_overlay, div#compilation > div#warning_overlay {
 body div#background_overlay {
 	opacity: 0.8;
 	height:40px;
+	-webkit-box-shadow: rgba(0, 0, 0, 0.8) 0px 4px 6px; -moz-box-shadow: rgba(0, 0, 0, 0.8) 0px 4px 6px;
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#666), color-stop(0.02, #1F1F1F), color-stop(0.5, #212121), color-stop(0.51, #1A1A1A), to(black));
+  background-image: -moz-radial-gradient(0% 0%, 0% 100%, from(#666), color-stop(0.02, #1F1F1F), color-stop(0.5, #212121), color-stop(0.51, #1A1A1A), to(black));
 }
 div#compilation > div#warning_overlay {
 	opacity: 0.7;

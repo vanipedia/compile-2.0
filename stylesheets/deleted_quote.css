@@ -1,13 +1,7 @@
 div#bodyContent > div#compilation div.deleted_quote, div#bodyContent > div#compilation div.deleted_quote:hover {
-	background: none;
-	border: none;
   padding: 4px;
 }
 div#bodyContent > div#compilation div.deleted_quote > div.deleted_quote_msg {
-	color: #FFFCE8;
-	padding: 2px 4px;
-	margin: 8px 6px;
-	background: #A69A4B;
 	display: table-row;
 }
 div#bodyContent > div#compilation div.deleted_quote > div.deleted_quote_msg > span:not(.ui-icon) {
@@ -18,4 +12,5 @@ div#bodyContent > div#compilation div.deleted_quote > div.deleted_quote_msg > .u
 	margin: 4px 6px 4px 2px;
 	float: right;
 	cursor:pointer;
+	border: 1px solid;
 }

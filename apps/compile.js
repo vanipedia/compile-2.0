@@ -1,9 +1,10 @@
 include.resources(
-    'jquery-1.3.2.min',
-    'jquery.tinysort.packed',
+		'jquery-1.4.4.min',
+		'jquery-ui/js/jquery-ui.min.js',
+		'jquery.jlthemeswitcher',
+    'jquery.tinysort.min',
     'jquery.autogrow','jquery.easing', 'jquery.scrollTo',
-    'jquery.jeditable', 'jquery.hoverIntent', 'jquery-autocomplete/jquery.autocomplete',
-    'jquery-ui-1.7.2.custom.min',
+    'jquery.jeditable', 'jquery.hoverIntent', 
     'BaltoUni.min', 'UniToASCII', 'jquery.highlight_sanskrit', 'RegExp.escape'
     );
 include.engines();
@@ -18,6 +19,13 @@ include(function(){ //runs after prior includes are loaded
   include.controllers('compilation', 'quotes', 'compile_form', 'facts');
   include.views();
 });
-include.css('compilation', 'quotes', 'edit_quote', 'deleted_quote', 'compile_form', 'facts',
-            'skins/light_blue/jquery-ui', 'jquery.autocomplete'
-            );
+include.css(
+	// 'skins/ui-lightness/jquery-ui',
+	'skins/vaniquotes/jquery-ui',
+	'compilation', 
+	'quotes', 
+	'edit_quote', 
+	'deleted_quote', 
+	'compile_form', 
+	'facts'
+);

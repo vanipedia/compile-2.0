@@ -1,10 +1,23 @@
+/*jquery-ui overrides*/
+.ui-autocomplete {
+	position: fixed;
+}
+.ui-accordion {
+	width: 95%;
+}
+
 #facts {
 height: 320px;
 overflow: hidden;
 }
-#facts > div {
-color:#603F9D;
+/*
+#facts li:nth-child(odd) {
+	background-color: #eee;
 }
+#facts li:nth-child(even) {
+	background-color: #fff;
+}
+*/
 #facts > div > div {
 padding: 4px 2px;
 }
@@ -19,10 +32,6 @@ padding: 4px 8px;
 float:left;
 margin-right:8px;
 position:relative;
-}
-
-#facts .facts_tools {
-	background-color:#D2C1F2;
 }
 
 #facts .facts_tools > div {
@@ -54,6 +63,7 @@ position:relative;
 #facts #terms_tools #copy_terms_man {
   display: none;
 }
+
 #facts #categories .facts_sortable_placeholder {
   border: dashed 3px;
 }
@@ -61,40 +71,3 @@ position:relative;
 	max-height: 250px;
 }
 
-.cat_suggest_results {
-	padding: 0px;
-	margin: 0px 6px;
-	border: 1px solid black;
-	background-color: white;
-	float: left; /* windows */
-	overflow: hidden;
-	z-index: 99999;
-}
-
-.cat_suggest_results ul {
-	width: 100%;
-	list-style-position: outside;
-	list-style: none;
-	padding: 0;
-	margin: 0;
-}
-
-.cat_suggest_results li {
-	margin: 0px;
-	padding: 2px 5px;
-	cursor: default;
-	display: block;
-	/*
-	if width will be 100% horizontal scrollbar will apear
-	when scroll mode will be used
-	*/
-	/*width: 100%;*/
-	font: menu;
-	font-size: 12px;
-	/*
-	it is very important, if line-height not setted or setted
-	in relative units scroll will be broken in firefox
-	*/
-	line-height: 16px;
-	overflow: hidden;
-}
