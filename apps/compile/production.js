@@ -9076,7 +9076,9 @@ _1=_1.replace(/ü/g, "ū");
 _1=_1.replace(/å/g, "ṛ");
 _1=_1.replace(/è/g, "ṟ");
 _1=_1.replace(/ì/g, "ṅ");
+_1=_1.replace(/ṣ/, "&#241;");
 _1=_1.replace(/ñ/g, "ṣ");
+_1=_1.replace(/&#241;/g, "ñ");
 _1=_1.replace(/ï/g, "ñ");
 _1=_1.replace(/ö/g, "ṭ");
 _1=_1.replace(/ò/g, "ḍ");
@@ -9091,8 +9093,10 @@ _1=_1.replace(/É/g, "Ī");
 _1=_1.replace(/Ü/g, "Ū");
 _1=_1.replace(/Å/g, "Ṛ");
 _1=_1.replace(/È/g, "Ṟ");
-_1=_1.replace(/Ì/g, "&#7748;");
+_1=_1.replace(/Ì/g, "Ṅ");
+_1=_1.replace(/Ṣ/g, "&#209;");
 _1=_1.replace(/Ñ/g, "Ṣ");
+_1=_1.replace(/&#209;/g, "Ñ");
 _1=_1.replace(/Ï/g, "Ñ");
 _1=_1.replace(/Ö/g, "Ṭ");
 _1=_1.replace(/Ò/g, "Ḍ");
@@ -13133,8 +13137,7 @@ $("div#bodyContent > div#compilation > div#compile_tools_menu").animate({right:"
 $(_1).autocomplete("/php/get_vanisource_title.php",{extraParams:{type:"title",suggest:true},minChars:4,resultsClass:"link_suggest_results",fixed:_2});
 },category_autocomplete:function function_name(_3,_4){
 $(_3).autocomplete({source:function(_5,_6){
-_5.ns="14";
-$.ajax({url:"/search/pages/search",dataType:"json",data:{q:_5.term,ns:_5.ns},success:function(_7){
+$.ajax({url:"/search/category",dataType:"json",data:{q:_5.term},success:function(_7){
 var l=$.map(_7,function(_9){
 return _9.category;
 });

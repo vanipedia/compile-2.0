@@ -73,11 +73,10 @@ CompileController = MVC.Controller.extend('compilation',
 		category_autocomplete: function function_name (elem, fixed) {
 			$(elem).autocomplete({
 				source: function(request, response) {
-					request.ns = '14';
 					$.ajax({
-						url: "/search/pages/search",
+						url: "/search/category",
 					  dataType: "json",
-				    data: { q: request.term, ns: request.ns },
+				    data: { q: request.term },
 						success: function( data ) {
 								var l = $.map(data, function(title) {
 									return title.category;

@@ -1,6 +1,8 @@
 /*jquery-ui overrides*/
 .ui-autocomplete {
 	position: fixed;
+	max-height: 150px;
+	overflow-y: scroll;
 }
 .ui-accordion {
 	width: 95%;
