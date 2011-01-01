@@ -57,19 +57,36 @@ CompileController = MVC.Controller.extend('compilation',
 												fixed: fixed
 								});
 				},
-    category_autocomplete: function(elem, fixed) {
-								// autocomplete for suggest box on quote or link not found
-								// jQuery.autocomplete was customized in order to display properly
-								// in our fixed compile_tools box
-								$(elem).autocomplete("/php/category_search2.php", {
-												minChars: 3,
-            resultsClass: 'cat_suggest_results',
-            max: 45,
-												fixed: fixed,
-            matchContains: true,
-            selectFirst: false
+    // category_autocomplete: function(elem, fixed) {
+    // 								// autocomplete for suggest box on quote or link not found
+    // 								// jQuery.autocomplete was customized in order to display properly
+    // 								// in our fixed compile_tools box
+    // 								$(elem).autocomplete("/php/category_search2.php", {
+    // 												minChars: 3,
+    //         resultsClass: 'cat_suggest_results',
+    //         max: 45,
+    // 												fixed: fixed,
+    //         matchContains: true,
+    //         selectFirst: false
+    // 								});
+    // 				},
+		category_autocomplete: function function_name (elem, fixed) {
+			$(elem).autocomplete({
+				source: function(request, response) {
+					$.ajax({
+						url: "/search/category",
+					  dataType: "json",
+				    data: { q: request.term },
+						success: function( data ) {
+								var l = $.map(data, function(title) {
+									return title.category;
 								});
-				},
+				        response(l);
+				    }
+				});
+				}
+			});
+		},
     enable_keybindings: function() {
         CompileController.disable_keybindings();
         $(document).bind('keydown', CompileController.keybindings);
@@ -230,12 +247,28 @@ CompileController = MVC.Controller.extend('compilation',
         that = this;
         // jQuery Event attachments
         CompileController.compile_tools.tabs().draggable({ handle: '> ul' });
-        $('div#bodyContent > div#compilation > div#compile_tools_menu').hoverIntent(that.Class.compile_tools_menu_hover_options);
+        $('div#bodyContent > div#compilation > div#compile_tools_menu')
+					.hoverIntent(that.Class.compile_tools_menu_hover_options);
+				// Help menu
+				$('div#compilation > div#compile_tools > div#compile_help').accordion({
+				    autoHeight: false,
+		      collapsible: true,
+		      active: false
+		    });
+				// jQuery UI theme switcher
+				$('div#compilation > div#compile_tools > #compile_help #theme_switcher > .jlthemeswitcher-opener').jlthemeswitcher({
+					themePreview: false,
+					closeOnClick: false,
+					importThemes: false,
+					autoOpen: true,
+					width: "100%",
+				});
         // SetTimeout to hide the tools_menu
         setTimeout( that.Class.hide_tools_menu, 5000);
 
         // buttons effects
-        $('div#bodyContent > div#compilation > div#compile_tools_menu > p').bind('mouseenter', function() {
+        $('div#bodyContent > div#compilation > div#compile_tools_menu > p')
+					.bind('mouseenter', function() {
             $(this).addClass('ui-state-hover');
         }).bind('mouseleave', function() {
             $(this).removeClass('ui-state-hover');
@@ -529,11 +562,11 @@ CompileController = MVC.Controller.extend('compilation',
             $('.verse_in_q', q).each(function() {
                 $(this).replaceWith($(this).text().replace(/^([^\n])/mg, ':$1'));
             });
-            $('span.highlight_terms', q).each(function() {
+            $('span.ui-state-highlight', q).each(function() {
                 var t = $(this).text();
                 $(this).replaceWith(t);
             });
-            q.removeClass('ui-corner-all q_new q_updated');
+            q.removeClass().addClass('quote');
             q.removeAttr('style');
             that.update_progressbar(progress_unit);
         });

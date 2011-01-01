@@ -1,26 +1,22 @@
 div#bodyContent > div#compilation div.quote {
-	background: none;
-	border: 2px solid white;
+	border: 1px solid transparent;
 	padding: 4px;
   margin: 10px 0px;
   position: relative;
   left: -6px;
   width: 97%;
   overflow: auto;
+	font-weight: normal;
 }
 div#bodyContent > div#compilation div.quote:hover {
-	background: #FFFEC6;
-	border: 2px solid #A68940;
+	border: 1px solid grey;
 	padding: 4px;
 }
-div#bodyContent > div#compilation div.quote .highlight_terms {
-    background: #EEE8AA;
+div#bodyContent > div#compilation div.quote .ui-state-highlight {
+    background-color: #EEE8AA;
     padding: 0px 1px;
 }
-div#bodyContent > div#compilation div.quote:hover .highlight_terms {
- background: #D2C1F2;
- padding: 0px 1px;
-}
+
 div#bodyContent > div#compilation div.quote > div {
  margin: 6px 2px;
 }
@@ -28,7 +24,7 @@ div#bodyContent > div#compilation div.quote >.heading, div#bodyContent > div#com
  font-weight: bold;
 }
 div#bodyContent > div#compilation div.quote > .heading {
- color: #296F39;
+ color: none;
 }
 div#bodyContent > div#compilation div.quote > .trans, div#bodyContent > div#compilation div.quote > .purport {
  margin: 8px 0px 0px 0px;
@@ -80,10 +76,11 @@ div#bodyContent > div#compilation div.quote > div.q_menu > div.q_tips input {
   padding: 4px;
   cursor: pointer;
   font-size: 0.8em;
+	margin: 0.5px;
 }
 div#bodyContent > div#compilation div.quote:hover div.q_menu {
-	background: #D2C1F2;
-  border: 1px solid #603F9D;
+/*	background: #D2C1F2;*/
+/*  border: 1px solid #603F9D;*/
   padding: 2px;
   text-align: left;
   -moz-border-radius-bottomright:15px;
@@ -102,21 +99,20 @@ div#bodyContent > div#compilation div.quote > div.q_menu > div.q_tools > div.und
 
 /* Building_quote section */
 div#bodyContent > div#compilation div.quote.building_quote, div#bodyContent > div#compilation div.quote.building_quote:hover {
-  background: white;
-  border: 25px solid #3F4C9D;
+/*  background: white;*/
+/*  border: 25px solid #3F4C9D;*/
+-webkit-border-radius: 10px; -moz-border-radius: 10px;
   padding: 25px;
- -moz-border-radius: 5px;
- -webkit-border-radius: 5px;
   position: relative;
   width: 85%;
   z-index: 2;
-  background-image: url(/images/Vaniquotes-logo-small2.png);
-  background-repeat: no-repeat;
-  background-position: center;
+	-webkit-box-shadow: rgba(0, 0, 0, 0.8) 0px 4px 12px; -moz-box-shadow: rgba(0, 0, 0, 0.8) 0px 4px 12px;
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#666), color-stop(0.02, #1F1F1F), color-stop(0.5, #212121), color-stop(0.51, #1A1A1A), to(black));
+  background-image: -moz-radial-gradient(0% 0%, 0% 100%, from(#666), color-stop(0.02, #1F1F1F), color-stop(0.5, #212121), color-stop(0.51, #1A1A1A), to(black));
 }
 div#bodyContent > div#compilation div.quote.building_quote > div.q_menu {
-  background: #D2C1F2;
-  border: 1px solid #603F9D;
+/*  background: #D2C1F2;*/
+/*  border: 1px solid #603F9D;*/
   padding: 2px;
   text-align: left;
   -moz-border-radius-bottomright:15px;
@@ -157,10 +153,9 @@ div#bodyContent > div#compilation div.quote div#alert_tip {
 	display: none;
 }
 div#bodyContent > div#compilation div.quote div#alert_tip > span {
- font-weight: bold;
- color: #603F9D;
+	font-weight: bold;
 }
 div#bodyContent > div#compilation div.quote .bad_link {
-		background:url(images/red-alert.gif);
-		padding:2px 4px;
+	background:url(images/red-alert.gif);
+	padding:2px 4px;
 }

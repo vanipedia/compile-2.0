@@ -1,7 +1,6 @@
 div#bodyContent > div#compilation div.quote.edit_quote, div#bodyContent > div#compilation div.quote.edit_quote:hover {
-  background: #C3C9F2;
   padding: 8px 4px;
-  border: 2px solid #C3C9F2;
+  border: 2px solid transparent;
   margin: 8px 0px;
   position: relative;
   left: -6px;
@@ -10,7 +9,6 @@ div#bodyContent > div#compilation div.quote.edit_quote, div#bodyContent > div#co
 
 }
 div#bodyContent > div#compilation .edit_quote label {
-  color:#747184;
   font-family:tahoma;
   font-style:italic;
   font-weight:bold;
@@ -70,7 +68,6 @@ div#bodyContent > div#compilation .edit_quote #diacritics {
 div#bodyContent > div#compilation .edit_quote #diacritics #diacritics_toggle:hover {
 	cursor: pointer;
 	text-decoration: underline;
-	color: #3F4C9D;
 }
 div#bodyContent > div#compilation .edit_quote #diacritics p {
 	display: none;

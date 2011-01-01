@@ -13,7 +13,7 @@
       i: true,
       global: true,
       strict: true,
-      hi_class: 'highlight_terms',
+      hi_class: 'ui-state-highlight',
       type: 'span'
     };
     var opts = $.extend(defaults, options);
