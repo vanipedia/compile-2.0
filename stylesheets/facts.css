@@ -4,9 +4,6 @@
 	max-height: 150px;
 	overflow-y: scroll;
 }
-.ui-accordion {
-	width: 95%;
-}
 
 #facts {
 height: 320px;

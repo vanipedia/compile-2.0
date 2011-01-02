@@ -16,6 +16,10 @@ div#compilation > div#compile_tools {
   background-image: -moz-radial-gradient(0% 0%, 0% 100%, from(#666), color-stop(0.02, #1F1F1F), color-stop(0.5, #212121), color-stop(0.51, #1A1A1A), to(black));
 }
 
+div#compile_tools > div.ui-accordion {
+	width: 95%;
+}
+
 div#compilation > div#compile_tools > ul > div#compile_tools_buttons {
 	position: relative;
 	float: right;
@@ -27,7 +31,6 @@ div#compilation > div#compile_tools > ul > div#compile_tools_buttons > span {
 }
 
 div#compilation > div#compile_tools #compile_help {
-	padding:    20px;
 	height:     220px;
 	overflow:   hidden;
 }

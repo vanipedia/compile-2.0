@@ -65,15 +65,16 @@ $.fn.jlthemeswitcher = function(settings) {
     $('.jlthemeswitcher-close-icon').remove();
   }
   function construct(themes, obj) {
-    themes = themes.split('|');
+    // themes = themes.split('|');
     var cicon = '';
     if (options.closeIcon) {
       cicon = '<div class="jlthemeswitcher-closer jlthemeswitcher-close-icon ui-state-default ui-corner-all"><span class="ui-icon ui-icon-circle-close" title="Close"></span></div>';
     }
     var content = '<div class="jlthemeswitcher-container"><div class="jlthemeswitcher-header"><div class="jlthemeswitcher-title">&nbsp;' + options.title + '</div>' + cicon + '</div><div class="jlthemeswitcher ' + options.bgClass + ' ui-corner-bl ui-corner-br"><ul class="jlthemeswitcher">\n';
     for (var i in themes) {
-      if (typeof(themes[i]) !== 'string') continue;
-      var themedata = themes[i].split(',');
+      if (typeof(themes[i]) !== 'object') continue;
+      // var themedata = themes[i].split(',');
+      var themedata = themes[i];
       if ($.inArray(themedata[0], excludeThemes) == -1) {
         content += '<li class="theme_item"><a class="theme_link" href="javascript:void(0)" rel="' + themedata[2] + '" title="' + themedata[0] + '"><img class="theme_thumb" src="' + themedata[1] + '" alt="' + themedata[0] + '" title="' + themedata[0] + '" /><br /><span class="theme_name">' + themedata[0] + '</span></a></li>\n';
       }

@@ -1,5 +1,4 @@
 div#compile_form {
-  padding:    20px;
   height:     220px;
   overflow:   hidden;
 }
@@ -52,11 +51,12 @@ div#compile_form > div#form_buttons > span#prabhupada_icon {
 
 div#compile_form textarea {
 	float: left;
-  height: 170px;
-  width:  99%;
+  height: 70%;
+  width:  95%;
   background-image:     url("images/vaniquotes-logo-bg.png");
   background-repeat:    no-repeat;
   background-position:  center;
+	margin: 1em;
 }
 div#compile_form #form_text * {
  float: left;

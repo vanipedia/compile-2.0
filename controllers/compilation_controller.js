@@ -262,7 +262,137 @@ CompileController = MVC.Controller.extend('compilation',
 					importThemes: false,
 					autoOpen: true,
 					width: "100%",
+					// importThemesPath: "http://localhost/js/compile-2.0/stylesheets/skins/vaniquotes/jqueryui-themes.js"
+					themes: [
+						[
+						"Vaniquotes",
+						"/js/compile-2.0/stylesheets/skins/vaniquotes/images/theme_30_ui_vaniquotes.png",
+						"/js/compile-2.0/stylesheets/skins/vaniquotes/jquery-ui.css"
+						],
+						[
+						"UI Lightness",
+						"http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_ui_light.png",
+						"http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/ui-lightness/jquery-ui.css"	
+						],
+						[
+						"UI Darkness",
+						"http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_ui_dark.png",
+						"http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/ui-darkness/jquery-ui.css"	
+						],
+						[
+						"Smoothness",
+						"http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_smoothness.png",
+						"http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/smoothness/jquery-ui.css"	
+						],
+						[
+						"Start",
+						"http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_start_menu.png",
+						"http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/start/jquery-ui.css"	
+						],
+						[
+						"Redmond",
+						"http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_windoze.png",
+						"http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/redmond/jquery-ui.css"	
+						],
+						[
+						"Sunny",
+						"http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_sunny.png",
+						"http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/sunny/jquery-ui.css"	
+						],
+						[
+						"Overcast",
+						"http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_overcast.png",
+						"http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/overcast/jquery-ui.css"	
+						],
+						[
+						"Le Frog",
+						"http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_le_frog.png",
+						"http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/le-frog/jquery-ui.css"	
+						],
+						[
+						"Flick",
+						"http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_flick.png",
+						"http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/flick/jquery-ui.css"	
+						],
+						[
+						"Pepper Grinder",
+						"http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_pepper_grinder.png",
+						"http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/pepper-grinder/jquery-ui.css"	
+						],
+						[
+						"Eggplant",
+						"http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_eggplant.png",
+						"http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/eggplant/jquery-ui.css"	
+						],
+						[
+						"Dark Hive",
+						"http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_dark_hive.png",
+						"http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/dark-hive/jquery-ui.css"	
+						],
+						[
+						"Cupertino",
+						"http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_cupertino.png",
+						"http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/cupertino/jquery-ui.css"	
+						],
+						[
+						"South St",
+						"http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_south_street.png",
+						"http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/south-street/jquery-ui.css"	
+						],
+						[
+						"Blitzer",
+						"http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_blitzer.png",
+						"http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/blitzer/jquery-ui.css"	
+						],
+						[
+						"Humanity",
+						"http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_humanity.png",
+						"http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/humanity/jquery-ui.css"	
+						],
+						[
+						"Hot Sneaks",
+						"http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_hot_sneaks.png",
+						"http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/hot-sneaks/jquery-ui.css"	
+						],
+						[
+						"Excite Bike",
+						"http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_excite_bike.png",
+						"http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/excite-bike/jquery-ui.css"	
+						],
+						[
+						"Vader",
+						"http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_black_matte.png",
+						"http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/vader/jquery-ui.css"	
+						],
+						[
+						"Dot Luv",
+						"http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_dot_luv.png",
+						"http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/dot-luv/jquery-ui.css"	
+						],
+						[
+						"Mint Choc",
+						"http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_mint_choco.png",
+						"http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/mint-choc/jquery-ui.css"	
+						],
+						[
+						"Black Tie",
+						"http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_black_tie.png",
+						"http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/black-tie/jquery-ui.css"	
+						],
+						[
+						"Trontastic",
+						"http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_trontastic.png",
+						"http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/trontastic/jquery-ui.css"	
+						],
+						[
+						"Swanky Purse",
+						"http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_swanky_purse.png",
+						"http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/swanky-purse/jquery-ui.css"	
+						]
+					],
+					
 				});
+				
         // SetTimeout to hide the tools_menu
         setTimeout( that.Class.hide_tools_menu, 5000);
 
