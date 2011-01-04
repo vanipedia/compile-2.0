@@ -257,6 +257,7 @@ CompileController = MVC.Controller.extend('compilation',
 		    });
 				// jQuery UI theme switcher
 				$('div#compilation > div#compile_tools > #compile_help #theme_switcher > .jlthemeswitcher-opener').jlthemeswitcher({
+					defaultTheme: 'Vaniquotes',
 					themePreview: false,
 					closeOnClick: false,
 					importThemes: false,

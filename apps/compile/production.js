@@ -12287,7 +12287,7 @@ _2.publish("not_found_reference",{ref:_1.ref});
 _1.quote.bad_link=true;
 }
 }else{
-new_quote={link:_7.title,link_text:_7.title,parent:_7.parent.replace(/\s+/g,"_"),index:_7.index,};
+new_quote={link:_7.title,link_text:_7.title,parent:_7.parent.replace(/\s+/g,"_"),index:_7.index};
 new_quote.type=_4?false:"new";
 _2.cache[_1.ref]=new_quote;
 if(window.console){
@@ -12425,7 +12425,7 @@ _21=_1a[i].length;
 if(_21>_1c){
 _1c=_1a[i].length;
 }
-if(_21<89&&!/[:,"\?]/.test(_1a[i])&&!/^\s*$/.test(_1a[i])){
+if(_21<89&&!(/[:,"\?]/).test(_1a[i])&&!(/^\s*$/).test(_1a[i])){
 if(_1e===false){
 _1e=i;
 last=i;
@@ -12522,7 +12522,7 @@ _38=this;
 _3b=/^(?:''')\[\[(?:Vanisource:)?(.+?)\|(.+?)\]\]:(?:''')?/;
 if(!_37.link){
 $.each(_38.Class.attr,function(i,a){
-!/^(?:text|trans|purport|heading)$/.test(a)?_38[a]=$(_37).attr(a)||false:_38[a]=$(_37).children("."+a).html()||false;
+!(/^(?:text|trans|purport|heading)$/).test(a)?_38[a]=$(_37).attr(a)||false:_38[a]=$(_37).children("."+a).html()||false;
 });
 }else{
 $.each(_38.Class.attr,function(i,a){
@@ -13278,7 +13278,7 @@ _1d=this;
 CompileController.compile_tools.tabs().draggable({handle:"> ul"});
 $("div#bodyContent > div#compilation > div#compile_tools_menu").hoverIntent(_1d.Class.compile_tools_menu_hover_options);
 $("div#compilation > div#compile_tools > div#compile_help").accordion({autoHeight:false,collapsible:true,active:false});
-$("div#compilation > div#compile_tools > #compile_help #theme_switcher > .jlthemeswitcher-opener").jlthemeswitcher({themePreview:false,closeOnClick:false,importThemes:false,autoOpen:true,width:"100%",themes:[["Vaniquotes","/js/compile-2.0/stylesheets/skins/vaniquotes/images/theme_30_ui_vaniquotes.png","/js/compile-2.0/stylesheets/skins/vaniquotes/jquery-ui.css"],["UI Lightness","http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_ui_light.png","http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/ui-lightness/jquery-ui.css"],["UI Darkness","http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_ui_dark.png","http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/ui-darkness/jquery-ui.css"],["Smoothness","http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_smoothness.png","http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/smoothness/jquery-ui.css"],["Start","http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_start_menu.png","http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/start/jquery-ui.css"],["Redmond","http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_windoze.png","http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/redmond/jquery-ui.css"],["Sunny","http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_sunny.png","http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/sunny/jquery-ui.css"],["Overcast","http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_overcast.png","http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/overcast/jquery-ui.css"],["Le Frog","http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_le_frog.png","http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/le-frog/jquery-ui.css"],["Flick","http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_flick.png","http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/flick/jquery-ui.css"],["Pepper Grinder","http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_pepper_grinder.png","http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/pepper-grinder/jquery-ui.css"],["Eggplant","http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_eggplant.png","http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/eggplant/jquery-ui.css"],["Dark Hive","http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_dark_hive.png","http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/dark-hive/jquery-ui.css"],["Cupertino","http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_cupertino.png","http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/cupertino/jquery-ui.css"],["South St","http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_south_street.png","http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/south-street/jquery-ui.css"],["Blitzer","http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_blitzer.png","http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/blitzer/jquery-ui.css"],["Humanity","http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_humanity.png","http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/humanity/jquery-ui.css"],["Hot Sneaks","http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_hot_sneaks.png","http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/hot-sneaks/jquery-ui.css"],["Excite Bike","http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_excite_bike.png","http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/excite-bike/jquery-ui.css"],["Vader","http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_black_matte.png","http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/vader/jquery-ui.css"],["Dot Luv","http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_dot_luv.png","http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/dot-luv/jquery-ui.css"],["Mint Choc","http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_mint_choco.png","http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/mint-choc/jquery-ui.css"],["Black Tie","http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_black_tie.png","http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/black-tie/jquery-ui.css"],["Trontastic","http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_trontastic.png","http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/trontastic/jquery-ui.css"],["Swanky Purse","http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_swanky_purse.png","http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/swanky-purse/jquery-ui.css"]],});
+$("div#compilation > div#compile_tools > #compile_help #theme_switcher > .jlthemeswitcher-opener").jlthemeswitcher({defaultTheme:"Vaniquotes",themePreview:false,closeOnClick:false,importThemes:false,autoOpen:true,width:"100%",themes:[["Vaniquotes","/js/compile-2.0/stylesheets/skins/vaniquotes/images/theme_30_ui_vaniquotes.png","/js/compile-2.0/stylesheets/skins/vaniquotes/jquery-ui.css"],["UI Lightness","http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_ui_light.png","http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/ui-lightness/jquery-ui.css"],["UI Darkness","http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_ui_dark.png","http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/ui-darkness/jquery-ui.css"],["Smoothness","http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_smoothness.png","http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/smoothness/jquery-ui.css"],["Start","http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_start_menu.png","http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/start/jquery-ui.css"],["Redmond","http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_windoze.png","http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/redmond/jquery-ui.css"],["Sunny","http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_sunny.png","http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/sunny/jquery-ui.css"],["Overcast","http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_overcast.png","http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/overcast/jquery-ui.css"],["Le Frog","http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_le_frog.png","http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/le-frog/jquery-ui.css"],["Flick","http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_flick.png","http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/flick/jquery-ui.css"],["Pepper Grinder","http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_pepper_grinder.png","http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/pepper-grinder/jquery-ui.css"],["Eggplant","http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_eggplant.png","http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/eggplant/jquery-ui.css"],["Dark Hive","http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_dark_hive.png","http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/dark-hive/jquery-ui.css"],["Cupertino","http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_cupertino.png","http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/cupertino/jquery-ui.css"],["South St","http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_south_street.png","http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/south-street/jquery-ui.css"],["Blitzer","http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_blitzer.png","http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/blitzer/jquery-ui.css"],["Humanity","http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_humanity.png","http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/humanity/jquery-ui.css"],["Hot Sneaks","http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_hot_sneaks.png","http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/hot-sneaks/jquery-ui.css"],["Excite Bike","http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_excite_bike.png","http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/excite-bike/jquery-ui.css"],["Vader","http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_black_matte.png","http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/vader/jquery-ui.css"],["Dot Luv","http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_dot_luv.png","http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/dot-luv/jquery-ui.css"],["Mint Choc","http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_mint_choco.png","http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/mint-choc/jquery-ui.css"],["Black Tie","http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_black_tie.png","http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/black-tie/jquery-ui.css"],["Trontastic","http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_trontastic.png","http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/trontastic/jquery-ui.css"],["Swanky Purse","http://static.jquery.com/ui/themeroller/images/themeGallery/theme_30_swanky_purse.png","http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/swanky-purse/jquery-ui.css"]],});
 setTimeout(_1d.Class.hide_tools_menu,5000);
 $("div#bodyContent > div#compilation > div#compile_tools_menu > p").bind("mouseenter",function(){
 $(this).addClass("ui-state-hover");
@@ -13746,7 +13746,7 @@ this.check_internet_connection(_7e);
 }});
 ;
 include.set_path('controllers');
-QuotesController=MVC.Controller.extend("quotes",{currently_editing:false,focused_textarea:false,current_quote:"",key:{main:{heading:68,section:83,edit_quote:81,insert:69,},section:{trans:84,purport:82,trans_purport:78,},edit_heading:{heading_create:65,heading_edit:77,},heading:{heading_set:69,heading_append:68,heading_new:78,},heading_or_verse:{heading:68,verse_select:86,},escape:27,update_quote:81,insert_prabhupada:65,},enable_keybindings:function(_1){
+QuotesController=MVC.Controller.extend("quotes",{currently_editing:false,focused_textarea:false,current_quote:"",key:{main:{heading:68,section:83,edit_quote:81,insert:69},section:{trans:84,purport:82,trans_purport:78},edit_heading:{heading_create:65,heading_edit:77},heading:{heading_set:69,heading_append:68,heading_new:78},heading_or_verse:{heading:68,verse_select:86},escape:27,update_quote:81,insert_prabhupada:65},enable_keybindings:function(_1){
 $(document).bind("keydown",{quote:_1},QuotesController.keybindings_event);
 },disable_keybindings:function(){
 $(document).unbind("keydown",QuotesController.keybindings_event);
@@ -13807,7 +13807,7 @@ var _10=_f.selectionStart;
 var _11=_f.selectionEnd;
 _f.value=_f.value.substring(0,_10)+"Prabhup&#257;da: "+_f.value.substring(_11,_f.value.length);
 }
-},},{mouseover:function(_12){
+}},{mouseover:function(_12){
 _12.event.kill();
 QuotesController.current_quote=_12.element;
 if(!$(_12.element).hasClass("edit_quote")){
@@ -13917,7 +13917,6 @@ this.process_verse($(_2f).attr("id"));
 },"div.q_menu div.q_tips div#alert_tip input.alert_tip_heading_set click":function(_30){
 var id,_32;
 _30.event.kill();
-pp;
 id=_30.element.id;
 _32=$(_30.element).parents("div.quote");
 if(id==="heading_new"){
@@ -14037,7 +14036,7 @@ _41=$(_40.elem);
 id=_41.attr("id");
 action=_40.action;
 if(_41.children("#trans, #purport").length===2&&action==="cancel"){
-if(/^\s+$/.test(_41.children("#trans").val())||/^\s+$/.test(_41.children("#purport").val())){
+if(/^\s+$/.test(_41.children("#trans").val())||(/^\s+$/).test(_41.children("#purport").val())){
 action="update";
 }
 }
