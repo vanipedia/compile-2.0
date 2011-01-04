@@ -16,7 +16,7 @@ QuotesController = MVC.Controller.extend('quotes', /* @Static */ {
             // s
             edit_quote: 81,
             // 
-            insert: 69,
+            insert: 69
             // e
         },
         section: {
@@ -24,13 +24,13 @@ QuotesController = MVC.Controller.extend('quotes', /* @Static */ {
             // t
             purport: 82,
             //r
-            trans_purport: 78,
+            trans_purport: 78
             // n    
         },
         edit_heading: {
             heading_create: 65,
             // a
-            heading_edit: 77,
+            heading_edit: 77
             // m    
         },
         heading: {
@@ -38,20 +38,20 @@ QuotesController = MVC.Controller.extend('quotes', /* @Static */ {
             // e
             heading_append: 68,
             // d
-            heading_new: 78,
+            heading_new: 78
             // n	    
         },
         heading_or_verse: {
             heading: 68,
             // d
-            verse_select: 86,
+            verse_select: 86
             // v	    
         },
         escape: 27,
         // esc
         update_quote: 81,
         // q same as edit but will work with Alt+
-        insert_prabhupada: 65,
+        insert_prabhupada: 65
         // a
         //enter: 13,
     },
@@ -109,7 +109,7 @@ QuotesController = MVC.Controller.extend('quotes', /* @Static */ {
         QuotesController.enable_keybindings(q_obj); // enable tips
     },
     edit_view_keybindings_event: function (e) {
-        if (typeof(e.keyCode) == 'undefined') return;
+        if (typeof(e.keyCode) == 'undefined') { return; }
         var q = e.data.q;
         // enable escape key to exist edit_quote view
         if (e.keyCode === QuotesController.key['escape']) {
@@ -138,7 +138,7 @@ QuotesController = MVC.Controller.extend('quotes', /* @Static */ {
             var endPos = quote_textarea.selectionEnd;
             quote_textarea.value = quote_textarea.value.substring(0, startPos) + 'Prabhup&#257;da: ' + quote_textarea.value.substring(endPos, quote_textarea.value.length);
         }
-    },
+    }
 
 }, /* @Prototype */ { /****** Events ******/
     mouseover: function (params) {
@@ -155,7 +155,7 @@ QuotesController = MVC.Controller.extend('quotes', /* @Static */ {
     },
     // Problems handling mouseup and dblclick event confusion
     dblclick: function (params) {
-        if (params.element.has_class('edit_quote') !== undefined) return;
+        if (params.element.has_class('edit_quote') !== undefined) { return; }
         params.event.kill();
         if (this.Class.currently_editing) {
             this.render_quote(this.Class.currently_editing);
@@ -223,7 +223,7 @@ QuotesController = MVC.Controller.extend('quotes', /* @Static */ {
         this.Class.focused_textarea = params.element;
     },
     "div.undo_quote click": function (params) {
-        if (params.element.has_class('edit_quote') !== undefined) return;
+        if (params.element.has_class('edit_quote') !== undefined) { return; }
         var quote;
         params.event.kill();
         quote = $(params.element).parents('div.quote');
@@ -251,7 +251,7 @@ QuotesController = MVC.Controller.extend('quotes', /* @Static */ {
             return;
         }
         //if(window.console) { console.log('In mouseup'); }
-        if (params.element.has_class('edit_quote') !== undefined) return;
+        if (params.element.has_class('edit_quote') !== undefined) { return; }
         params.event.kill();
         var elem;
         elem = params.element;
@@ -275,7 +275,7 @@ QuotesController = MVC.Controller.extend('quotes', /* @Static */ {
                 this.tip_alert({
                     elem: quote,
                     type: 'heading'
-                })
+                });
             } else {
                 // Submit to _do_heading with a heading_set id
                 this._do_heading(quote, 'heading_set');
@@ -287,7 +287,7 @@ QuotesController = MVC.Controller.extend('quotes', /* @Static */ {
     },
     "div.q_menu div.q_tips div#alert_tip input.alert_tip_heading_set click": function (params) {
         var id, quote;
-        params.event.kill();pp
+        params.event.kill();
         id = params.element.id;
         quote = $(params.element).parents('div.quote');
         if (id === 'heading_new') {
@@ -302,7 +302,7 @@ QuotesController = MVC.Controller.extend('quotes', /* @Static */ {
         }
         if (id === 'heading_edit') {
             // if other quote is in edit mode, render it to view mode
-            if (this.Class.currently_editing) this.render_quote(this.Class.currently_editing);
+            if (this.Class.currently_editing) {this.render_quote(this.Class.currently_editing);}
             // if no existing heading.. update the quote with a blank heading, which will automagically render in edit mode
             if (quote.children('.heading').length === 0) {
                 Compilation.update_heading({
@@ -320,11 +320,11 @@ QuotesController = MVC.Controller.extend('quotes', /* @Static */ {
             // Give focus and select text in heading
             $('#heading', quote).focus().select();
         }
-        if (id === 'heading_create') this.tip_alert({
+        if (id === 'heading_create') { this.tip_alert({
             elem: quote,
             type: 'heading'
-        });
-        if (id === 'heading_set' || id === 'heading_append') this._do_heading(quote, id);
+        }); }
+        if (id === 'heading_set' || id === 'heading_append') { this._do_heading(quote, id); }
 
     },
 
@@ -332,12 +332,12 @@ QuotesController = MVC.Controller.extend('quotes', /* @Static */ {
     "div.q_menu div.q_tips div#alert_tip input click": function (params) {
         var selected_section, elem;
         params.event.kill();
-        elem = params.element
+        elem = params.element;
         selected_section = elem.id;
         if (window.console) {
             console.log(elem + ' with ' + selected_section);
         }
-        this._do_section(elem, selected_section)
+        this._do_section(elem, selected_section);
     },
 
     // custom buttons
@@ -365,7 +365,7 @@ QuotesController = MVC.Controller.extend('quotes', /* @Static */ {
         elem = params['elem'];
         // check for id in elem depending whether is an custom object or a dom object
         elem.id ? id = elem.id : id = $(elem).attr('id');
-        if ($('#' + id).length !== 1) this._append_quote(elem);
+        if ($('#' + id).length !== 1) { this._append_quote(elem); }
         if (params['view'] === 'view') {
             action = 'quote';
             this.Class.currently_editing = false;
@@ -373,7 +373,7 @@ QuotesController = MVC.Controller.extend('quotes', /* @Static */ {
             if (!$('#' + id).hasClass('building_quote')) {
                 $('#' + id).removeClass('edit_quote').removeClass('ui-state-highlight');
             }
-            if (elem.type === 'new') $('#' + id).addClass('q_new building_quote').addClass('ui-state-highlight');
+            if (elem.type === 'new') { $('#' + id).addClass('q_new building_quote').addClass('ui-state-highlight'); }
             CompileController.enable_keybindings();
         } else if (params['view'] === 'edit') {
             action = 'quote_edit';
@@ -476,10 +476,12 @@ QuotesController = MVC.Controller.extend('quotes', /* @Static */ {
         action = params.action;
         if ($quote.children('#trans, #purport').length === 2 && action === 'cancel') {
             // Make update on a quote with Translation and Purport where either one might be empty, e.g.: after choosing a Trans-Purport section when only one has text
-            if (/^\s+$/.test($quote.children('#trans').val()) || /^\s+$/.test($quote.children('#purport').val())) action = 'update';
+            if (/^\s+$/.test($quote.children('#trans').val()) || (/^\s+$/).test($quote.children('#purport').val())) { 
+							action = 'update';
+						}
         }
         if ($quote.children('#heading').length === 1 && action === 'cancel') {
-            if (/^\s+$/.test($quote.children('#heading').val())) action = 'update';
+            if (/^\s+$/.test($quote.children('#heading').val())) { action = 'update'; }
         }
         if (action === 'update') {
             this.update($quote);
@@ -490,8 +492,8 @@ QuotesController = MVC.Controller.extend('quotes', /* @Static */ {
                 view: 'view'
             });
             $quote.fadeIn("slow");
-            if (!$quote.hasClass('building_quote')) this._transition_hilite($quote, '#FFFEC6', 2);
-        }
+            if (!$quote.hasClass('building_quote')) { this._transition_hilite($quote, '#FFFEC6', 2); }
+        }	
         QuotesController.disable_edit_keybindings(params.elem);
     },
 
@@ -501,12 +503,12 @@ QuotesController = MVC.Controller.extend('quotes', /* @Static */ {
      */
     check_selection: function (text_elem) {
         var q = $(text_elem).parents('.quote');
-        if ($('div#alert_tip', q).is(':visible')) return;
+        if ($('div#alert_tip', q).is(':visible')) { return; }
         var that, heading_selection, quote, tip_elem;
         that = this;
         heading_selection = $.trim(window.getSelection().toString());
         if (heading_selection === '') {
-            if ($('div#alert_tip').is(':visible')) this.cancel_tip(quote);
+            if ($('div#alert_tip').is(':visible')) { this.cancel_tip(quote); }
             return;
         }
         quote = $(text_elem).parents('div.quote');
@@ -590,12 +592,12 @@ QuotesController = MVC.Controller.extend('quotes', /* @Static */ {
      */
     _do_section: function (elem, new_section_id) {
         var quote, id, text, new_section;
-        quote = $(elem).parents('div.quote')
+        quote = $(elem).parents('div.quote');
         id = quote.attr('id');
         link = quote.attr('link');
-        if (new_section_id == 'trans') new_section = 'Translation';
-        if (new_section_id == 'purport') new_section = 'Purport';
-        if (new_section_id == 'trans_purport') new_section = 'Translation and Purport';
+        if (new_section_id == 'trans') { new_section = 'Translation'; }
+        if (new_section_id == 'purport') { new_section = 'Purport'; }
+        if (new_section_id == 'trans_purport') { new_section = 'Translation and Purport'; }
         Compilation.update_q_section(id, link, {
             section: new_section
         });
@@ -608,30 +610,34 @@ QuotesController = MVC.Controller.extend('quotes', /* @Static */ {
         var that, quote;
         that = this;
         quote = $(tips_elem).parents('div.quote'); // Find the quote the tip that triggered the event belongs to
-        if (/section/.test(tips_elem.id)) this.tip_alert({
-            elem: quote,
-            type: 'section'
-        });
-        if (tips_elem.id === 'set_insert_tip') this.insert_new_quote(quote);
-        if (tips_elem.id === 'edit_quote_tip') this.edit_quote(quote);
-        if (tips_elem.id === 'edit_heading_tip' || tips_elem.id === 'set_heading_tip') this.tip_alert({
+        if (/section/.test(tips_elem.id)) { 
+					this.tip_alert({
+					elem: quote,
+					type: 'section'
+        	}); 
+				}
+        if (tips_elem.id === 'set_insert_tip') { this.insert_new_quote(quote); }
+        if (tips_elem.id === 'edit_quote_tip') { this.edit_quote(quote); }
+        if (tips_elem.id === 'edit_heading_tip' || tips_elem.id === 'set_heading_tip') {
+					this.tip_alert({
             elem: quote,
             type: 'edit_heading'
-        });
+        	});
+				}
     },
 
     tip_alert: function (params) {
         var that, tip_elem;
         that = this;
         tip_elem = this._find_alert_tip_elem(params.elem);
-        if (!tip_elem) return;
+        if (!tip_elem) { return; }
         this._set_tip_context(tip_elem, params.type);
-        if (params.type === 'heading') this.message = $.trim(window.getSelection().toString()) === '' ? 'Highlight text and:' : 'Set heading:';
-        if (params.type === 'edit_heading') this.message = 'Set heading:';
+        if (params.type === 'heading') { this.message = $.trim(window.getSelection().toString()) === '' ? 'Highlight text and:' : 'Set heading:'; }
+        if (params.type === 'edit_heading') { this.message = 'Set heading:'; }
         this.render({
             to: tip_elem,
             action: params.type
-        })
+        });
         // Hide tips and show alert_tip
         if ($(tip_elem).is(':hidden')) {
             $(tip_elem).siblings('.tips').slideUp('fast');
@@ -648,7 +654,7 @@ QuotesController = MVC.Controller.extend('quotes', /* @Static */ {
                 console.log('Error in QuoteController.cancel_tip: missing elem argument');
             }
         }
-        if ($(elem).hasClass('edit_quote') || $(elem).parents('div.edit_quote').length) return; // If we are in edit_quote form, exit!
+        if ($(elem).hasClass('edit_quote') || $(elem).parents('div.edit_quote').length) { return; } // If we are in edit_quote form, exit!
         var tip_elem;
         tip_elem = this._find_alert_tip_elem(elem);
         //if(!tip_elem) return;
@@ -656,7 +662,8 @@ QuotesController = MVC.Controller.extend('quotes', /* @Static */ {
         if ($(tip_elem).is(':visible')) {
             // Always hide first
             $(tip_elem).slideUp('slow');
-            if ($(tip_elem).siblings('.tips')) $(tip_elem).siblings('.tips').slideDown('slow'); // Test for siblings before trying to hide them. (Problems with dblclick event)
+            if ($(tip_elem).siblings('.tips')) { $(tip_elem).siblings('.tips').slideDown('slow'); // Test for siblings before trying to hide them. (Problems with dblclick event) 
+						}
         }
     },
 
@@ -738,7 +745,7 @@ QuotesController = MVC.Controller.extend('quotes', /* @Static */ {
             }
         }
         $.each(terms, function (i, term) {
-            if (term === '') return true;
+            if (term === '') { return true; }
             $(elem).highlight_sanskrit(term);
         });
     },
@@ -883,7 +890,7 @@ QuotesController = MVC.Controller.extend('quotes', /* @Static */ {
                     t = t.replace(/\[\[(?:Vanisource:)?(.+?)\|(.+?)\]\]/g, '<a class="cited_link" href="http://vanisource.org/wiki/$1"><b>$2</b></a>');
                     $(this).html(t);
                 }
-            })
+            });
         }
         // fix newlines by making them into <p> otherwise they will render badly in wiki
 
@@ -928,16 +935,17 @@ QuotesController = MVC.Controller.extend('quotes', /* @Static */ {
                     if (/^.+?(?:<br|\n|$)/.test(t)) {
                         a = t.match(/^.+?(?:<br|\n|$)/)[0];
                     }
-                    if (a && a.indexOf(':') > -1) b = a.substring(0, a.indexOf(':'));
-                    if (b) c = b.split(' '); // use split because match(/\w+/) makes a strange array with unicode chars
+                    if (a && a.indexOf(':') > -1) { b = a.substring(0, a.indexOf(':')); }
+                    if (b) { c = b.split(' '); } // use split because match(/\w+/) makes a strange array with unicode chars
                     if (a && b && c && c.length < 4) {
                         inline = false;
                     }
                 }
 
-                if (inline) $(this).children('div.text:first').css({
-                    display: "inline"
-                });
+                if (inline) { $(this).children('div.text:first').css({
+										display: "inline"
+                	});
+								}
                 inline = false;
                 // Make first <p> child inline
                 $(this).children('div.text').children(':first').each(function () {
@@ -983,7 +991,7 @@ QuotesController = MVC.Controller.extend('quotes', /* @Static */ {
             that.render_quote({
                 elem: quote,
                 view: 'view'
-            })
+            });
             $(this).removeClass('building_quote').fadeIn('medium');
         });
         this._transition_hilite(quote, '#EEF7D9', 5);

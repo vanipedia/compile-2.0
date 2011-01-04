@@ -114,7 +114,7 @@ Quote = MVC.Model.extend('quote', /* @Static */ {
             link: resp.title,
             link_text: resp.title,
             parent: resp.parent.replace(/\s+/g, '_'),
-            index: resp.index,
+            index: resp.index
             //type:       'new'
           };
           // Save to Quote.cache
@@ -293,7 +293,7 @@ Quote = MVC.Model.extend('quote', /* @Static */ {
         if (line_len > longest) {
           longest = lines[i].length;
         }
-        if (line_len < 89 && !/[:,"\?]/.test(lines[i]) && !/^\s*$/.test(lines[i])) {
+        if (line_len < 89 && !(/[:,"\?]/).test(lines[i]) && !(/^\s*$/).test(lines[i])) {
           if (first === false) {
             first = i;
             last = i;
@@ -426,7 +426,7 @@ Quote = MVC.Model.extend('quote', /* @Static */ {
     // instance independent of source of quote_obj(from a dom node or new_quote)
     if (!quote_obj.link) {
       $.each(that.Class.attr, function(i, a) {
-        !/^(?:text|trans|purport|heading)$/.test(a) ? that[a] = $(quote_obj).attr(a) || false : that[a] = $(quote_obj).children('.' + a).html() || false;
+        !(/^(?:text|trans|purport|heading)$/).test(a) ? that[a] = $(quote_obj).attr(a) || false : that[a] = $(quote_obj).children('.' + a).html() || false;
       });
     } else {
       $.each(that.Class.attr, function(i, a) {
