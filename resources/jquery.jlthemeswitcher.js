@@ -45,7 +45,7 @@ $.fn.jlthemeswitcher = function(settings) {
   var obj = $(this);
   var themes = options.themes;
   var excludeThemes = options.excludeThemes.split(',');
-  if (options.importThemes || themes == '' || options.joinThemes) {
+  if (options.importThemes || themes === '' || options.joinThemes) {
     $.ajax({
       url: options.importThemesPath,
       dataType: 'jsonp',
@@ -72,7 +72,7 @@ $.fn.jlthemeswitcher = function(settings) {
     }
     var content = '<div class="jlthemeswitcher-container"><div class="jlthemeswitcher-header"><div class="jlthemeswitcher-title">&nbsp;' + options.title + '</div>' + cicon + '</div><div class="jlthemeswitcher ' + options.bgClass + ' ui-corner-bl ui-corner-br"><ul class="jlthemeswitcher">\n';
     for (var i in themes) {
-      if (typeof(themes[i]) !== 'object') continue;
+      if (typeof(themes[i]) !== 'object') { continue; }
       // var themedata = themes[i].split(',');
       var themedata = themes[i];
       if ($.inArray(themedata[0], excludeThemes) == -1) {
@@ -133,7 +133,7 @@ $.fn.jlthemeswitcher = function(settings) {
       'cursor': 'pointer',
       'width': '16px',
       'height': '16px',
-      'padding': '2px',
+      'padding': '2px'
     });
     $('.jlthemeswitcher-header').css({
       'padding': '2px 4px 0px 0px',
@@ -329,7 +329,7 @@ jQuery.cookie = function(name, value, options) {
     document.cookie = [name, '=', encodeURIComponent(value), expires, path, domain, secure].join('');
   } else { // only name given, get cookie
     var cookieValue = null;
-    if (document.cookie && document.cookie != '') {
+    if (document.cookie && document.cookie !== '') {
       var cookies = document.cookie.split(';');
       for (var i = 0; i < cookies.length; i++) {
         var cookie = jQuery.trim(cookies[i]);
